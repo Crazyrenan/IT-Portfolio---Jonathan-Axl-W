@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 
-// 1. Generate a new path for every project
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
   return projects.map(project => ({
@@ -11,58 +10,100 @@ export async function getStaticPaths() {
   }));
 }
 
-// 2. Get the specific project data
 const { project } = Astro.props;
 const { Content } = await project.render();
+
+// Safe Date Helper (Fixes the crash if date is missing or a string)
+const safeDate = new Date(project.data.date || Date.now()).toISOString().split('T')[0];
 ---
 
-<Layout title={`${project.data.title} | Tactical Elegance`}>
-  <main class="min-h-screen px-4 py-20 max-w-4xl mx-auto">
+<Layout title={`${project.data.title} | Case File`}>
+  <main class="min-h-screen pt-32 pb-20 px-6 relative overflow-hidden">
     
-    <a href="/" class="inline-flex items-center text-sm text-neutral/50 hover:text-primary transition-colors mb-8 font-mono">
-      ← RETURN TO BASE
-    </a>
+    <div class="fixed inset-0 z-0 opacity-[0.03] pointer-events-none" 
+         style="background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px); background-size: 50px 50px;">
+    </div>
 
-    <header class="mb-12 border-b border-white/10 pb-12">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div>
-          <span class="font-mono text-primary text-sm tracking-widest uppercase">
-            {project.data.date.toISOString().split('T')[0]}
-          </span>
-          <h1 class="text-4xl md:text-5xl font-bold text-white mt-2">
-            {project.data.title}
-          </h1>
+    <div class="max-w-4xl mx-auto relative z-10">
+      
+      <a href="/#mission-log" class="inline-flex items-center text-xs font-mono text-primary/80 hover:text-primary tracking-widest uppercase mb-12 group">
+        <span class="mr-2 group-hover:-translate-x-1 transition-transform">←</span> RETURN TO BASE
+      </a>
+
+      <header class="mb-12 border-b border-white/10 pb-8 relative">
+        <div class="absolute -top-10 -right-10 border-4 border-white/5 text-white/5 p-4 transform rotate-12 font-black text-6xl uppercase pointer-events-none select-none hidden md:block">
+          TOP SECRET
         </div>
 
-        {project.data.githubUrl && (
-          <a 
-            href={project.data.githubUrl} 
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center px-6 py-3 bg-surface border border-white/10 text-white hover:border-primary hover:text-primary transition-all rounded-sm font-mono text-sm group"
-          >
-            <span>VIEW SOURCE</span>
-            <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-          </a>
-        )}
-      </div>
-    </header>
-    
-    {project.data.coverImage && (
-      <div class="mb-12 border border-white/10 p-2 bg-surface rounded-sm">
-        <img 
-          src={project.data.coverImage} 
-          alt={project.data.title} 
-          class="w-full h-auto max-h-[500px] object-cover rounded-sm grayscale-[20%] hover:grayscale-0 transition-all duration-500"
-        />
-      </div>
-    )}
+        <div class="flex flex-col gap-6">
+          <div>
+            <div class="flex items-center gap-4 mb-4">
+              <span class="px-2 py-1 bg-primary/10 border border-primary/30 text-primary text-[10px] font-mono tracking-widest uppercase rounded-sm">
+                CASE ID: {project.slug.toUpperCase()}
+              </span>
+              <span class="text-neutral/50 font-mono text-xs">
+                // DATE: {safeDate}
+              </span>
+            </div>
+            
+            <h1 class="text-4xl md:text-6xl font-bold text-white tracking-tight mb-6">
+              {project.data.title}
+            </h1>
 
-    <article class="prose prose-lg prose-invert max-w-3xl mx-auto prose-headings:uppercase prose-headings:tracking-wider prose-img:w-full">
-      <Content />
-    </article>
+            {project.data.tags && project.data.tags.length > 0 && (
+              <div class="flex flex-wrap gap-2">
+                {project.data.tags.map((tag: string) => (
+                  <span class="flex items-center px-3 py-1 bg-white/5 border border-white/10 text-xs font-mono text-neutral/80 rounded-sm">
+                    <span class="w-1 h-1 bg-primary mr-2 rounded-full"></span>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
 
+          {project.data.githubUrl && (
+            <div class="flex gap-4">
+              <a 
+                href={project.data.githubUrl} 
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center px-6 py-3 bg-white text-black font-bold text-sm tracking-wide hover:bg-neutral-200 transition-colors rounded-sm shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+              >
+                VIEW SOURCE DATA
+                <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
+          )}
+        </div>
+      </header>
+
+      {project.data.coverImage && (
+        <div class="relative mb-16 group">
+          <div class="absolute -inset-1 bg-gradient-to-r from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-md"></div>
+          <div class="relative border border-white/10 p-1 bg-surface rounded-sm overflow-hidden">
+            <img 
+              src={project.data.coverImage} 
+              alt={project.data.title} 
+              class="w-full h-auto object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
+            />
+            <div class="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_2px,3px_100%] pointer-events-none opacity-20"></div>
+          </div>
+        </div>
+      )}
+
+      <article class="prose prose-invert prose-lg max-w-none prose-headings:font-bold prose-headings:text-white prose-headings:uppercase prose-headings:tracking-wider prose-p:text-neutral/80 prose-p:leading-relaxed prose-li:text-neutral/80 prose-strong:text-primary prose-a:text-white prose-a:underline hover:prose-a:text-primary transition-colors">
+        <Content />
+      </article>
+
+      <div class="mt-20 pt-10 border-t border-white/10 text-center">
+        <span class="font-mono text-xs text-neutral/30 tracking-[0.5em] uppercase">
+          // END OF FILE //
+        </span>
+      </div>
+
+    </div>
   </main>
 </Layout>

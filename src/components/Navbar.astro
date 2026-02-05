@@ -11,7 +11,23 @@ const visibleLinks = navLinks.filter(link => link.active);
       <a href="#" class="text-xl font-bold text-white tracking-tighter hover:text-primary transition-colors">
         JAWS<span class="text-primary">.</span>SYS
       </a>
-
+      <div class="hidden md:flex items-center gap-2 ml-4 px-3 py-1 bg-black/50 border border-white/10 rounded-sm">
+            <span class="text-[10px] text-neutral/50 font-mono">VITALS</span>
+            
+            <svg width="50" height="20" viewBox="0 0 100 40" class="text-green-500">
+                <path 
+                d="M0 20 H30 L40 5 L50 35 L60 20 H100" 
+                fill="none" 
+                stroke="currentColor" 
+                stroke-width="2" 
+                stroke-linecap="round" 
+                stroke-linejoin="round"
+                class="animate-pulse-fast" 
+                />
+            </svg>
+            
+            <span class="text-[10px] text-green-500 font-mono tracking-widest">FINE</span>
+        </div>
       <div class="hidden md:flex items-center space-x-8">
         {visibleLinks.map((link) => (
           <a 

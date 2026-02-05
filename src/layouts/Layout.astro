@@ -3,11 +3,14 @@
 import '@fontsource/space-grotesk';
 import '@fontsource/jetbrains-mono';
 import { ClientRouter } from 'astro:transitions';
+import SpyCursor from '../components/SpyCursor';
 import Navbar from '../components/Navbar.astro';
 
 interface Props {
   title: string;
 }
+
+
 
 const { title } = Astro.props;
 ---
@@ -27,6 +30,9 @@ const { title } = Astro.props;
   
   <body class="bg-background text-text font-sans antialiased min-h-screen flex flex-col overflow-x-hidden">
     
+    <SpyCursor client:load /> 
+    <Navbar />
+
     <main class="flex-grow flex flex-col relative w-full">
       <slot />
     </main>
@@ -43,3 +49,14 @@ const { title } = Astro.props;
 
   </body>
 </html>
+
+<style is:global>
+  @keyframes pulse-fast {
+    0% { stroke-dasharray: 0 100; stroke-dashoffset: 0; opacity: 0.5; }
+    50% { stroke-dasharray: 100 0; stroke-dashoffset: 0; opacity: 1; }
+    100% { stroke-dasharray: 0 100; stroke-dashoffset: -100; opacity: 0.5; }
+  }
+  .animate-pulse-fast path {
+    animation: pulse-fast 2s infinite linear;
+  }
+</style>

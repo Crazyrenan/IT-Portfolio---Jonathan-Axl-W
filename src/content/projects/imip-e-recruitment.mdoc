@@ -1,0 +1,41 @@
+---
+title: IMIP E-Recruitment
+date: 2025-12-01
+tags:
+  - figma
+  - scss
+  - bootstrap
+  - laravel
+coverImage: /images/projects/imip-e-recruitment/coverImage.png
+gallery:
+  - /images/projects/imip-e-recruitment/gallery/0.png
+  - /images/projects/imip-e-recruitment/gallery/1.png
+githubUrl: https://github.com/Crazyrenan/e-recruitment-imip
+excerpt: >-
+  Portal e-recruitment skala enterprise untuk PT IMIP, mengubah desain Figma
+  menjadi aplikasi Laravel yang responsif dan aman.
+---
+## System Architecture
+
+Proyek ini menggunakan arsitektur MVC (Model-View-Controller) yang ketat. Desain Figma diterjemahkan ke dalam komponen Blade yang modular dengan styling SCSS kustom.
+
+### Frontend Implementation (SCSS)
+
+Saya menggunakan SCSS untuk menjaga konsistensi variabel warna dan responsivitas sesuai desain Figma.
+
+```
+// resources/css/app.scss
+$primary-color: #0d6efd;
+$secondary-color: #6c757d;
+
+.dashboard-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+}
+```

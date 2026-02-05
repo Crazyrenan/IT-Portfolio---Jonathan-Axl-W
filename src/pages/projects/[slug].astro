@@ -98,6 +98,29 @@ const safeDate = new Date(project.data.date || Date.now()).toISOString().split('
         <Content />
       </article>
 
+      {project.data.gallery && project.data.gallery.length > 0 && (
+        <div class="mt-20 border-t border-white/10 pt-12">
+          <h3 class="font-mono text-primary text-sm tracking-widest uppercase mb-8 flex items-center">
+            <span class="w-2 h-2 bg-primary mr-3 rounded-full animate-pulse"></span>
+            ADDITIONAL INTEL / SCREENSHOTS
+          </h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {project.data.gallery.map((image) => (
+              <div class="group relative overflow-hidden border border-white/10 bg-surface rounded-sm">
+                <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                
+                <img 
+                  src={image} 
+                  alt="Mission Evidence" 
+                  class="w-full h-auto object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div class="mt-20 pt-10 border-t border-white/10 text-center">
         <span class="font-mono text-xs text-neutral/30 tracking-[0.5em] uppercase">
           // END OF FILE //

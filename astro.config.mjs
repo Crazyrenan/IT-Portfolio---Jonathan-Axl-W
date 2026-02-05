@@ -2,7 +2,6 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
 import keystatic from '@keystatic/astro';
-
 import markdoc from '@astrojs/markdoc';
 
 export default defineConfig({
@@ -13,7 +12,8 @@ export default defineConfig({
       experimentalReactChildren: true,
     }), 
     tailwind(), 
-    keystatic()
+    keystatic(),
+    markdoc(),
   ],
   output: 'static',
 });

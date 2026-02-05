@@ -3,7 +3,15 @@ import { getCollection } from 'astro:content';
 
 // 1. Fetch & Sort Projects
 const projects = await getCollection('projects');
-// Sort by date (Newest first)
+
+// --- DEBUG SENSOR (CHECK YOUR TERMINAL) ---
+console.log("========================================");
+console.log("🔍 MISSION LOG DIAGNOSTIC");
+console.log(`📂 FILES FOUND: ${projects.length}`);
+projects.forEach(p => console.log(`   - ${p.slug} (${p.data.title})`));
+console.log("========================================");
+// ------------------------------------------
+
 const sortedProjects = projects.sort((a, b) => {
   const dateA = new Date(a.data.date || 0).valueOf();
   const dateB = new Date(b.data.date || 0).valueOf();

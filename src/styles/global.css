@@ -1,1 +1,27 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* PASTEL LIGHT (Default) */
+    --color-bg: #FDFCF8;       /* Cream Paper */
+    --color-surface: #F3EFE5;  /* Soft Beige */
+    --color-primary: #B85C68;  /* Dusty Rose */
+    --color-text: #4A4442;     /* Warm Charcoal */
+  }
+
+  .dark {
+    /* TACTICAL DARK */
+    --color-bg: #0F0F11;
+    --color-surface: #232325;
+    --color-primary: #681826;
+    --color-text: #E0D5C9;
+  }
+}
+
+html {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color 0.5s ease, color 0.5s ease;
+}

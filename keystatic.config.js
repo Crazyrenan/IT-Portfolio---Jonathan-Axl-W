@@ -6,31 +6,56 @@ export default config({
   },
   collections: {
     projects: collection({
-      label: 'Projects',
+      label: 'Mission Log',
       slugField: 'title',
       path: 'src/content/projects/*',
       format: { contentField: 'content' },
       schema: {
-        title: fields.slug({ name: { label: 'Title' } }),
+        title: fields.slug({ name: { label: 'Mission Title' } }),
         date: fields.date({ label: 'Date', validation: { isRequired: true } }),
+        
+        // Tags Field (This one is correct)
+        tags: fields.array(
+          fields.text({ label: 'Tech Stack' }), 
+          {
+            label: 'Technologies',
+            itemLabel: (props) => props.value
+          }
+        ),
+
         coverImage: fields.image({
-            label: 'Cover Image',
-            // This defines where images are saved on your computer:
-            directory: 'public/images/projects',
-            // This defines how the website finds them:
-            publicPath: '/images/projects/',
+          label: 'Evidence Photo',
+          directory: 'public/images/projects',
+          publicPath: '/images/projects/',
         }),
-        githubUrl: fields.url({ label: 'GitHub Repository URL' }),
-        excerpt: fields.text({ label: 'Excerpt', multiline: true }),
+
+        // --- FIXED GALLERY SECTION ---
+        gallery: fields.array(
+            fields.image({
+                label: 'Gallery Image',
+                directory: 'public/images/projects',
+                publicPath: '/images/projects/',
+            }),
+            {
+                label: 'Mission Gallery',
+                // FIX: Use () => 'String' instead of just 'String'
+                itemLabel: (props) => 'Evidence Photo', 
+            }
+        ),
+        // -----------------------------
+        
+        githubUrl: fields.url({ label: 'GitHub Source URL' }),
+        excerpt: fields.text({ label: 'Mission Brief (Excerpt)', multiline: true }),
+        
         content: fields.document({
-        label: 'Content',
-        formatting: true,
-        dividers: true,
-        links: true,
-        images: {
+          label: 'Full Report',
+          formatting: true,
+          dividers: true,
+          links: true,
+          images: {
             directory: 'public/images/projects',
             publicPath: '/images/projects/',
-        },
+          },
         }),
       },
     }),

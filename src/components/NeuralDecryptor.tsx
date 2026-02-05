@@ -4,9 +4,9 @@ import { playSound } from '../utils/sounds';
 const SECRETS = [
   { id: 1, label: 'CODENAME', value: 'Mirae' },
   { id: 2, label: 'OPERATING BASE', value: 'INDONESIA' },
-  { id: 3, label: 'EDUCATION', value: 'UMN (GPA 3.78)' },
+  { id: 3, label: 'EDUCATION', value: 'UMN (GPA 3.52)' },
   { id: 4, label: 'SPECIALTY', value: 'FULL STACK' },
-  { id: 5, label: 'PASSION', value: 'COFFEE PROCESSING' }, // Personalized!
+  { id: 5, label: 'PASSION', value: 'SLEEP' }, // Personalized!
   { id: 6, label: 'STATUS', value: 'AVAILABLE FOR HIRE' },
 ];
 
@@ -22,7 +22,7 @@ export default function NeuralDecryptor() {
   return (
     <div className="max-w-4xl mx-auto py-20 px-6">
       <div className="mb-8 border-b border-white/10 pb-4 flex justify-between items-end">
-        <h2 className="text-2xl font-bold text-white">NEURAL LINK</h2>
+        <h2 className="text-2xl font-bold text-text">NEURAL LINK</h2>
         <span className="font-mono text-primary text-xs">
           DECRYPTION PROGRESS: {Math.round((decrypted.length / SECRETS.length) * 100)}%
         </span>
@@ -54,12 +54,12 @@ export default function NeuralDecryptor() {
                 {isRevealed ? (
                   <>
                     <div className="text-xs text-primary mb-1">{secret.label}</div>
-                    <div className="text-lg text-white font-bold">{secret.value}</div>
+                    <div className="text-lg text-text font-bold">{secret.value}</div>
                   </>
                 ) : (
                   <div className="flex space-x-1 mt-4">
                     {[...Array(8)].map((_, i) => (
-                      <div key={i} className="w-1 h-1 bg-white/20 animate-pulse" style={{ animationDelay: `${i * 100}ms` }} />
+                      <div key={i} className="w-1 h-1 bg-background/20 animate-pulse" style={{ animationDelay: `${i * 100}ms` }} />
                     ))}
                   </div>
                 )}

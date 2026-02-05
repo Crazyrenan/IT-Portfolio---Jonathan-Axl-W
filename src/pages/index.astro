@@ -5,6 +5,7 @@ import Manifesto from '../components/Manifesto.astro';
 import TechArsenal from '../components/TechArsenal.astro';
 import MissionLog from '../components/Missionlog.astro';
 import About from '../components/About.astro';
+import NeuralDecryptor from '../components/NeuralDecryptor.tsx';
 import ContactTerminal from '../components/ContactTerminal.astro';
 ---
 
@@ -39,8 +40,11 @@ import ContactTerminal from '../components/ContactTerminal.astro';
     
     </section>
 
-    <div class="relative z-10 bg-background">
+    <div class="relative z-10 bg-background -mt-20">
       <Manifesto />
+      <section class="py-20">
+        <NeuralDecryptor client:load />
+      </section>
       <About />
       <TechArsenal />
       <MissionLog />

@@ -61,61 +61,85 @@ const getIcon = (name: string) => {
     ))}
   </div>
 
-  <div id="rain-container" class="fixed inset-0 pointer-events-none z-50"></div>
+  <div id="rain-container" class="fixed inset-0 pointer-events-none z-[40]"></div>
 </section>
 
 <script>
   import { gsap } from "gsap";
-  // ... (The rest of your existing script tag remains exactly the same) ...
-  const container = document.getElementById('rain-container');
-  const items = document.querySelectorAll('.tech-item');
 
-  const playClick = () => {
-    const audio = new AudioContext();
-    const osc = audio.createOscillator();
-    const gain = audio.createGain();
-    osc.connect(gain);
-    gain.connect(audio.destination);
-    osc.frequency.setValueAtTime(800, audio.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(100, audio.currentTime + 0.1);
-    gain.gain.setValueAtTime(0.05, audio.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audio.currentTime + 0.1);
-    osc.start();
-    osc.stop(0.1);
-  };
+  function initTechArsenal() {
+    const container = document.getElementById('rain-container');
+    const items = document.querySelectorAll('.tech-item');
+    let audioCtx: AudioContext;
 
-  items.forEach(item => {
-    item.addEventListener('click', (e) => {
+    const playTacticalClick = () => {
+      if (!audioCtx) audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      
+      const masterGain = audioCtx.createGain();
+      masterGain.connect(audioCtx.destination);
+      masterGain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+
+      // LAYER 1: The "Digital Crunch" (Square wave)
+      const osc1 = audioCtx.createOscillator();
+      osc1.type = 'square';
+      osc1.frequency.setValueAtTime(1200, audioCtx.currentTime);
+      osc1.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.1);
+      
+      // LAYER 2: The "Mechanical Thump" (Low frequency)
+      const osc2 = audioCtx.createOscillator();
+      osc2.type = 'sawtooth';
+      osc2.frequency.setValueAtTime(150, audioCtx.currentTime);
+      osc2.frequency.linearRampToValueAtTime(40, audioCtx.currentTime + 0.1);
+
+      const clickGain = audioCtx.createGain();
+      clickGain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+
+      osc1.connect(clickGain);
+      osc2.connect(clickGain);
+      clickGain.connect(masterGain);
+
+      osc1.start();
+      osc2.start();
+      osc1.stop(audioCtx.currentTime + 0.15);
+      osc2.stop(audioCtx.currentTime + 0.15);
+    };
+
+    const handleItemClick = (e: Event) => {
       const target = e.currentTarget as HTMLElement;
       const iconUrl = target.dataset.icon;
-      if(!iconUrl) return;
+      if (!iconUrl || !container) return;
 
-      playClick();
+      playTacticalClick(); // Panggil suara baru
 
+      // Animasi Hujan Ikon tetap menggunakan GSAP
       for (let i = 0; i < 20; i++) {
         const drop = document.createElement('img');
         drop.src = iconUrl;
-        drop.classList.add('absolute', 'w-6', 'h-6', 'opacity-80');
+        drop.classList.add('absolute', 'w-6', 'h-6', 'opacity-80', 'pointer-events-none');
         
         const startX = Math.random() * window.innerWidth;
         const startY = -50 - (Math.random() * 200);
-        const duration = 1 + Math.random() * 2;
-
+        
         drop.style.left = `${startX}px`;
         drop.style.top = `${startY}px`;
-        
-        container?.appendChild(drop);
+        container.appendChild(drop);
 
         gsap.to(drop, {
           y: window.innerHeight + 200,
           rotation: Math.random() * 360,
-          duration: duration,
+          duration: 1 + Math.random() * 2,
           ease: "none",
-          onComplete: () => {
-            drop.remove();
-          }
+          onComplete: () => drop.remove()
         });
       }
+    };
+
+    items.forEach(item => {
+      item.addEventListener('click', handleItemClick);
     });
-  });
+  }
+
+  initTechArsenal();
+  document.addEventListener('astro:page-load', initTechArsenal);
 </script>

@@ -38,8 +38,8 @@
     updateUI();
 
     btn.onclick = () => {
-      const isDark = document.documentElement.classList.toggle('dark');
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      const isNowDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isNowDark ? 'dark' : 'light');
       updateUI();
     };
   }

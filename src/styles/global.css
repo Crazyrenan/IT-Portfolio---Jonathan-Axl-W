@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 1. DEFAULT: TACTICAL RED (DARK) */
+/* 1. BASE VARIABLES (Default to Dark/Tactical Red) */
 :root {
   --color-bg: #0F0F11;
   --color-surface: #1A1A1D;
@@ -18,9 +18,27 @@ html:not(.dark) {
   --color-text: #4A4442;
 }
 
-/* 3. CORE STYLES */
+/* 3. CORE GLOBAL STYLES */
 html, body {
   background-color: var(--color-bg) !important;
   color: var(--color-text) !important;
   transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+html:not(.dark) .tech-item img {
+  filter: brightness(0.2); 
+}
+
+/* Efek Shadow pada lipatan Tactical Fold */
+.active .fold-panel:nth-child(1) {
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.active .fold-panel:nth-child(2) {
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+}
+
+/* 4. SELECTION COLORS (Tactical Touch) */
+::selection {
+  background-color: var(--color-primary);
+  color: white;
 }

@@ -2,26 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    /* PASTEL LIGHT (Default) */
-    --color-bg: #FDFCF8;       /* Cream Paper */
-    --color-surface: #F3EFE5;  /* Soft Beige */
-    --color-primary: #B85C68;  /* Dusty Rose */
-    --color-text: #4A4442;     /* Warm Charcoal */
-  }
-
-  .dark {
-    /* TACTICAL DARK */
-    --color-bg: #0F0F11;
-    --color-surface: #232325;
-    --color-primary: #681826;
-    --color-text: #E0D5C9;
-  }
+/* 1. DEFAULT: TACTICAL RED (DARK) */
+:root {
+  --color-bg: #0F0F11;
+  --color-surface: #1A1A1D;
+  --color-primary: #E61E32;
+  --color-text: #E0D5C9;
 }
 
-html {
-  background-color: var(--color-bg);
-  color: var(--color-text);
+
+html:not(.dark) {
+  --color-bg: #FDFCF8;
+  --color-surface: #F3EFE5;
+  --color-primary: #B85C68;
+  --color-text: #4A4442;
+}
+
+/* 3. CORE STYLES */
+html, body {
+  background-color: var(--color-bg) !important;
+  color: var(--color-text) !important;
   transition: background-color 0.5s ease, color 0.5s ease;
 }

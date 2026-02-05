@@ -9,7 +9,7 @@ export const navLinks = [
 ];
 
 export const socialLinks = {
-  github: "https://github.com/yourusername",
-  linkedin: "https://linkedin.com/in/yourusername",
-  email: "mailto:your@email.com"
+  github: "https://github.com/Crazyrenan",
+  linkedin: "https://www.linkedin.com/in/jonathan-axl-b10567253/",
+  email: "jonathan.axlw@gmail.com"
 };

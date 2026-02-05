@@ -4,14 +4,6 @@ import { getCollection } from 'astro:content';
 // 1. Fetch & Sort Projects
 const projects = await getCollection('projects');
 
-// --- DEBUG SENSOR (CHECK YOUR TERMINAL) ---
-console.log("========================================");
-console.log("🔍 MISSION LOG DIAGNOSTIC");
-console.log(`📂 FILES FOUND: ${projects.length}`);
-projects.forEach(p => console.log(`   - ${p.slug} (${p.data.title})`));
-console.log("========================================");
-// ------------------------------------------
-
 const sortedProjects = projects.sort((a, b) => {
   const dateA = new Date(a.data.date || 0).valueOf();
   const dateB = new Date(b.data.date || 0).valueOf();
@@ -25,7 +17,7 @@ const sortedProjects = projects.sort((a, b) => {
     <span class="font-mono text-primary text-xs tracking-widest uppercase block mb-2">
       // ARCHIVE ACCESS
     </span>
-    <h2 class="text-4xl md:text-5xl font-bold text-white">
+    <h2 class="text-4xl md:text-5xl font-bold text-text">
       Mission Log
     </h2>
   </div>
@@ -48,11 +40,11 @@ const sortedProjects = projects.sort((a, b) => {
                 {new Date(project.data.date || Date.now()).toISOString().split('T')[0]}
               </span>
 
-              <h3 class="text-3xl font-bold text-white group-hover:text-primary transition-colors">
+              <h3 class="text-3xl font-bold text-text group-hover:text-primary transition-colors">
                 {project.data.title}
               </h3>
 
-              <p class="text-neutral/70 leading-relaxed max-w-md mb-4 group-hover:text-white transition-colors duration-500">
+              <p class="text-neutral/70 leading-relaxed max-w-md mb-4 group-hover:text-text transition-colors duration-500">
                 {project.data.excerpt}
               </p>
 
@@ -66,7 +58,7 @@ const sortedProjects = projects.sort((a, b) => {
                 </div>
               )}
 
-              <div class="flex items-center text-sm font-mono text-white/50 group-hover:text-white transition-colors pt-2">
+              <div class="flex items-center text-sm font-mono text-text/50 group-hover:text-text transition-colors pt-2">
                 <span>ACCESS BRIEFING</span>
                 <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />

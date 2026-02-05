@@ -3,12 +3,11 @@ import typography from '@tailwindcss/typography';
 
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
-  // 1. ENABLE CLASS-BASED DARK MODE
   darkMode: 'class', 
   theme: {
     extend: {
       colors: {
-        // 2. CONNECT TO CSS VARIABLES
+        // MAP VARIABLES HERE
         background: 'var(--color-bg)',
         surface: 'var(--color-surface)',
         primary: 'var(--color-primary)',

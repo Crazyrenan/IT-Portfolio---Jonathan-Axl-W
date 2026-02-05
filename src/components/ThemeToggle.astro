@@ -1,62 +1,49 @@
-<button
-  id="theme-toggle"
-  class="p-2 rounded-full border border-primary/20 bg-surface hover:bg-primary/10 transition-all duration-300 group cursor-pointer relative z-50"
-  aria-label="Toggle Theme"
->
+<button id="theme-toggle" class="fixed top-6 right-6 z-[9999] p-2 rounded-full border border-primary/20 bg-surface hover:bg-primary/10 transition-all duration-300 group cursor-pointer pointer-events-auto" aria-label="Toggle Theme">
   <div class="relative w-5 h-5 overflow-hidden pointer-events-none">
-    <svg id="sun-icon" class="w-5 h-5 text-primary absolute inset-0 transform transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+    <svg id="sun-icon" class="w-5 h-5 text-primary absolute inset-0 transform transition-all duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
     </svg>
-    
-    <svg id="moon-icon" class="w-5 h-5 text-primary absolute inset-0 transform transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+    <svg id="moon-icon" class="w-5 h-5 text-primary absolute inset-0 transform transition-all duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
     </svg>
   </div>
 </button>
 
 <script>
-  // 1. Wrap logic in a function
-  function initTheme() {
-    const toggle = document.getElementById('theme-toggle');
+  function setupTheme() {
+    const btn = document.getElementById('theme-toggle');
     const sunIcon = document.getElementById('sun-icon');
     const moonIcon = document.getElementById('moon-icon');
 
-    // Update UI based on current state
-    const updateIcons = () => {
+    if (!btn || !sunIcon || !moonIcon) return;
+
+    const updateUI = () => {
+      // By default, if 'dark' class is present (or no class at all if CSS is set to dark), 
+      // we show the moon.
       const isDark = document.documentElement.classList.contains('dark');
+      
       if (isDark) {
-        sunIcon?.classList.add('translate-y-full', 'rotate-90');
-        sunIcon?.classList.remove('translate-y-0', 'rotate-0');
-        moonIcon?.classList.add('translate-y-0', 'rotate-0');
-        moonIcon?.classList.remove('-translate-y-full', '-rotate-90');
+        sunIcon.style.transform = "translateY(100%) rotate(90deg)";
+        sunIcon.style.opacity = "0";
+        moonIcon.style.transform = "translateY(0) rotate(0deg)";
+        moonIcon.style.opacity = "1";
       } else {
-        sunIcon?.classList.add('translate-y-0', 'rotate-0');
-        sunIcon?.classList.remove('translate-y-full', 'rotate-90');
-        moonIcon?.classList.add('-translate-y-full', '-rotate-90');
-        moonIcon?.classList.remove('translate-y-0', 'rotate-0');
+        sunIcon.style.transform = "translateY(0) rotate(0deg)";
+        sunIcon.style.opacity = "1";
+        moonIcon.style.transform = "translateY(-100%) rotate(-90deg)";
+        moonIcon.style.opacity = "0";
       }
     };
 
-    // Initial check
-    updateIcons();
+    updateUI();
 
-    // Click Listener
-    toggle?.addEventListener('click', () => {
-      const isDark = document.documentElement.classList.contains('dark');
-      if (isDark) {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-      } else {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-      }
-      updateIcons();
-    });
+    btn.onclick = () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      updateUI();
+    };
   }
 
-  // 2. Run on initial load
-  initTheme();
-
-  // 3. Run on every page navigation (View Transitions)
-  document.addEventListener('astro:after-swap', initTheme);
+  setupTheme();
+  document.addEventListener('astro:page-load', setupTheme);
 </script>

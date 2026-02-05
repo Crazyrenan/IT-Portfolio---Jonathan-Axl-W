@@ -4,7 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
-  return projects.map(project => ({
+  return projects.map((project) => ({
     params: { slug: project.slug },
     props: { project },
   }));
@@ -13,120 +13,121 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const { Content } = await project.render();
 
-// Safe Date Helper (Fixes the crash if date is missing or a string)
-const safeDate = new Date(project.data.date || Date.now()).toISOString().split('T')[0];
+// Format tanggal agar terlihat profesional
+const formattedDate = project.data.date 
+  ? new Date(project.data.date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+    })
+  : 'Mission Pending';
 ---
 
-<Layout title={`${project.data.title} | Case File`}>
-  <main class="min-h-screen pt-32 pb-20 px-6 relative overflow-hidden">
+<Layout title={`${project.data.title} | Mission Log`}>
+  <main class="pt-32 pb-20 px-6 min-h-screen">
     
-    <div class="fixed inset-0 z-0 opacity-[0.03] pointer-events-none" 
-         style="background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px); background-size: 50px 50px;">
-    </div>
-
-    <div class="max-w-4xl mx-auto relative z-10">
+    <article class="max-w-6xl mx-auto">
       
-      <a href="/#mission-log" class="inline-flex items-center text-xs font-mono text-primary/80 hover:text-primary tracking-widest uppercase mb-12 group">
-        <span class="mr-2 group-hover:-translate-x-1 transition-transform">←</span> RETURN TO BASE
-      </a>
+      <header class="mb-16 border-b border-primary/20 pb-10">
+        <a href="/" class="inline-flex items-center text-sm font-mono text-text/60 hover:text-primary mb-8 transition-colors group">
+          <svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          // RETURN TO BASE
+        </a>
 
-      <header class="mb-12 border-b border-white/10 pb-8 relative">
-        <div class="absolute -top-10 -right-10 border-4 border-white/5 text-white/5 p-4 transform rotate-12 font-black text-6xl uppercase pointer-events-none select-none hidden md:block">
-          TOP SECRET
-        </div>
-
-        <div class="flex flex-col gap-6">
-          <div>
-            <div class="flex items-center gap-4 mb-4">
-              <span class="px-2 py-1 bg-primary/10 border border-primary/30 text-primary text-[10px] font-mono tracking-widest uppercase rounded-sm">
-                CASE ID: {project.slug.toUpperCase()}
-              </span>
-              <span class="text-neutral/50 font-mono text-xs">
-                // DATE: {safeDate}
-              </span>
-            </div>
-            
-            <h1 class="text-4xl md:text-6xl font-bold text-white tracking-tight mb-6">
-              {project.data.title}
-            </h1>
-
-            {project.data.tags && project.data.tags.length > 0 && (
-              <div class="flex flex-wrap gap-2">
-                {project.data.tags.map((tag: string) => (
-                  <span class="flex items-center px-3 py-1 bg-white/5 border border-white/10 text-xs font-mono text-neutral/80 rounded-sm">
-                    <span class="w-1 h-1 bg-primary mr-2 rounded-full"></span>
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <h1 class="text-4xl md:text-6xl font-bold text-text tracking-tight leading-tight">
+            {project.data.title}
+            <span class="text-primary">.</span>
+          </h1>
+          
+          <div class="font-mono text-sm text-primary border border-primary/30 px-3 py-1 rounded-sm bg-surface/50">
+            {formattedDate}
           </div>
-
-          {project.data.githubUrl && (
-            <div class="flex gap-4">
-              <a 
-                href={project.data.githubUrl} 
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center px-6 py-3 bg-white text-black font-bold text-sm tracking-wide hover:bg-neutral-200 transition-colors rounded-sm shadow-[0_0_15px_rgba(255,255,255,0.1)]"
-              >
-                VIEW SOURCE DATA
-                <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </a>
-            </div>
-          )}
         </div>
       </header>
 
-      {project.data.coverImage && (
-        <div class="relative mb-16 group">
-          <div class="absolute -inset-1 bg-gradient-to-r from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-md"></div>
-          <div class="relative border border-white/10 p-1 bg-surface rounded-sm overflow-hidden">
-            <img 
-              src={project.data.coverImage} 
-              alt={project.data.title} 
-              class="w-full h-auto object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
-            />
-            <div class="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_2px,3px_100%] pointer-events-none opacity-20"></div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        
+        <div class="lg:col-span-2">
+          <div class="prose prose-lg max-w-none 
+            prose-headings:text-text prose-headings:font-bold
+            prose-p:text-text/80 prose-p:leading-relaxed
+            prose-strong:text-primary
+            prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+            prose-li:text-text/80
+            prose-code:text-primary prose-code:bg-surface prose-code:px-1 prose-code:rounded
+            prose-blockquote:border-l-primary prose-blockquote:text-text/70 prose-blockquote:bg-surface/30 prose-blockquote:py-2 prose-blockquote:px-4
+            ">
+            <Content />
           </div>
-        </div>
-      )}
 
-      <article class="prose prose-invert prose-lg max-w-none prose-headings:font-bold prose-headings:text-white prose-headings:uppercase prose-headings:tracking-wider prose-p:text-neutral/80 prose-p:leading-relaxed prose-li:text-neutral/80 prose-strong:text-primary prose-a:text-white prose-a:underline hover:prose-a:text-primary transition-colors">
-        <Content />
-      </article>
-
-      {project.data.gallery && project.data.gallery.length > 0 && (
-        <div class="mt-20 border-t border-white/10 pt-12">
-          <h3 class="font-mono text-primary text-sm tracking-widest uppercase mb-8 flex items-center">
-            <span class="w-2 h-2 bg-primary mr-3 rounded-full animate-pulse"></span>
-            ADDITIONAL INTEL / SCREENSHOTS
-          </h3>
-          
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {project.data.gallery.map((image) => (
-              <div class="group relative overflow-hidden border border-white/10 bg-surface rounded-sm">
-                <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
-                
-                <img 
-                  src={image} 
-                  alt="Mission Evidence" 
-                  class="w-full h-auto object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                />
+          {project.data.gallery && project.data.gallery.length > 0 && (
+            <div class="mt-20 border-t border-primary/20 pt-12">
+              <h3 class="font-mono text-primary text-sm tracking-widest uppercase mb-8 flex items-center">
+                <span class="w-2 h-2 bg-primary mr-3 rounded-full animate-pulse"></span>
+                ADDITIONAL INTEL / SCREENSHOTS
+              </h3>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {project.data.gallery.map((image) => (
+                  <div class="group relative overflow-hidden border border-primary/10 bg-surface rounded-sm shadow-sm hover:shadow-lg transition-all duration-300">
+                    <div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none"></div>
+                    <img 
+                      src={image} 
+                      alt="Evidence" 
+                      class="w-full h-auto object-cover grayscale-[20%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          )}
         </div>
-      )}
 
-      <div class="mt-20 pt-10 border-t border-white/10 text-center">
-        <span class="font-mono text-xs text-neutral/30 tracking-[0.5em] uppercase">
-          // END OF FILE //
-        </span>
+
+        <aside class="space-y-8">
+          
+          <div class="bg-surface border border-primary/20 p-6 rounded-sm shadow-lg sticky top-32">
+            <h3 class="text-xs font-mono text-text/50 uppercase tracking-widest mb-6 border-b border-primary/10 pb-2">
+              Technology Arsenal
+            </h3>
+            
+            <div class="flex flex-wrap gap-2">
+              {project.data.tags.map((tag) => (
+                <span class="text-xs font-mono px-3 py-1 bg-background border border-primary/10 text-text/80 rounded-sm hover:border-primary/50 transition-colors cursor-default">
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            {project.data.githubUrl && (
+              <div class="mt-8 pt-6 border-t border-primary/10">
+                <a 
+                  href={project.data.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex items-center justify-center w-full py-3 bg-background border border-primary/30 text-text font-mono text-sm hover:bg-primary hover:text-white transition-all duration-300 group rounded-sm"
+                >
+                  <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                  </svg>
+                  ACCESS SOURCE
+                </a>
+              </div>
+            )}
+          </div>
+        </aside>
+
+      </div>
+      
+      <div class="mt-20 pt-10 border-t border-primary/10 text-center">
+        <p class="font-mono text-xs text-text/40">
+          // END OF TRANSMISSION // {project.data}
+        </p>
       </div>
 
-    </div>
+    </article>
   </main>
 </Layout>

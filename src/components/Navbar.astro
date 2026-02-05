@@ -1,0 +1,56 @@
+---
+import { navLinks } from '../config/site';
+
+const visibleLinks = navLinks.filter(link => link.active);
+---
+
+<nav class="fixed top-0 left-0 right-0 z-50 px-6 py-4">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex items-center justify-between p-4 bg-[#0F0F11]/80 backdrop-blur-md border border-white/10 rounded-sm shadow-2xl">
+      
+      <a href="#" class="text-xl font-bold text-white tracking-tighter hover:text-primary transition-colors">
+        JAWS<span class="text-primary">.</span>SYS
+      </a>
+
+      <div class="hidden md:flex items-center space-x-8">
+        {visibleLinks.map((link) => (
+          <a 
+            href={link.href} 
+            class="text-sm font-mono text-neutral/70 hover:text-white hover:tracking-widest transition-all duration-300 uppercase"
+          >
+            {link.name}
+          </a>
+        ))}
+      </div>
+
+      <button id="menu-btn" class="md:hidden text-white focus:outline-none">
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+        </svg>
+      </button>
+
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden absolute top-20 left-6 right-6 bg-[#0F0F11] border border-white/10 p-6 flex-col space-y-4 rounded-sm shadow-xl">
+      {visibleLinks.map((link) => (
+        <a 
+          href={link.href} 
+          class="block text-center font-mono text-neutral/70 hover:text-white py-2 border-b border-white/5 last:border-0"
+        >
+          {link.name}
+        </a>
+      ))}
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Simple Toggle Logic for Mobile
+  const btn = document.getElementById('menu-btn');
+  const menu = document.getElementById('mobile-menu');
+
+  btn?.addEventListener('click', () => {
+    menu?.classList.toggle('hidden');
+    menu?.classList.toggle('flex');
+  });
+</script>

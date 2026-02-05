@@ -1,0 +1,121 @@
+---
+const stack = [
+  { category: "Core", items: ["Laravel", "Python", "TypeScript", "PostgreSQL", "PHP"] },
+  { category: "Frontend", items: ["React", "Astro", "Tailwind", "GSAP", "Figma"] },
+  { category: "Intelligence", items: ["TensorFlow", "HuggingFace", "OpenCV", "PyTorch"] },
+  { category: "DevOps", items: ["Docker", "Git", "Linux", "Nginx"] }
+];
+
+// Helper to get correct icon URL
+const getIcon = (name: string) => {
+  // Map for special cases where the name doesn't match the Simple Icons slug
+  const map: Record<string, string> = {
+    "Tailwind": "tailwindcss",
+    "SQL": "database", // Using a generic database icon as 'sql' can be inconsistent
+    "C++": "cplusplus",
+    "C#": "csharp",
+    ".NET": "dotnet"
+  };
+  
+  const slug = map[name] || name.toLowerCase().replace(' ', '');
+  // Using your text color #E0D5C9 for the icons
+  return `https://cdn.simpleicons.org/${slug}/E0D5C9`;
+};
+---
+
+<section id="tech-arsenal" class="py-20 px-6 max-w-6xl mx-auto relative overflow-hidden">
+  
+  <div class="mb-12 border-b border-white/10 pb-4">
+    <span class="font-mono text-primary text-xs tracking-widest uppercase block mb-2">
+      // SYSTEM CAPABILITIES
+    </span>
+    <h2 class="text-3xl font-bold text-white">Tech Arsenal</h2>
+    <p class="text-xs text-neutral/50 font-mono mt-2">
+      [INTERACTION REQUIRED]: CLICK MODULES TO INITIALIZE DEPLOYMENT
+    </p>
+  </div>
+
+  <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
+    {stack.map((group) => (
+      <div class="bg-surface border border-white/5 p-6 rounded-sm hover:border-primary/50 transition-colors group">
+        <h3 class="text-primary font-mono text-sm uppercase mb-6 tracking-wider">
+          {group.category}
+        </h3>
+        <ul class="space-y-4">
+          {group.items.map((tech) => (
+            <li 
+              class="tech-item flex items-center text-neutral/80 hover:text-white transition-colors cursor-pointer select-none"
+              data-tech={tech}
+              data-icon={getIcon(tech)}
+            >
+              <img 
+                src={getIcon(tech)} 
+                alt={tech} 
+                class="w-5 h-5 mr-3 opacity-60 group-hover:opacity-100 transition-opacity"
+              />
+              <span class="font-mono text-sm">{tech}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+
+  <div id="rain-container" class="fixed inset-0 pointer-events-none z-50"></div>
+</section>
+
+<script>
+  import { gsap } from "gsap";
+  // ... (The rest of your existing script tag remains exactly the same) ...
+  const container = document.getElementById('rain-container');
+  const items = document.querySelectorAll('.tech-item');
+
+  const playClick = () => {
+    const audio = new AudioContext();
+    const osc = audio.createOscillator();
+    const gain = audio.createGain();
+    osc.connect(gain);
+    gain.connect(audio.destination);
+    osc.frequency.setValueAtTime(800, audio.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(100, audio.currentTime + 0.1);
+    gain.gain.setValueAtTime(0.05, audio.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audio.currentTime + 0.1);
+    osc.start();
+    osc.stop(0.1);
+  };
+
+  items.forEach(item => {
+    item.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLElement;
+      const iconUrl = target.dataset.icon;
+      if(!iconUrl) return;
+
+      playClick();
+
+      for (let i = 0; i < 20; i++) {
+        const drop = document.createElement('img');
+        drop.src = iconUrl;
+        drop.classList.add('absolute', 'w-6', 'h-6', 'opacity-80');
+        
+        const startX = Math.random() * window.innerWidth;
+        const startY = -50 - (Math.random() * 200);
+        const duration = 1 + Math.random() * 2;
+
+        drop.style.left = `${startX}px`;
+        drop.style.top = `${startY}px`;
+        
+        container?.appendChild(drop);
+
+        gsap.to(drop, {
+          y: window.innerHeight + 200,
+          rotation: Math.random() * 360,
+          duration: duration,
+          ease: "none",
+          onComplete: () => {
+            drop.remove();
+          }
+        });
+      }
+    });
+  });
+</script>

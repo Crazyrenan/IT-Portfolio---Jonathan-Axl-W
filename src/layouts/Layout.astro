@@ -1,0 +1,45 @@
+---
+// 1. Imports
+import '@fontsource/space-grotesk';
+import '@fontsource/jetbrains-mono';
+import { ClientRouter } from 'astro:transitions';
+import Navbar from '../components/Navbar.astro';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Jonathan Axl Wibowo - Full Stack Engineer" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    
+    <ClientRouter />
+  </head>
+  
+  <body class="bg-background text-text font-sans antialiased min-h-screen flex flex-col overflow-x-hidden">
+    
+    <main class="flex-grow flex flex-col relative w-full">
+      <slot />
+    </main>
+
+  </body>
+</html>
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <body class="...">
+    <Navbar /> <main class="...">
+      <slot />
+    </main>
+
+  </body>
+</html>

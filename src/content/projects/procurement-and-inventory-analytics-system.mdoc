@@ -1,0 +1,29 @@
+---
+title: Procurement & Inventory Analytics System
+date: 2025-08-01
+githubUrl: https://github.com/Crazyrenan/Laravel-Practice
+excerpt: >-
+  A high-performance analytics dashboard built with Laravel and React for monitoring real-time mining procurement and profit margins.
+---
+
+## Intelligence Engine
+
+![Profit Chart](/images/projects/procurement-and-inventory-analytics-system/profit-chart.png)
+
+High-performance SQL aggregation engine for calculating real-time profit margins across mining inventory.
+
+---
+
+## Data Architecture
+
+![Schema Diagram](/images/projects/procurement-and-inventory-analytics-system/schema-diagram.png)
+
+The system relies on a strict relational schema to ensure auditability. Every purchase action triggers a JSON-based log entry (`pembelian_logs`), creating an immutable history of vendor interactions and price changes.
+
+---
+
+## Standardization Protocols
+
+![Trait System](/images/projects/procurement-and-inventory-analytics-system/trait-system.png)
+
+To maintain API consistency across the platform, I implemented a custom `ApiValidation` trait. This ensures all endpoints return standardized JSON error responses (Status 422) without repetitive controller logic.

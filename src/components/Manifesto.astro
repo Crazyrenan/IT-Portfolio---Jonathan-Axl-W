@@ -1,0 +1,44 @@
+<section id="manifesto" class="min-h-screen flex items-center justify-center relative z-10 bg-transparent px-6">
+  <div class="max-w-4xl mx-auto text-center">
+    
+    <div class="manifesto-text space-y-12 opacity-0 translate-y-20 filter blur-sm">
+      <p class="text-xl md:text-2xl font-mono text-primary tracking-widest uppercase">
+        // IDENTITY VERIFIED
+      </p>
+      
+      <h2 class="text-4xl md:text-6xl font-bold text-white leading-tight">
+        I don't just build websites. <br />
+        <span class="text-neutral/50">I engineer intelligent systems.</span>
+      </h2>
+      
+      <p class="text-xl text-neutral/80 max-w-2xl mx-auto leading-relaxed font-mono">
+        Leveraging <span class="text-white">Laravel</span> for structure, 
+        <span class="text-white">Python</span> for logic, and 
+        <span class="text-white">AI</span> for foresight.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Animate the text when it enters the viewport
+  gsap.to(".manifesto-text", {
+    scrollTrigger: {
+      trigger: "#manifesto",
+      start: "top 75%", // Start animation when top of section hits 75% of viewport
+      end: "bottom center",
+      toggleActions: "play none none reverse",
+    },
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    duration: 1.5,
+    ease: "power3.out",
+  });
+</script>

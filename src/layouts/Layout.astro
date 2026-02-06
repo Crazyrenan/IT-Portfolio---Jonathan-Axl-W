@@ -6,6 +6,7 @@ import SpyCursor from '../components/SpyCursor';
 import Navbar from '../components/Navbar.astro';
 import TacticalOverlay from '../components/TacticalOverlay.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
+import '../styles/global.css';
 
 interface Props {
   title: string;
@@ -37,10 +38,15 @@ const { title } = Astro.props;
     </script>
   </head>
 
-  <body class="bg-background text-text font-sans antialiased min-h-screen overflow-x-hidden">
-    <TacticalOverlay /> 
+  <body class="bg-background text-text font-sans antialiased min-h-screen overflow-x-hidden relative">
+    
+    <div class="fixed inset-0 z-[50] pointer-events-none">
+        <TacticalOverlay /> 
+    </div>
 
-    <SpyCursor client:load /> 
+    <div class="fixed inset-0 z-[60] pointer-events-none">
+        <SpyCursor client:load /> 
+    </div>
 
     <div id="site-wrapper" style="opacity: 0;"> 
       <ThemeToggle />
@@ -58,7 +64,7 @@ const { title } = Astro.props;
         setTimeout(() => {
           wrapper.style.transition = "opacity 1.2s ease-in-out";
           wrapper.style.opacity = "1";
-        }, 2000); 
+        }, 500); // Reduced time for faster feedback
       }
 
       revealSite();

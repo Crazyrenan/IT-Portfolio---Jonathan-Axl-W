@@ -2,34 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 1. BASE VARIABLES (Default to Dark/Tactical Red) */
 :root {
-  --color-bg: #0F0F11;
-  --color-surface: #1A1A1D;
-  --color-primary: #E61E32;
-  --color-text: #E0D5C9;
+  /* DARK MODE (Default) */
+  --color-bg: 15 15 17;          /* Deep Charcoal */
+  --color-surface: 35 35 37;     /* Matte Gunmetal */
+  --color-primary: 209 38 54;    /* Tactical Red */
+  --color-text: 224 213 201;     /* Bone White */
 }
-
 
 html:not(.dark) {
-  --color-bg: #FDFCF8;
-  --color-surface: #F3EFE5;
-  --color-primary: #B85C68;
-  --color-text: #4A4442;
+  /* LIGHT MODE */
+  --color-bg: 253 252 248;       /* Sterile White */
+  --color-surface: 255 255 255;  /* Pure White */
+  --color-primary: 163 22 33;    /* Dark Blood Red (Better contrast) */
+  --color-text: 31 31 34;        /* Ink Black */
 }
 
-/* 3. CORE GLOBAL STYLES */
+/* APPLY COLORS */
 html, body {
-  background-color: var(--color-bg) !important;
-  color: var(--color-text) !important;
+  /* We wrap the variable in rgb() here */
+  background-color: rgb(var(--color-bg));
+  color: rgb(var(--color-text));
   transition: background-color 0.5s ease, color 0.5s ease;
 }
 
+/* KEEP YOUR OTHER STYLES BELOW */
 html:not(.dark) .tech-item img {
   filter: brightness(0.2); 
 }
 
-/* Efek Shadow pada lipatan Tactical Fold */
+/* Fix Fold Panel Shadows */
 .active .fold-panel:nth-child(1) {
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
@@ -37,8 +39,7 @@ html:not(.dark) .tech-item img {
   box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
 }
 
-/* 4. SELECTION COLORS (Tactical Touch) */
 ::selection {
-  background-color: var(--color-primary);
+  background-color: rgb(var(--color-primary));
   color: white;
 }

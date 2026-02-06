@@ -7,11 +7,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        // MAP VARIABLES HERE
-        background: 'var(--color-bg)',
-        surface: 'var(--color-surface)',
-        primary: 'var(--color-primary)',
-        text: 'var(--color-text)',
+        background: 'rgb(var(--color-bg) / <alpha-value>)',
+        surface: 'rgb(var(--color-surface) / <alpha-value>)',
+        primary: 'rgb(var(--color-primary) / <alpha-value>)',
+        text: 'rgb(var(--color-text) / <alpha-value>)',
       },
       fontFamily: {
         sans: ['"Space Grotesk"', 'sans-serif'],

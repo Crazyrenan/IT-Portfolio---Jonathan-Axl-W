@@ -1,81 +1,36 @@
 ---
-// src/components/TacticalOverlay.astro
+// TacticalOverlay.astro
+// Concept: "Silent Scope" - Minimalist Framing
 ---
-<div id="tactical-wipe" class="fixed inset-0 z-[10000] flex flex-col overflow-hidden pointer-events-auto bg-background">
-  <div class="wipe-panel bg-primary/10 w-full h-1/4"></div>
-  <div class="wipe-panel bg-primary/30 w-full h-1/4"></div>
-  <div class="wipe-panel bg-primary/60 w-full h-1/4"></div>
-  <div class="wipe-panel bg-background w-full h-1/4 border-t border-primary/20"></div>
+
+<div class="fixed inset-0 z-[40] pointer-events-none select-none overflow-hidden">
   
-  <div id="welcome-content" class="absolute inset-0 flex items-center justify-center z-[10001] opacity-0">
-    <div class="text-center px-4">
-      <div class="mb-6 flex justify-center">
-        <div class="w-24 h-24 text-primary">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z" />
-          </svg>
-        </div>
-      </div>
-      <h2 class="text-primary font-mono text-xs tracking-[0.5em] uppercase mb-2 animate-pulse">// INITIALIZING NEURAL LINK</h2>
-      <h1 class="text-4xl md:text-7xl font-bold text-text uppercase tracking-tighter">
-        Jonathan <span class="text-primary">Axl</span>
-      </h1>
-      <p class="text-text/40 font-mono text-[10px] mt-4 uppercase tracking-[0.3em]">Umbrella Corp / Neural Link Established</p>
-    </div>
+  <div class="absolute inset-0 bg-[linear-gradient(rgba(18,16,19,0)_50%,rgba(0,0,0,0.05)_50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03))] z-0 bg-[length:100%_4px,6px_100%]"></div>
+
+  <div class="absolute top-6 left-6 w-8 h-8 border-l border-t border-primary/40"></div>
+  <div class="absolute top-6 right-6 w-8 h-8 border-r border-t border-primary/40"></div>
+  <div class="absolute bottom-6 left-6 w-8 h-8 border-l border-b border-primary/40"></div>
+  <div class="absolute bottom-6 right-6 w-8 h-8 border-r border-b border-primary/40"></div>
+
+  <div class="absolute top-8 left-10 flex items-center gap-2 opacity-50">
+    <div class="w-1 h-1 bg-primary rounded-full animate-pulse"></div>
+    <span class="font-mono text-[10px] tracking-[0.2em] text-primary">REC</span>
   </div>
+
+  <div class="absolute bottom-8 right-10 opacity-30">
+    <span class="font-mono text-[10px] tracking-widest text-text">SYS.NORMAL</span>
+  </div>
+
+  <div class="absolute top-1/2 left-6 -translate-y-1/2 flex flex-col gap-8 opacity-20 hidden md:flex">
+    <div class="w-px h-2 bg-primary"></div>
+    <div class="w-px h-2 bg-primary"></div>
+    <div class="w-px h-2 bg-primary"></div>
+  </div>
+
+  <div class="absolute top-1/2 right-6 -translate-y-1/2 flex flex-col gap-8 opacity-20 hidden md:flex">
+    <div class="w-px h-2 bg-primary"></div>
+    <div class="w-px h-2 bg-primary"></div>
+    <div class="w-px h-2 bg-primary"></div>
+  </div>
+
 </div>
-
-<script>
-  import { gsap } from 'gsap';
-
-  function runTacticalWipe() {
-    const overlay = document.getElementById('tactical-wipe');
-    const panels = document.querySelectorAll('.wipe-panel');
-    const content = document.getElementById('welcome-content');
-    const siteWrapper = document.getElementById('site-wrapper');
-
-    if (!overlay || !siteWrapper) return;
-
-    // Reset awal
-    gsap.set(overlay, { display: 'flex', opacity: 1, pointerEvents: 'auto' });
-    gsap.set(panels, { xPercent: 0 });
-    gsap.set(siteWrapper, { opacity: 0, scale: 0.98 });
-
-    const tl = gsap.timeline({
-      onComplete: () => {
-        gsap.set(overlay, { display: 'none', pointerEvents: 'none' });
-      }
-    });
-
-    // 1. Tampilkan Teks Welcome (Lama: 2 detik total)
-    tl.to(content, { 
-      opacity: 1, 
-      duration: 0.8, 
-      ease: "power2.out" 
-    })
-    .to(content, { 
-      opacity: 0, 
-      duration: 0.4, 
-      delay: 1.5, // Memberikan waktu user membaca teks
-      ease: "power2.in" 
-    });
-
-    // 2. Transisi "Wipe" dan "Reveal" Site
-    // Kita jalankan SETELAH teks benar-benar hilang agar tidak tabrakan
-    tl.to(panels, {
-      xPercent: -100,
-      duration: 1.2,
-      stagger: 0.1,
-      ease: "expo.inOut"
-    }) 
-    .to(siteWrapper, {
-      opacity: 1,
-      scale: 1,
-      duration: 1,
-      ease: "power2.out"
-    }, "-=0.8"); // Site mulai muncul saat panel hampir selesai bergeser
-  }
-
-  runTacticalWipe();
-  document.addEventListener('astro:after-swap', runTacticalWipe);
-</script>

@@ -1,19 +1,25 @@
 ---
+import { getCollection } from 'astro:content'; // 1. Fetch data logic
 import Layout from '../layouts/Layout.astro';
-import Hero3D from '../components/Hero3D'; // Import the new component
+import Hero3D from '../components/Hero3D'; 
 import Manifesto from '../components/Manifesto.astro';
 import TechArsenal from '../components/TechArsenal.astro';
 import MissionLog from '../components/Missionlog.astro';
 import About from '../components/About.astro';
+import resume from '../components/ResumeAction.astro';
+import ProjectCard from '../components/ProjectCard'; 
 import NeuralDecryptor from '../components/NeuralDecryptor.tsx';
 import ContactTerminal from '../components/ContactTerminal.astro';
+import GitHubIntel from '../components/GithubIntel.tsx'; 
+
+// 4. Fetch Projects from CMS
+const projects = await getCollection('projects');
 ---
 
 <Layout title="Jonathan Axl Wibowo | Full Stack Engineer">
   <main class="relative w-full overflow-hidden">
     
     <section id="hero" class="relative h-screen w-full flex items-center justify-center overflow-hidden">
-      
       <div class="absolute inset-0 z-0 opacity-100">
         <Hero3D client:load />
       </div>
@@ -30,13 +36,28 @@ import ContactTerminal from '../components/ContactTerminal.astro';
           <span class="text-primary">Axl Wibowo</span>
         </h1>
 
-        <p class="text-lg md:text-xl font-mono text-text/60 max-w-2xl mx-auto leading-relaxed">
+        <p class="text-lg md:text-xl font-mono text-text/60 max-w-2xl mx-auto leading-relaxed mb-10">
           Full-Stack Engineering <span class="text-primary">×</span> Intelligent Data
         </p>
-      </div>
+
+        <div class="flex justify-center gap-4 pointer-events-auto">
+            <a href="/cv.pdf" download class="group relative inline-flex items-center gap-3 px-6 py-3 bg-surface/50 backdrop-blur-sm border border-white/10 hover:border-primary/50 transition-all duration-300 rounded-sm">
+              <div class="absolute inset-0 bg-primary/10 w-0 group-hover:w-full transition-all duration-300 ease-out"></div>
+              
+              <div class="relative z-10 text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M12 12.75l-3-3m3 3l3-3m-3 3V3" />
+                </svg>
+              </div>
+
+              <span class="relative z-10 font-mono text-xs tracking-widest uppercase group-hover:text-white transition-colors">
+                Download_CV
+              </span>
+            </a>
+        </div>
+        </div>
 
       <div class="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-background via-background/80 to-transparent z-20 pointer-events-none"></div>
-    
     </section>
 
     <div class="relative z-30 bg-background -mt-32">
@@ -47,6 +68,39 @@ import ContactTerminal from '../components/ContactTerminal.astro';
       </section>
 
       <About />
+
+      <section id="works" class="py-32 relative z-20">
+        <div class="container mx-auto px-6">
+          <div class="flex items-end justify-between mb-16">
+            <div>
+              <h2 class="text-4xl md:text-6xl font-bold mb-4">Selected Works</h2>
+              <div class="h-1 w-20 bg-primary"></div>
+            </div>
+            <a href="#missionlog" class="hidden md:block font-mono text-primary hover:text-white transition-colors">
+              // VIEW_ALL_MISSIONS
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {projects.map((project) => (
+              <ProjectCard 
+                client:visible
+                title={project.data.title}
+                tagline={project.data.tagline || project.data.excerpt || "Classified Project"}
+                image={project.data.coverImage || "/images/Dashboard.png"} 
+                slug={project.slug}
+                techStack={project.data.techStack || project.data.tags || []}
+              />
+            ))}
+          </div>
+      </section>
+
+      <section class="py-20 bg-background relative z-10">
+        <div class="container mx-auto px-6">
+          <GitHubIntel client:visible username="Crazyrenan" />
+        </div>
+      </section>
+
       <TechArsenal />
       <MissionLog />
       <ContactTerminal />

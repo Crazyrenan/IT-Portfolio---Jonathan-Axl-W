@@ -5,8 +5,9 @@ import { ClientRouter } from 'astro:transitions';
 import SpyCursor from '../components/SpyCursor';
 import Navbar from '../components/Navbar.astro';
 import TacticalOverlay from '../components/TacticalOverlay.astro';
-import ThemeToggle from '../components/ThemeToggle.astro';
-import '../styles/global.css';
+
+// Import Global Styles
+import '../styles/global.css'; 
 
 interface Props {
   title: string;
@@ -16,8 +17,7 @@ const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth">
-  <head>
+<html lang="en" class="scroll-smooth dark"> <head>
     <meta charset="UTF-8" />
     <meta name="description" content="Jonathan Axl Wibowo - Full Stack Engineer" />
     <meta name="viewport" content="width=device-width" />
@@ -25,31 +25,18 @@ const { title } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <ClientRouter />
-
-    <script is:inline>
-      (function() {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light') {
-          document.documentElement.classList.remove('dark');
-        } else {
-          document.documentElement.classList.add('dark');
-        }
-      })();
-    </script>
   </head>
 
-  <body class="bg-background text-text font-sans antialiased min-h-screen overflow-x-hidden relative">
+  <body class="bg-background text-text font-sans antialiased min-h-screen overflow-x-hidden relative selection:bg-primary selection:text-white">
     
     <div class="fixed inset-0 z-[50] pointer-events-none">
         <TacticalOverlay /> 
     </div>
-
     <div class="fixed inset-0 z-[60] pointer-events-none">
         <SpyCursor client:load /> 
     </div>
 
-    <div id="site-wrapper" style="opacity: 0;"> 
-      <ThemeToggle />
+   <div id="site-wrapper" class="opacity-0"> 
       <Navbar />
       <main class="flex-grow flex flex-col relative w-full">
         <slot />
@@ -60,15 +47,24 @@ const { title } = Astro.props;
       function revealSite() {
         const wrapper = document.getElementById('site-wrapper');
         if (!wrapper) return;
-        wrapper.style.opacity = "0";
-        setTimeout(() => {
-          wrapper.style.transition = "opacity 1.2s ease-in-out";
+        requestAnimationFrame(() => {
+          wrapper.style.transition = "opacity 0.3s cubic-bezier(0.2, 0, 0, 1), transform 0.3s cubic-bezier(0.2, 0, 0, 1)";
+          
           wrapper.style.opacity = "1";
-        }, 500); // Reduced time for faster feedback
+          wrapper.style.transform = "scale(1)"; // Subtle zoom-in finish
+        });
       }
 
       revealSite();
-      document.addEventListener('astro:after-swap', revealSite);
+      
+      document.addEventListener('astro:after-swap', () => {
+        const wrapper = document.getElementById('site-wrapper');
+        if(wrapper) {
+            wrapper.style.opacity = "0"; 
+            wrapper.style.transform = "scale(0.98)"; 
+            setTimeout(revealSite, 10); 
+        }
+      });
     </script>
   </body>
 </html>

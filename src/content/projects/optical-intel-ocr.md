@@ -7,7 +7,7 @@ tags:
   - Hugging Face
   - Flask
   - AI
-githubUrl: https://github.com/yourusername/ocr-bot
+githubUrl: https://github.com/Crazyrenan/ocr-PdfImageScanner
 ---
 
 ## Mission Briefing

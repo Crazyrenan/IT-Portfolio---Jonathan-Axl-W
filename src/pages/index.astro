@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Hero3D from '../components/Hero3D';
+import Hero3D from '../components/Hero3D'; // Import the new component
 import Manifesto from '../components/Manifesto.astro';
 import TechArsenal from '../components/TechArsenal.astro';
 import MissionLog from '../components/Missionlog.astro';
@@ -10,23 +10,22 @@ import ContactTerminal from '../components/ContactTerminal.astro';
 ---
 
 <Layout title="Jonathan Axl Wibowo | Full Stack Engineer">
-  
   <main class="relative w-full overflow-hidden">
     
     <section id="hero" class="relative h-screen w-full flex items-center justify-center overflow-hidden">
       
-      <div class="absolute inset-0 z-0 opacity-60">
+      <div class="absolute inset-0 z-0 opacity-100">
         <Hero3D client:load />
       </div>
 
-      <div class="relative z-10 text-center px-4">
-        <div class="inline-block mb-4 px-3 py-1 border border-primary/20 bg-surface/50 backdrop-blur-sm rounded-full">
-          <span class="font-mono text-primary text-xs tracking-[0.2em] uppercase">
+      <div class="relative z-10 text-center px-4 pointer-events-none">
+        <div class="inline-block mb-4 px-3 py-1 border border-primary/20 bg-[#0F0F11]/80 backdrop-blur-sm rounded-full pointer-events-auto">
+          <span class="font-mono text-primary text-xs tracking-[0.2em] uppercase animate-pulse">
             // System Online
           </span>
         </div>
         
-        <h1 class="text-5xl md:text-8xl font-bold tracking-tighter mb-6 text-text">
+        <h1 class="text-5xl md:text-8xl font-bold tracking-tighter mb-6 text-text drop-shadow-2xl">
           Jonathan <br class="md:hidden" />
           <span class="text-primary">Axl Wibowo</span>
         </h1>
@@ -36,15 +35,17 @@ import ContactTerminal from '../components/ContactTerminal.astro';
         </p>
       </div>
 
-      <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-background to-transparent z-20 pointer-events-none"></div>
+      <div class="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-background via-background/80 to-transparent z-20 pointer-events-none"></div>
     
     </section>
 
-    <div class="relative z-10 bg-background -mt-20">
+    <div class="relative z-30 bg-background -mt-32">
       <Manifesto />
-      <section class="py-20">
+      
+      <section class="py-20 border-y border-primary/5 bg-surface/30">
         <NeuralDecryptor client:load />
       </section>
+
       <About />
       <TechArsenal />
       <MissionLog />

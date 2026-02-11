@@ -3,9 +3,7 @@ import { Canvas, useFrame, extend } from '@react-three/fiber';
 import { shaderMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 
-// --- 1. Custom Shader Definition ---
-// This runs on the GPU. It modifies vertex positions for the "wave" effect
-// and calculates the color gradient based on height.
+
 
 const DataLoomMaterial = shaderMaterial(
   {

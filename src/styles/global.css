@@ -9,24 +9,20 @@
   --color-text: 224 213 201;     /* Bone White (#E0D5C9) */
 }
 
-/* Base Styles */
 html, body {
   background-color: rgb(var(--color-bg));
   color: rgb(var(--color-text));
 }
 
-/* Force dark filtering on images in tech stack if needed */
 .tech-item img {
   filter: brightness(0.8); 
 }
 
-/* Selection Color (The highlight when you drag mouse over text) */
 ::selection {
   background-color: rgb(var(--color-primary));
   color: white;
 }
 
-/* Scrollbar Styling */
 ::-webkit-scrollbar {
   width: 8px;
 }

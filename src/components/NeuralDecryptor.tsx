@@ -12,6 +12,7 @@ const SECRETS = [
 
 export default function NeuralDecryptor() {
   const [decrypted, setDecrypted] = useState<number[]>([]);
+  const [gameState, setGameState] = useState('locked');
 
   const handleDecrypt = (id: number) => {
     if (decrypted.includes(id)) return;

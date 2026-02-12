@@ -2,80 +2,93 @@
 import PhotoFrame from './PhotoFrame.astro';
 ---
 
-<section id="about" class="py-24 px-6 max-w-6xl mx-auto relative">
+<section id="about" class="py-24 px-6 max-w-6xl mx-auto relative overflow-hidden">
   
-  <div class="absolute -right-20 top-0 text-[10rem] font-bold text-text/5 pointer-events-none select-none font-mono leading-none hidden md:block">
+  <div class="absolute -right-20 top-0 text-[10rem] font-bold text-text/5 pointer-events-none select-none font-mono leading-none hidden md:block z-0">
     BIO
   </div>
 
   <div class="flex flex-col md:flex-row gap-16 items-center relative z-10">
     
-    <div class="flex-1 space-y-8 text-center md:text-left order-2 md:order-1">
+    <div class="flex-1 space-y-10 text-center md:text-left order-2 md:order-1">
+      
       <div>
         <span class="font-mono text-primary text-xs tracking-widest uppercase block mb-2">
-          // PERSONNEL FILE
+          // PERSONNEL FILE: 001
         </span>
-        <h2 class="text-4xl font-bold text-text">
-          About Me
+        <h2 class="text-4xl md:text-5xl font-bold text-text tracking-tight">
+          About <span class="text-primary">Me</span>
         </h2>
       </div>
 
-      <div class="space-y-6 text-lg text-neutral/80 leading-relaxed">
+      <div class="space-y-6 text-base md:text-lg text-neutral/80 leading-relaxed">
         <p>
-          I’m <strong class="text-text">Jonathan Axl Wibowo</strong>, a Full-Stack Engineer and a high-honors student at Multimedia Nusantara University (GPA 3.78). I enjoy working across the stack, with a strong focus on building reliable backend systems and creating user experiences that feel simple and intuitive.
+          I’m <strong class="text-text">Jonathan Axl Wibowo</strong>, a Full-Stack Engineer and a high-honors student at Multimedia Nusantara University. I specialize in building reliable backend systems and creating intuitive user experiences.
         </p>
         <p>
-          I like solving practical problems through code. <strong class="text-text">My experiences</strong> includes optimizing SQL queries for real-time analytics, building scalable applications, and working with AI models to tackle real-world use cases. I value clear logic, clean architecture, and solutions that actually work in production.
+          I approach code with a focus on <strong class="text-text">practicality and scalability</strong>. My experience ranges from optimizing SQL queries for real-time analytics to deploying AI models for tangible business solutions. I value clear logic, clean architecture, and software that performs under pressure.
         </p>
         <p>
-          Outside of tech, I’m interested in the science behind <strong class="text-primary">coffee processing</strong>It’s a space where precision, experimentation, and consistency matter—values that also shape how I approach software engineering.
+          Outside of tech, I’m interested in the science behind <strong class="text-primary">coffee processing</strong>. It’s a space where precision, experimentation, and consistency matter—values that deeply shape my engineering philosophy.
+        </p>
       </div>
 
-      <div class="pt-4">
-        <a href="#contact" class="inline-flex items-center px-6 py-3 bg-primary/10 border border-primary text-primary hover:bg-primary hover:text-text transition-all rounded-sm font-mono text-sm group">
-          <span>INITIATE CONTACT</span>
-          <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
+      <div class="pt-2">
+        <h3 class="text-xs font-mono text-primary/70 mb-6 flex items-center justify-center md:justify-start gap-2 uppercase tracking-widest">
+          <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+          Academic_Log
+        </h3>
+
+        <div class="relative pl-8 border-l border-white/10 ml-4 md:ml-0 text-left">
+          <div class="absolute -left-[5px] top-0 w-2.5 h-2.5 bg-background border border-primary rounded-full shadow-[0_0_10px_rgba(209,38,54,0.5)]"></div>
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-2">
+            <h4 class="text-xl font-bold text-white font-sans">Multimedia Nusantara University</h4>
+            <span class="inline-block font-mono text-[10px] text-primary bg-primary/10 border border-primary/20 px-2 py-1 rounded-sm">
+              2022 — PRESENT
+            </span>
+          </div>
+          
+          <div class="mb-5">
+            <p class="text-white/60 font-mono text-sm">Bachelor of Information Systems</p>
+          </div>
+
+          <div class="inline-flex items-center gap-6 bg-surface border border-white/10 p-4 rounded-sm relative overflow-hidden group hover:border-primary/30 transition-colors">
+            <div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-primary/50"></div>
+
+            <div class="text-center px-2 border-r border-white/10">
+              <span class="block text-[10px] text-white/40 font-mono uppercase tracking-wider">GPA Score</span>
+              <span class="text-2xl font-bold text-primary font-mono">3.50</span>
+            </div>
+            
+            <div class="flex-1 min-w-[120px]">
+              <div class="flex justify-between text-[10px] text-white/40 font-mono uppercase mb-1.5">
+                <span>Completion</span>
+                <span>94%</span>
+              </div>
+              <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                <div class="h-full bg-primary w-[94%] shadow-[0_0_10px_rgba(209,38,54,0.8)]"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-8">
+        <a href="#contact" class="inline-flex items-center px-8 py-4 bg-primary/10 border border-primary/50 text-primary hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 rounded-sm font-mono text-sm tracking-widest group relative overflow-hidden">
+          <span class="relative z-10 flex items-center">
+            INITIATE_CONTACT
+            <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </span>
+          <div class="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-0"></div>
         </a>
       </div>
+
     </div>
 
-    <div class="mt-12 border-t border-white/5 pt-8">
-  <h3 class="text-sm font-mono text-primary mb-6 flex items-center gap-2">
-    <span class="w-2 h-2 bg-primary"></span>
-    ACADEMIC_LOG
-  </h3>
-
-  <div class="relative pl-8 border-l border-white/10">
-    <div class="absolute -left-[5px] top-0 w-2.5 h-2.5 bg-background border border-primary rounded-full"></div>
-    
-    <div class="flex flex-col md:flex-row md:items-center justify-between mb-2">
-      <h4 class="text-xl font-bold text-white font-sans">Multimedia Nusantara University</h4>
-      <span class="font-mono text-xs text-primary/80 border border-primary/20 px-2 py-1 rounded-full">
-        2022 — Present
-      </span>
-    </div>
-    
-    <div class="mb-4">
-      <p class="text-white/60 font-mono text-sm">Bachelor of Information Systems</p>
-    </div>
-
-    <div class="inline-flex items-center gap-4 bg-surface/50 border border-white/5 p-3 pr-6 rounded-sm">
-      <div class="text-center px-3 border-r border-white/10">
-        <span class="block text-[10px] text-white/40 font-mono uppercase">Performance</span>
-        <span class="text-lg font-bold text-primary">3.78</span>
-      </div>
-      <div>
-        <span class="block text-[10px] text-white/40 font-mono uppercase mb-1">Status</span>
-        <div class="h-1.5 w-24 bg-white/10 rounded-full overflow-hidden">
-          <div class="h-full bg-primary w-[94%]"></div> </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-    <div class="flex-1 flex justify-center order-1 md:order-2">
+    <div class="flex-1 flex justify-center order-1 md:order-2 w-full md:w-auto">
       <PhotoFrame />
     </div>
 

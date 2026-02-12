@@ -1,0 +1,46 @@
+---
+title: Optical Intel & Logistics Net
+date: 2025-09-23
+tags:
+  - Laravel
+  - Telegram API
+  - OCR
+  - MySQL
+  - PHP
+coverImage: /images/projects/optical-intel-and-logistics-net/coverImage.png
+gallery:
+  - /images/projects/optical-intel-and-logistics-net/gallery/0.png
+  - /images/projects/optical-intel-and-logistics-net/gallery/1.png
+  - /images/projects/optical-intel-and-logistics-net/gallery/2.png
+githubUrl: https://github.com/Crazyrenan/telegram-OCR-Service-Web
+excerpt: >-
+  Sistem manajemen logistik terintegrasi yang menggabungkan OCR untuk
+  digitalisasi dokumen dan Bot Telegram untuk laporan intelijen harian otomatis.
+---
+\
+Mission Briefing // Deskripsi Sistem\
+\
+Proyek ini menjembatani kesenjangan antara dokumen fisik dan database digital. Sistem ini tidak hanya mencatat transaksi pembelian (*Purchase Requests*) tetapi juga mendigitalisasi bukti fisik menggunakan teknologi OCR dan mengirimkan laporan situasi (*SITREP*) harian langsung ke perangkat seluler manajemen melalui Telegram.\
+\
+Tactical Capabilities // Fitur Utama\
+
+1. **Automated Intelligence Briefing (Telegram Bot)**\
+   \* Sistem secara otonom mengirimkan ringkasan harian (*Daily Briefing*) dan laporan bulanan ke kanal Telegram yang aman.\
+   \* *Code Reference:* `app/Console/Commands/SendDailyBriefing.php` & `app/Traits/NotifiesViaTelegram.php`\
+1. **Optical Character Recognition (OCR) Engine**\
+   \* Modul pemrosesan citra yang mengekstrak teks dari dokumen fisik (faktur/surat jalan) untuk mempercepat input data dan pencarian arsip.\
+   \* *Code Reference:* `app/Http/Controllers/OcrController.php` & `app/Http/Controllers/OcrSearchController.php`\
+1. **Secure Verification Protocol**\
+   \* Mekanisme verifikasi pengguna yang terintegrasi dengan Telegram untuk memastikan otorisasi akses yang aman.\
+   \* *Code Reference:* `app/Http/Controllers/VerificationController.php`\
+1. **Logistics & Vendor Command Center**\
+   \* Manajemen terpusat untuk *Purchase Requests* (PR), data vendor, dan inventaris barang dengan pelacakan status *real-time*.\
+   \* *Code Reference:* `app/Http/Controllers/PurchaseRequestController.php`\
+   \
+   Tech Stack Deployment\
+   \
+   \* **Core Framework:** Laravel 11 (PHP)\
+   \* **Comms Link:** Telegram Bot API (Webhooks & Polling)\
+   \* **Database:** MySQL (Relational Data Structure)\
+   \* **Frontend:** Blade Templates + Tailwind CSS\
+   \* **Automation:** Laravel Scheduler (Cron Jobs)EndFragment\

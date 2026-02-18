@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 
+
 const projects = defineCollection({
   type: 'content',
   schema: z.object({
@@ -15,5 +16,22 @@ const projects = defineCollection({
     gallery: z.array(z.string()).optional().default([])
   }),
 });
+const status = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    published: z.boolean().default(true),        
+    status: z.string(),
+    githubUrl: z.string().url().optional(),
+    progress: z.number().optional(),        
+    description: z.string().optional(),      
+    tech: z.array(z.string()),  
+    lastUpdate: z.string().or(z.date()), 
+  }),
+});
 
-export const collections = { projects };
+export const collections = { 
+  projects, 
+  status    
+};
+

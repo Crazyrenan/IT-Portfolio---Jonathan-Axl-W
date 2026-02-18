@@ -13,14 +13,15 @@ interface Activity {
 }
 
 export default function GitHubIntel({ username }: Props) {
+  // THEME: Tactical Red Scale
   const theme = {
     light: ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39'],
     dark: [
-      '#1A1A1D', // Level 0: Empty (Matte Gunmetal)
-      '#5C1823', // Level 1: Visible Dark Red (Was #3f1016 - too dark!)
-      '#8A1C2E', // Level 2: Mid Red
-      '#C42438', // Level 3: Bright Red
-      '#FF2E44', // Level 4: Neon/Active Red (Highest Intensity)
+      '#1A1A1D', // Level 0: Background match
+      '#4A121B', // Level 1: Subtle Red
+      '#7D1A29', // Level 2: Visible Red
+      '#B02236', // Level 3: Bright Red
+      '#FF2E44', // Level 4: Neon Active
     ],
   };
 
@@ -46,6 +47,7 @@ export default function GitHubIntel({ username }: Props) {
         transition={{ duration: 0.8 }}
         className="bg-surface/30 border border-white/5 p-6 rounded-sm relative group overflow-hidden"
       >
+        {/* Tactical Corners */}
         <div className="absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 border-primary/50" />
         <div className="absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 border-primary/50" />
 
@@ -68,6 +70,7 @@ export default function GitHubIntel({ username }: Props) {
           />
         </div>
         
+        {/* Hover Glow */}
         <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       </motion.div>
     </div>

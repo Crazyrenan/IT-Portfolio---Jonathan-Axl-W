@@ -14,7 +14,6 @@ export default config({
         title: fields.slug({ name: { label: 'Mission Title' } }),
         date: fields.date({ label: 'Date', validation: { isRequired: true } }),
         
-        // Tags Field (This one is correct)
         tags: fields.array(
           fields.text({ label: 'Tech Stack' }), 
           {
@@ -29,7 +28,6 @@ export default config({
           publicPath: '/images/projects/',
         }),
 
-        // --- FIXED GALLERY SECTION ---
         gallery: fields.array(
             fields.image({
                 label: 'Gallery Image',
@@ -38,11 +36,9 @@ export default config({
             }),
             {
                 label: 'Mission Gallery',
-                // FIX: Use () => 'String' instead of just 'String'
                 itemLabel: (props) => 'Evidence Photo', 
             }
         ),
-        // -----------------------------
         
         githubUrl: fields.url({ label: 'GitHub Source URL' }),
         excerpt: fields.text({ label: 'Mission Brief (Excerpt)', multiline: true }),
@@ -56,6 +52,33 @@ export default config({
             directory: 'public/images/projects',
             publicPath: '/images/projects/',
           },
+        }),
+      },
+    }),
+
+   status: collection({
+      label: 'Active Mission',
+      slugField: 'title',
+      path: 'src/content/status/*',
+      format: { contentField: 'content' },
+      schema: {
+        title: fields.slug({ name: { label: 'Project Name' } }),
+        status: fields.text({ label: 'Current Phase' }),
+        githubUrl: fields.url({ 
+          label: 'GitHub Repository URL (Optional)',
+          description: 'Link ke repo project yang sedang dikerjakan'
+        }),
+        tech: fields.array(
+          fields.text({ label: 'Tech Item' }),
+          {
+            label: 'Tech Stack Used',
+            itemLabel: (props) => props.value,
+          }
+        ),
+        lastUpdate: fields.date({ label: 'Last Log Date' }),
+        content: fields.document({ 
+          label: 'Short Description',
+          formatting: true 
         }),
       },
     }),

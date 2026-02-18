@@ -9,6 +9,7 @@ import About from '../components/About.astro';
 import NeuralDecryptor from '../components/NeuralDecryptor.tsx';
 import ContactTerminal from '../components/ContactTerminal.astro';
 import GitHubIntel from '../components/GithubIntel.tsx'; 
+import ActiveMission from '../components/ActiveMission.astro';
 
 // 4. Fetch Projects from CMS
 const projects = await getCollection('projects');
@@ -61,6 +62,17 @@ const projects = await getCollection('projects');
     <div class="relative z-30 bg-background -mt-32">
       <Manifesto />
       
+      <section class="py-20 border-y border-primary/5 bg-surface/30">
+        
+        <div class="mb-16">
+           <div class="container mx-auto px-6 mb-4">
+              <h2 class="text-sm font-mono text-primary/50 tracking-[0.2em] uppercase">
+                // ACTIVE_OPERATIONS_FEED
+              </h2>
+           </div>
+           <ActiveMission />
+        </div>
+        
       <section class="py-20 border-y border-primary/5 bg-surface/30">
         <NeuralDecryptor client:load />
       </section>

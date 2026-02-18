@@ -1,5 +1,4 @@
 import React, { type ReactElement } from 'react';
-// FIX 1: Use Named Import (Curly Braces) as the original error suggested
 import { GitHubCalendar } from 'react-github-calendar';
 import { motion } from 'framer-motion';
 
@@ -7,7 +6,6 @@ interface Props {
   username: string;
 }
 
-// Interface for the data inside the calendar blocks
 interface Activity {
   date: string;
   count: number;
@@ -15,7 +13,6 @@ interface Activity {
 }
 
 export default function GitHubIntel({ username }: Props) {
-  // THEME: "Ada Wong" Tactical Red Scale
   const theme = {
     light: ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39'],
     dark: [
@@ -42,7 +39,6 @@ export default function GitHubIntel({ username }: Props) {
         </div>
       </div>
 
-      {/* Calendar Container */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -50,11 +46,9 @@ export default function GitHubIntel({ username }: Props) {
         transition={{ duration: 0.8 }}
         className="bg-surface/30 border border-white/5 p-6 rounded-sm relative group overflow-hidden"
       >
-        {/* Tactical Corners */}
         <div className="absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 border-primary/50" />
         <div className="absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 border-primary/50" />
 
-        {/* The Graph */}
         <div className="flex justify-center font-mono text-sm overflow-x-auto">
           <GitHubCalendar 
             username={username} 
@@ -74,7 +68,6 @@ export default function GitHubIntel({ username }: Props) {
           />
         </div>
         
-        {/* Hover Glow */}
         <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       </motion.div>
     </div>

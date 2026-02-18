@@ -63,6 +63,11 @@ export default config({
       format: { contentField: 'content' },
       schema: {
         title: fields.slug({ name: { label: 'Project Name' } }),
+        published: fields.checkbox({
+          label: 'Display on Website',
+          description: 'Nonaktifkan jika project sudah selesai atau ingin disembunyikan',
+          defaultValue: true,
+        }),
         status: fields.text({ label: 'Current Phase' }),
         githubUrl: fields.url({ 
           label: 'GitHub Repository URL (Optional)',

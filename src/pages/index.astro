@@ -12,8 +12,13 @@ import GitHubIntel from '../components/GithubIntel.tsx';
 import ActiveMission from '../components/ActiveMission.astro';
 import TacticalCard from '../components/TacticalCard.tsx';
 
-// Fetch Projects from CMS
-const projects = await getCollection('projects');
+// Fetch Projects from CMS & Sort by Date (Newest first)
+const allProjects = await getCollection('projects');
+const projects = allProjects.sort((a, b) => {
+  const dateA = a.data.date ? new Date(a.data.date).valueOf() : 0;
+  const dateB = b.data.date ? new Date(b.data.date).valueOf() : 0;
+  return dateB - dateA;
+});
 ---
 
 <Layout title="Jonathan Axl Wibowo | Full Stack Engineer">

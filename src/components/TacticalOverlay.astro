@@ -3,32 +3,34 @@
 
 <div class="fixed inset-0 z-[40] pointer-events-none select-none overflow-hidden">
   
-  <div class="absolute inset-0 bg-[linear-gradient(rgba(18,16,19,0)_50%,rgba(0,0,0,0.05)_50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03))] z-0 bg-[length:100%_4px,6px_100%]"></div>
+  <!-- Subtle Scanline Texture -->
+  <div class="absolute inset-0 bg-[linear-gradient(rgba(15,15,17,0)_50%,rgba(0,0,0,0.15)_50%),linear-gradient(90deg,rgba(209,38,54,0.02),rgba(104,24,38,0.01),rgba(209,38,54,0.02))] z-0 bg-[length:100%_4px,6px_100%]"></div>
 
-  <div class="absolute top-6 left-6 w-8 h-8 border-l border-t border-primary/40"></div>
-  <div class="absolute top-6 right-6 w-8 h-8 border-r border-t border-primary/40"></div>
-  <div class="absolute bottom-6 left-6 w-8 h-8 border-l border-b border-primary/40"></div>
-  <div class="absolute bottom-6 right-6 w-8 h-8 border-r border-b border-primary/40"></div>
+  <!-- Outer HUD Corner Crosshairs -->
+  <div class="absolute top-6 left-6 w-8 h-8 border-l-2 border-t-2 border-[#D12636]/30"></div>
+  <div class="absolute top-6 right-6 w-8 h-8 border-r-2 border-t-2 border-[#D12636]/30"></div>
+  <div class="absolute bottom-6 left-6 w-8 h-8 border-l-2 border-b-2 border-[#D12636]/30"></div>
+  <div class="absolute bottom-6 right-6 w-8 h-8 border-r-2 border-b-2 border-[#D12636]/30"></div>
 
-  <div class="absolute top-8 left-10 flex items-center gap-2 opacity-50">
-    <div class="w-1 h-1 bg-primary rounded-full animate-pulse"></div>
-    <span class="font-mono text-[10px] tracking-[0.2em] text-primary">REC</span>
+  <div class="absolute top-8 left-10 flex items-center gap-2 opacity-60">
+    <div class="w-1.5 h-1.5 bg-[#D12636] rounded-full animate-pulse shadow-[0_0_6px_#D12636]"></div>
+    <span class="font-mono text-[10px] tracking-[0.2em] text-[#D12636] font-bold">REC // LIVE</span>
   </div>
 
-  <div class="absolute bottom-8 right-10 opacity-30">
-    <span class="font-mono text-[10px] tracking-widest text-text">SYS.NORMAL</span>
+  <div class="absolute bottom-8 right-10 opacity-40">
+    <span class="font-mono text-[10px] tracking-widest text-[#E0D5C9]">ADA_SYS // 0x24</span>
   </div>
 
-  <div class="absolute top-1/2 left-6 -translate-y-1/2 flex flex-col gap-8 opacity-20 hidden md:flex">
-    <div class="w-px h-2 bg-primary"></div>
-    <div class="w-px h-2 bg-primary"></div>
-    <div class="w-px h-2 bg-primary"></div>
+  <div class="absolute top-1/2 left-6 -translate-y-1/2 flex flex-col gap-8 opacity-30 hidden md:flex">
+    <div class="w-px h-2 bg-[#D12636]"></div>
+    <div class="w-px h-2 bg-[#D12636]"></div>
+    <div class="w-px h-2 bg-[#D12636]"></div>
   </div>
 
-  <div class="absolute top-1/2 right-6 -translate-y-1/2 flex flex-col gap-8 opacity-20 hidden md:flex">
-    <div class="w-px h-2 bg-primary"></div>
-    <div class="w-px h-2 bg-primary"></div>
-    <div class="w-px h-2 bg-primary"></div>
+  <div class="absolute top-1/2 right-6 -translate-y-1/2 flex flex-col gap-8 opacity-30 hidden md:flex">
+    <div class="w-px h-2 bg-[#D12636]"></div>
+    <div class="w-px h-2 bg-[#D12636]"></div>
+    <div class="w-px h-2 bg-[#D12636]"></div>
   </div>
 
 </div>

@@ -5,6 +5,7 @@ import { ClientRouter } from 'astro:transitions';
 import SpyCursor from '../components/SpyCursor';
 import Navbar from '../components/Navbar.astro';
 import TacticalOverlay from '../components/TacticalOverlay.astro';
+import TacticalCanvas from '../components/TacticalCanvas';
 
 // Import Global Styles
 import '../styles/global.css'; 
@@ -27,16 +28,19 @@ const { title } = Astro.props;
     <ClientRouter />
   </head>
 
-  <body class="bg-background text-text font-sans antialiased min-h-screen overflow-x-hidden relative selection:bg-primary selection:text-white">
+  <body class="bg-[#0F0F11] text-[#E0D5C9] font-sans antialiased min-h-screen overflow-x-hidden relative selection:bg-[#D12636] selection:text-[#0F0F11]">
     
-    <div class="fixed inset-0 z-[50] pointer-events-none">
+    <!-- Ambient Semi-3D Web3 Canvas Layer -->
+    <TacticalCanvas client:idle />
+
+    <div class="fixed inset-0 z-[40] pointer-events-none">
         <TacticalOverlay /> 
     </div>
     <div class="fixed inset-0 z-[60] pointer-events-none">
         <SpyCursor client:load /> 
     </div>
 
-   <div id="site-wrapper" class="opacity-0"> 
+   <div id="site-wrapper" class="relative z-10 opacity-0"> 
       <Navbar />
       <main class="flex-grow flex flex-col relative w-full">
         <slot />

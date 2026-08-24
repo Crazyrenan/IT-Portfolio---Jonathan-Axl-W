@@ -54,11 +54,29 @@ export default function SpyCursor() {
   // 3. Animation for "Locking On"
   useEffect(() => {
     if (isHovering) {
-      gsap.to(ringRef.current, { scale: 1.5, borderColor: '#681826', opacity: 1 }); // Red Brand Color
-      gsap.to(cursorRef.current, { backgroundColor: '#681826' });
+      gsap.to(ringRef.current, { 
+        scale: 1.6, 
+        borderColor: '#D12636', 
+        opacity: 1,
+        duration: 0.2
+      });
+      gsap.to(cursorRef.current, { 
+        backgroundColor: '#D12636',
+        scale: 1.5,
+        duration: 0.2
+      });
     } else {
-      gsap.to(ringRef.current, { scale: 1, borderColor: '#ffffff', opacity: 0.5 });
-      gsap.to(cursorRef.current, { backgroundColor: '#ffffff' });
+      gsap.to(ringRef.current, { 
+        scale: 1, 
+        borderColor: '#E0D5C9', 
+        opacity: 0.4,
+        duration: 0.2
+      });
+      gsap.to(cursorRef.current, { 
+        backgroundColor: '#E0D5C9',
+        scale: 1,
+        duration: 0.2
+      });
     }
   }, [isHovering]);
 
@@ -72,17 +90,17 @@ export default function SpyCursor() {
       {/* The Center Dot */}
       <div 
         ref={cursorRef} 
-        className="spy-cursor fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 mix-blend-difference"
+        className="spy-cursor fixed top-0 left-0 w-2 h-2 bg-[#E0D5C9] rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 shadow-[0_0_6px_rgba(209,38,54,0.6)]"
       />
 
       {/* The Scanning Ring */}
       <div 
         ref={ringRef} 
-        className="spy-cursor fixed top-0 left-0 w-8 h-8 border border-white/50 rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 transition-colors duration-300"
+        className="spy-cursor fixed top-0 left-0 w-8 h-8 border border-[#E0D5C9]/40 rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 transition-colors duration-300"
       >
         {/* The Crosshair Lines */}
-        <div className={`absolute top-1/2 left-0 w-full h-[1px] bg-current transform -translate-y-1/2 ${isHovering ? 'opacity-100' : 'opacity-0'}`} />
-        <div className={`absolute top-0 left-1/2 w-[1px] h-full bg-current transform -translate-x-1/2 ${isHovering ? 'opacity-100' : 'opacity-0'}`} />
+        <div className={`absolute top-1/2 left-0 w-full h-[1px] bg-[#D12636] transform -translate-y-1/2 transition-opacity duration-200 ${isHovering ? 'opacity-100' : 'opacity-0'}`} />
+        <div className={`absolute top-0 left-1/2 w-[1px] h-full bg-[#D12636] transform -translate-x-1/2 transition-opacity duration-200 ${isHovering ? 'opacity-100' : 'opacity-0'}`} />
       </div>
     </>
   );

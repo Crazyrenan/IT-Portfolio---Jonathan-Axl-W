@@ -25,48 +25,54 @@ const history = [
 ];
 ---
 
-<section id="experience" class="py-20 relative border-t border-white/5">
-  <div class="container mx-auto px-6">
+<section id="experience" class="py-24 relative border-t border-[#681826]/20 bg-[#0F0F11]/50">
+  <div class="container mx-auto px-6 max-w-6xl">
     
-    <div class="flex items-end gap-4 mb-16">
-      <h2 class="text-4xl md:text-6xl font-bold text-white">
-        Work <span class="text-primary">Experience</span>
-      </h2>
-      <span class="font-mono text-primary/50 text-sm mb-2">// SERVICE_RECORD</span>
+    <div class="flex flex-col sm:flex-row sm:items-end gap-3 mb-16 border-b border-[#681826]/30 pb-6">
+      <div>
+        <span class="font-mono text-[#D12636] text-xs tracking-widest uppercase block mb-2">
+          // SERVICE_RECORD
+        </span>
+        <h2 class="text-4xl md:text-5xl font-bold text-[#E0D5C9]">
+          Work <span class="text-[#D12636]">Experience</span>
+        </h2>
+      </div>
+      <span class="font-mono text-[#E0D5C9]/40 text-xs sm:ml-auto">DEPLOYMENT_HISTORY</span>
     </div>
 
     <div class="relative space-y-12 pl-4 md:pl-0">
-      <div class="absolute left-4 top-0 bottom-0 w-px bg-white/10 hidden md:block md:left-1/2"></div>
+      <div class="absolute left-4 top-0 bottom-0 w-px bg-[#681826]/40 hidden md:block md:left-1/2"></div>
 
       {history.map((item, index) => (
         <div class={`relative flex flex-col md:flex-row gap-8 ${index % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
           
-          <div class="absolute left-4 md:left-1/2 w-3 h-3 bg-primary rounded-full border-4 border-background transform -translate-x-1/2 mt-1.5 z-10 hidden md:block"></div>
+          <div class="absolute left-4 md:left-1/2 w-3 h-3 bg-[#D12636] rounded-full border-2 border-[#0F0F11] transform -translate-x-1/2 mt-2 z-10 hidden md:block shadow-[0_0_10px_rgba(209,38,54,0.8)]"></div>
 
           <div class="md:w-1/2">
-            <div class={`bg-surface/30 p-6 border border-white/5 hover:border-primary/30 transition-colors duration-300 relative group ${index % 2 === 0 ? 'md:mr-8' : 'md:ml-8'}`}>
+            <div class={`bg-[#1B1B1E]/80 backdrop-blur-md p-6 md:p-7 border border-[#681826]/40 hover:border-[#D12636] transition-all duration-300 rounded-xs relative group shadow-lg hover:shadow-[0_0_25px_rgba(104,24,38,0.2)] ${index % 2 === 0 ? 'md:mr-8' : 'md:ml-8'}`}>
               
-              {/* Decorative Corner */}
-              <div class="absolute top-0 right-0 w-4 h-4 border-t border-r border-primary/20 group-hover:border-primary transition-colors"></div>
+              {/* Decorative Corner Reticles */}
+              <div class="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#D12636]/40 group-hover:border-[#D12636] transition-colors"></div>
+              <div class="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#D12636]/40 group-hover:border-[#D12636] transition-colors"></div>
 
-              <div class="flex justify-between items-start mb-2">
-                <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">
+              <div class="flex justify-between items-start mb-2 gap-3 flex-wrap">
+                <h3 class="text-xl font-bold text-[#E0D5C9] group-hover:text-[#D12636] transition-colors">
                   {item.role}
                 </h3>
-                <span class="font-mono text-xs text-primary/80 bg-primary/10 px-2 py-1 rounded-sm">
+                <span class="font-mono text-xs text-[#D12636] bg-[#681826]/20 border border-[#681826]/40 px-2.5 py-0.5 rounded-xs">
                   {item.period}
                 </span>
               </div>
               
-              <h4 class="text-sm font-mono text-white/50 mb-4 uppercase tracking-wider">
+              <h4 class="text-xs font-mono text-[#E0D5C9]/50 mb-4 uppercase tracking-wider">
                 @ {item.company}
               </h4>
 
-              <ul class="space-y-2">
+              <ul class="space-y-2.5">
                 {item.details.map(detail => (
-                  <li class="flex items-start gap-2 text-sm text-text/70">
-                    <span class="mt-1.5 w-1 h-1 bg-primary/50 rounded-full"></span>
-                    {detail}
+                  <li class="flex items-start gap-2.5 text-sm text-[#E0D5C9]/75 font-mono">
+                    <span class="mt-1.5 w-1.5 h-1.5 bg-[#D12636] rounded-full shrink-0 shadow-[0_0_5px_#D12636]"></span>
+                    <span>{detail}</span>
                   </li>
                 ))}
               </ul>

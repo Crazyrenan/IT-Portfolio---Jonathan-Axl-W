@@ -9,8 +9,16 @@ export default {
       colors: {
         background: 'rgb(var(--color-bg) / <alpha-value>)',
         surface: 'rgb(var(--color-surface) / <alpha-value>)',
+        crimson: 'rgb(var(--color-crimson) / <alpha-value>)',
         primary: 'rgb(var(--color-primary) / <alpha-value>)',
         text: 'rgb(var(--color-text) / <alpha-value>)',
+        ada: {
+          bg: '#0F0F11',
+          surface: '#1B1B1E',
+          crimson: '#681826',
+          red: '#D12636',
+          bone: '#E0D5C9',
+        },
       },
       fontFamily: {
         sans: ['"Space Grotesk"', 'sans-serif'],

@@ -5,6 +5,7 @@ dist/
 
 # dependencies
 node_modules/
+.antigravity/
 
 # logs
 npm-debug.log*

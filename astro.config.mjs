@@ -7,8 +7,6 @@ import markdoc from '@astrojs/markdoc';
 export default defineConfig({
   integrations: [
     react({
-      // ADD THIS LINE: Disables the "Double Loop" in dev
-      include: ['**/react/*'], 
       experimentalReactChildren: true,
     }), 
     tailwind(), 

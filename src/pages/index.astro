@@ -105,11 +105,8 @@ const projects = allProjects.sort((a, b) => {
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           {projects.map((project, index) => (
-            <TacticalCard client:visible depth={25} className="!p-0 h-full flex flex-col justify-between">
-              <a 
-                href={`/projects/${project.slug}`} 
-                class="flex flex-col justify-between h-full p-6 md:p-8 group/card"
-              >
+            <TacticalCard client:only="react" depth={25} className="!p-0 h-full flex flex-col justify-between">
+              <a href={`/projects/${project.slug}`} class="flex flex-col justify-between h-full p-6 md:p-8 group/card">
                 <div>
                   <div class="flex items-center justify-between gap-4 mb-6">
                     <span class="font-mono text-xs font-bold text-[#D12636] bg-[#681826]/20 border border-[#681826]/50 px-2.5 py-1 rounded-xs">
@@ -157,10 +154,10 @@ const projects = allProjects.sort((a, b) => {
         </div>
       </section>
 
-      <!-- GitHub Open Source Intel -->
+      <!-- GitHub Open Source Intel (client:only="react" to prevent hydration mismatch) -->
       <section class="py-20 bg-[#0F0F11] relative z-10 border-y border-[#681826]/20">
         <div class="container mx-auto px-6">
-          <GitHubIntel client:visible username="Crazyrenan" />
+          <GitHubIntel client:only="react" username="Crazyrenan" />
         </div>
       </section>
 

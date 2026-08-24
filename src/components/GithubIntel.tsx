@@ -1,4 +1,4 @@
-import React, { type ReactElement } from 'react';
+import React, { useState, useEffect, type ReactElement } from 'react';
 import { GitHubCalendar } from 'react-github-calendar';
 import { motion } from 'framer-motion';
 
@@ -13,9 +13,15 @@ interface Activity {
 }
 
 export default function GitHubIntel({ username }: Props) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // THEME: Ada Wong Tactical Red Scale
   const theme = {
-    light: ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39'],
+    light: ['#1B1B1E', '#420F18', '#681826', '#A31D2D', '#D12636'],
     dark: [
       '#0F0F11', // Level 0: Deep Obsidian
       '#420F18', // Level 1: Dark Crimson
@@ -24,6 +30,16 @@ export default function GitHubIntel({ username }: Props) {
       '#D12636', // Level 4: Ada Wong Vibrant Red
     ],
   };
+
+  if (!mounted) {
+    return (
+      <div className="w-full max-w-5xl mx-auto p-4">
+        <div className="h-44 bg-[#1B1B1E]/40 border border-[#681826]/20 rounded-xs animate-pulse flex items-center justify-center font-mono text-xs text-[#E0D5C9]/40">
+          // INITIALIZING_INTEL_STREAM...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-5xl mx-auto p-4">

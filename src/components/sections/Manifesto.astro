@@ -28,14 +28,12 @@
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // FIX: Wrap in astro:page-load so it works after returning from slug pages
   document.addEventListener('astro:page-load', () => {
     gsap.to(".manifesto-text", {
       scrollTrigger: {
         trigger: "#manifesto",
-        start: "top 80%", // Moved up slightly to ensure it triggers earlier
+        start: "top 80%",
         toggleActions: "play none none reverse",
-        // Re-calculate positions to prevent "missing" elements
         onRefresh: (self) => {
           if (self.progress > 0) gsap.set(".manifesto-text", { opacity: 1, y: 0, filter: "blur(0px)" });
         }
@@ -44,7 +42,7 @@
       y: 0,
       filter: "blur(0px)",
       duration: 1.5,
-      ease: "power4.out", // Smoother exit
+      ease: "power4.out",
     });
   });
 </script>

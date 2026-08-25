@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { playSound } from '../utils/sounds';
+import { playSound } from '../../config/sounds';
 
 const SECRETS = [
   { id: 1, label: 'CODENAME', value: 'Mirae' },
   { id: 2, label: 'OPERATING BASE', value: 'INDONESIA' },
-  { id: 3, label: 'EDUCATION', value: 'UMN (GPA 3.52)' },
+  { id: 3, label: 'EDUCATION', value: 'UMN (GPA 3.50)' },
   { id: 4, label: 'SPECIALTY', value: 'FULL STACK' },
-  { id: 5, label: 'PASSION', value: 'SLEEP' }, // Personalized!
+  { id: 5, label: 'PASSION', value: 'PRECISION COFFEE & CODE' },
   { id: 6, label: 'STATUS', value: 'AVAILABLE FOR HIRE' },
 ];
 
@@ -14,7 +14,7 @@ export default function NeuralDecryptor() {
   const [decrypted, setDecrypted] = useState<number[]>([]);
   const handleDecrypt = (id: number) => {
     if (decrypted.includes(id)) return;
-    playSound('success'); // Play sound!
+    playSound('success');
     setDecrypted([...decrypted, id]);
   };
 

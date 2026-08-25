@@ -1,16 +1,16 @@
 ---
 import { getCollection } from 'astro:content'; 
 import Layout from '../layouts/Layout.astro';
-import Hero3D from '../components/Hero3D'; 
-import Manifesto from '../components/Manifesto.astro';
-import TechArsenal from '../components/TechArsenal.astro';
-import MissionLog from '../components/Missionlog.astro';
-import About from '../components/About.astro';
-import NeuralDecryptor from '../components/NeuralDecryptor.tsx';
-import ContactTerminal from '../components/ContactTerminal.astro';
-import GitHubIntel from '../components/GithubIntel.tsx'; 
-import ActiveMission from '../components/ActiveMission.astro';
-import TacticalCard from '../components/TacticalCard.tsx';
+import Hero3D from '../components/3d/Hero3D'; 
+import TacticalCard from '../components/3d/TacticalCard';
+import Manifesto from '../components/sections/Manifesto.astro';
+import ActiveMission from '../components/sections/ActiveMission.astro';
+import TechArsenal from '../components/sections/TechArsenal.astro';
+import MissionLog from '../components/sections/MissionLog.astro';
+import About from '../components/sections/About.astro';
+import ContactTerminal from '../components/sections/ContactTerminal.astro';
+import NeuralDecryptor from '../components/interactive/NeuralDecryptor';
+import GitHubIntel from '../components/interactive/GitHubIntel'; 
 
 // Fetch Projects from CMS & Sort by Date (Newest first)
 const allProjects = await getCollection('projects');
@@ -81,7 +81,7 @@ const projects = allProjects.sort((a, b) => {
       </section>
         
       <!-- Neural Decryptor -->
-      <section class="py-20 border-b border-[#681826]/20 bg-[#1B1B1E]/10">
+      <section id="neural-decryptor" class="py-20 border-b border-[#681826]/20 bg-[#1B1B1E]/10">
         <NeuralDecryptor client:load />
       </section>
 
@@ -162,7 +162,9 @@ const projects = allProjects.sort((a, b) => {
       </section>
 
       <TechArsenal />
-      <MissionLog />
+      <div id="mission-log">
+        <MissionLog />
+      </div>
       <ContactTerminal />
     </div>
 

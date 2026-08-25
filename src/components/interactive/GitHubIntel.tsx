@@ -19,15 +19,14 @@ export default function GitHubIntel({ username }: Props) {
     setMounted(true);
   }, []);
 
-  // THEME: Ada Wong Tactical Red Scale
   const theme = {
     light: ['#1B1B1E', '#420F18', '#681826', '#A31D2D', '#D12636'],
     dark: [
-      '#0F0F11', // Level 0: Deep Obsidian
-      '#420F18', // Level 1: Dark Crimson
-      '#681826', // Level 2: Ada Wong Crimson
-      '#A31D2D', // Level 3: Bright Crimson
-      '#D12636', // Level 4: Ada Wong Vibrant Red
+      '#0F0F11',
+      '#420F18',
+      '#681826',
+      '#A31D2D',
+      '#D12636',
     ],
   };
 

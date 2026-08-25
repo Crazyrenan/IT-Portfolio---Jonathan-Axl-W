@@ -20,7 +20,7 @@ export default function SpyCursor() {
         duration: 0.1,
         ease: "power2.out"
       });
-      // Ring follows with a slight delay (Spy gadget feel)
+      // Ring follows with a slight delay
       gsap.to(ring, {
         x: e.clientX,
         y: e.clientY,
@@ -83,8 +83,8 @@ export default function SpyCursor() {
   return (
     <>
       <style>{`
-        body { cursor: none; } /* Hide default cursor */
-        @media (hover: none) { body { cursor: auto; } .spy-cursor { display: none; } } /* Mobile safe */
+        body { cursor: none; }
+        @media (hover: none) { body { cursor: auto; } .spy-cursor { display: none; } }
       `}</style>
       
       {/* The Center Dot */}

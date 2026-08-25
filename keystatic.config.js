@@ -12,37 +12,32 @@ export default config({
       format: { contentField: 'content' },
       schema: {
         title: fields.slug({ name: { label: 'Mission Title' } }),
-        date: fields.date({ label: 'Date', validation: { isRequired: true } }),
-        
+        date: fields.date({ label: 'Date', validation: { isRequired: false } }),
         tags: fields.array(
-          fields.text({ label: 'Tech Stack' }), 
+          fields.text({ label: 'Tech Stack' }),
           {
             label: 'Technologies',
-            itemLabel: (props) => props.value
+            itemLabel: (props) => props.value,
           }
         ),
-
         coverImage: fields.image({
           label: 'Evidence Photo',
           directory: 'public/images/projects',
           publicPath: '/images/projects/',
         }),
-
         gallery: fields.array(
-            fields.image({
-                label: 'Gallery Image',
-                directory: 'public/images/projects',
-                publicPath: '/images/projects/',
-            }),
-            {
-                label: 'Mission Gallery',
-                itemLabel: (props) => 'Evidence Photo', 
-            }
+          fields.image({
+            label: 'Gallery Image',
+            directory: 'public/images/projects',
+            publicPath: '/images/projects/',
+          }),
+          {
+            label: 'Mission Gallery',
+            itemLabel: () => 'Evidence Photo',
+          }
         ),
-        
         githubUrl: fields.url({ label: 'GitHub Source URL' }),
         excerpt: fields.text({ label: 'Mission Brief (Excerpt)', multiline: true }),
-        
         content: fields.document({
           label: 'Full Report',
           formatting: true,
@@ -56,7 +51,7 @@ export default config({
       },
     }),
 
-   status: collection({
+    status: collection({
       label: 'Active Mission',
       slugField: 'title',
       path: 'src/content/status/*',
@@ -69,9 +64,9 @@ export default config({
           defaultValue: true,
         }),
         status: fields.text({ label: 'Current Phase' }),
-        githubUrl: fields.url({ 
+        githubUrl: fields.url({
           label: 'GitHub Repository URL (Optional)',
-          description: 'Link ke repo project yang sedang dikerjakan'
+          description: 'Link ke repo project yang sedang dikerjakan',
         }),
         tech: fields.array(
           fields.text({ label: 'Tech Item' }),
@@ -81,9 +76,9 @@ export default config({
           }
         ),
         lastUpdate: fields.date({ label: 'Last Log Date' }),
-        content: fields.document({ 
+        content: fields.document({
           label: 'Short Description',
-          formatting: true 
+          formatting: true,
         }),
       },
     }),

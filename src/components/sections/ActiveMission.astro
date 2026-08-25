@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import TacticalCard from './TacticalCard';
+import TacticalCard from '../3d/TacticalCard';
 
 const allStatus = await getCollection('status');
 const publishedStatus = allStatus.filter(mission => mission.data.published === true);
@@ -22,7 +22,7 @@ if (sortedStatus.length === 0) return null;
 
   <div class="space-y-8">
     {sortedStatus.map(async (mission) => {
-      const { title, status, tech, lastUpdate, githubUrl } = mission.data;
+      const { title, status, tech, githubUrl } = mission.data;
       const { Content } = await mission.render();
 
       return (

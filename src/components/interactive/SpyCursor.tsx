@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+﻿import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 
 export default function SpyCursor() {
@@ -90,18 +90,19 @@ export default function SpyCursor() {
       {/* The Center Dot */}
       <div 
         ref={cursorRef} 
-        className="spy-cursor fixed top-0 left-0 w-2 h-2 bg-[#E0D5C9] rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 shadow-[0_0_6px_rgba(209,38,54,0.6)]"
+        className="spy-cursor fixed top-0 left-0 w-2 h-2 bg-text rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 shadow-[0_0_6px_rgba(209,38,54,0.6)]"
       />
 
       {/* The Scanning Ring */}
       <div 
         ref={ringRef} 
-        className="spy-cursor fixed top-0 left-0 w-8 h-8 border border-[#E0D5C9]/40 rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 transition-colors duration-300"
+        className="spy-cursor fixed top-0 left-0 w-8 h-8 border border-text/40 rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 transition-colors duration-300"
       >
         {/* The Crosshair Lines */}
-        <div className={`absolute top-1/2 left-0 w-full h-[1px] bg-[#D12636] transform -translate-y-1/2 transition-opacity duration-200 ${isHovering ? 'opacity-100' : 'opacity-0'}`} />
-        <div className={`absolute top-0 left-1/2 w-[1px] h-full bg-[#D12636] transform -translate-x-1/2 transition-opacity duration-200 ${isHovering ? 'opacity-100' : 'opacity-0'}`} />
+        <div className={`absolute top-1/2 left-0 w-full h-[1px] bg-primary-glow transform -translate-y-1/2 transition-opacity duration-200 ${isHovering ? 'opacity-100' : 'opacity-0'}`} />
+        <div className={`absolute top-0 left-1/2 w-[1px] h-full bg-primary-glow transform -translate-x-1/2 transition-opacity duration-200 ${isHovering ? 'opacity-100' : 'opacity-0'}`} />
       </div>
     </>
   );
 }
+

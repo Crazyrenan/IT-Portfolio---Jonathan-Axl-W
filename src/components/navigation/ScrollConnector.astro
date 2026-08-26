@@ -1,0 +1,56 @@
+﻿---
+/**
+ * ScrollConnector
+ * A thin vertical progress rail fixed on the left side of the
+ * viewport. The crimson fill grows from top to bottom as the user
+ * scrolls. Uses a passive scroll listener so the browser never blocks paint.
+ */
+---
+
+<!-- Rail track -->
+<div
+  id="scroll-connector"
+  aria-hidden="true"
+  class="fixed left-5 top-20 bottom-5 w-px pointer-events-none z-30 hidden md:block"
+>
+  <!-- Ghost track (faint line) -->
+  <div class="absolute inset-0 opacity-30 rounded-full" style="background: rgb(var(--color-));"></div>
+
+  <!-- Filled progress bar -->
+  <div
+    id="scroll-fill"
+    class="absolute top-0 left-0 w-full rounded-full origin-top"
+    style="background: rgb(var(--color-)); box-shadow: (var(--color-)); height: 0%; will-change: height;"
+  ></div>
+
+  <!-- Trailing dot at the tip of the fill -->
+  <div
+    id="scroll-dot"
+    class="absolute left-1/2 -translate-x-1/2 w-2 h-2 rounded-full -ml-0.5"
+    style="background: rgb(var(--color-)); box-shadow: (var(--color-)); top: 0%; will-change: top;"
+  ></div>
+</div>
+
+<script>
+  function initScrollConnector() {
+    const fill = document.getElementById('scroll-fill') as HTMLElement | null;
+    const dot  = document.getElementById('scroll-dot')  as HTMLElement | null;
+    if (!fill || !dot) return;
+
+    function update() {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const pct = maxScroll > 0 ? Math.min(scrollTop / maxScroll, 1) * 100 : 0;
+      fill.style.height = `${pct}%`;
+      dot.style.top     = `${pct}%`;
+    }
+
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+  }
+
+  initScrollConnector();
+  document.addEventListener('astro:after-swap', initScrollConnector);
+</script>

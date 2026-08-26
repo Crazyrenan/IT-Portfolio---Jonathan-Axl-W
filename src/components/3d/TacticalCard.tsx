@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+﻿import React, { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 interface TacticalCardProps {
@@ -60,7 +60,7 @@ export default function TacticalCard({
         transformStyle: "preserve-3d",
         perspective: 1000
       }}
-      className={`relative group bg-[#1B1B1E]/80 backdrop-blur-xl border border-[#681826]/40 hover:border-[#D12636] rounded-xs p-6 md:p-8 transition-colors duration-500 shadow-[0_10px_35px_rgba(0,0,0,0.5)] hover:shadow-[0_0_35px_rgba(104,24,38,0.25)] overflow-hidden ${className}`}
+      className={`relative group bg-surface/80 backdrop-blur-xl border border-primary/40 hover:border-primary-glow rounded-xs p-6 md:p-8 transition-colors duration-500 shadow-[0_10px_35px_rgba(0,0,0,0.5)] hover:shadow-[0_0_35px_rgba(104,24,38,0.25)] overflow-hidden ${className}`}
     >
       {/* Dynamic Holographic Glare Follower */}
       {interactive && isHovered && (
@@ -73,13 +73,13 @@ export default function TacticalCard({
       )}
 
       {/* Tactical Corner Brackets (Ada Wong Red) */}
-      <div className="absolute top-0 left-0 w-3.5 h-3.5 border-t-2 border-l-2 border-[#D12636]/40 group-hover:border-[#D12636] transition-colors duration-300 pointer-events-none z-20" />
-      <div className="absolute top-0 right-0 w-3.5 h-3.5 border-t-2 border-r-2 border-[#D12636]/40 group-hover:border-[#D12636] transition-colors duration-300 pointer-events-none z-20" />
-      <div className="absolute bottom-0 left-0 w-3.5 h-3.5 border-b-2 border-l-2 border-[#D12636]/40 group-hover:border-[#D12636] transition-colors duration-300 pointer-events-none z-20" />
-      <div className="absolute bottom-0 right-0 w-3.5 h-3.5 border-b-2 border-r-2 border-[#D12636]/40 group-hover:border-[#D12636] transition-colors duration-300 pointer-events-none z-20" />
+      <div className="absolute top-0 left-0 w-3.5 h-3.5 border-t-2 border-l-2 border-primary-glow/40 group-hover:border-primary-glow transition-colors duration-300 pointer-events-none z-20" />
+      <div className="absolute top-0 right-0 w-3.5 h-3.5 border-t-2 border-r-2 border-primary-glow/40 group-hover:border-primary-glow transition-colors duration-300 pointer-events-none z-20" />
+      <div className="absolute bottom-0 left-0 w-3.5 h-3.5 border-b-2 border-l-2 border-primary-glow/40 group-hover:border-primary-glow transition-colors duration-300 pointer-events-none z-20" />
+      <div className="absolute bottom-0 right-0 w-3.5 h-3.5 border-b-2 border-r-2 border-primary-glow/40 group-hover:border-primary-glow transition-colors duration-300 pointer-events-none z-20" />
 
       {/* Top Accent Line */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#D12636]/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20" />
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary-glow/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20" />
 
       {/* Multi-Layer Depth Content Container */}
       <div 
@@ -91,3 +91,4 @@ export default function TacticalCard({
     </motion.div>
   );
 }
+

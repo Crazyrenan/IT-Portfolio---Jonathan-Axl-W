@@ -1,4 +1,4 @@
----
+﻿---
 interface TechItem {
   name: string;
   role: string;
@@ -100,19 +100,19 @@ const getIcon = (name: string) => {
   
   <!-- Tactical Background Grid & Ambience -->
   <div class="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
-    <div class="absolute inset-0 bg-[#0F0F11]"></div>
-    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-[#681826]/15 blur-[120px] rounded-full pointer-events-none"></div>
-    <div class="absolute bottom-10 right-10 w-[400px] h-[250px] bg-[#681826]/10 blur-[100px] rounded-full pointer-events-none"></div>
+    <div class="absolute inset-0 bg-background"></div>
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-primary/15 blur-[120px] rounded-full pointer-events-none"></div>
+    <div class="absolute bottom-10 right-10 w-[400px] h-[250px] bg-primary/10 blur-[100px] rounded-full pointer-events-none"></div>
     <div class="absolute inset-0 opacity-[0.07] bg-[radial-gradient(#E0D5C9_1px,transparent_1px)] [background-size:24px_24px]"></div>
   </div>
 
   <!-- Tactical Section Header -->
   <div class="mb-14 relative z-10">
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-[#681826]/30">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-primary/30">
       <div>
         <div class="flex items-center gap-3 mb-3">
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-xs bg-[#681826]/20 border border-[#681826]/50 text-[#D12636] font-mono text-[11px] uppercase tracking-widest">
-            <span class="w-1.5 h-1.5 rounded-full bg-[#D12636] animate-pulse"></span>
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-xs bg-primary/20 border border-primary/50 text-primary-glow font-mono text-[11px] uppercase tracking-widest">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary-glow animate-pulse"></span>
             SYS.CAPABILITIES // ARSENAL_MATRIX
           </span>
           <span class="text-white/20 font-mono text-xs hidden sm:inline">[SEC_LEVEL_04]</span>
@@ -128,11 +128,11 @@ const getIcon = (name: string) => {
       <!-- Telemetry Status Bar -->
       <div class="flex flex-col items-start md:items-end gap-1.5 font-mono text-xs">
         <div class="flex items-center gap-2 text-white/60">
-          <span class="text-[#681826] font-bold">STATUS:</span>
+          <span class="text-primary font-bold">STATUS:</span>
           <span class="text-emerald-400">OPERATIONAL [100%]</span>
         </div>
-        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-[#0F0F11] border border-[#681826]/40 rounded-xs text-[#E0D5C9]/70 text-[11px]">
-          <span class="w-2 h-2 rounded-full bg-[#681826] animate-ping"></span>
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-background border border-primary/40 rounded-xs text-text/70 text-[11px]">
+          <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
           <span>CLICK MODULE NODE TO INITIALIZE RAIN PROTOCOL</span>
         </div>
       </div>
@@ -142,35 +142,35 @@ const getIcon = (name: string) => {
   <!-- Interactive Bento Grid -->
   <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
     {stack.map((group) => (
-      <div class={`col-span-12 ${group.colSpan} relative bg-[#0F0F11]/90 backdrop-blur-md border border-[#681826]/30 p-6 md:p-7 rounded-xs group hover:border-[#681826] transition-all duration-500 hover:shadow-[0_0_30px_rgba(104,24,38,0.2)] flex flex-col justify-between overflow-hidden`}>
+      <div class={`col-span-12 ${group.colSpan} relative bg-background/90 backdrop-blur-md border border-primary/30 p-6 md:p-7 rounded-xs group hover:border-primary transition-all duration-500 hover:shadow-[0_0_30px_rgba(104,24,38,0.2)] flex flex-col justify-between overflow-hidden`}>
         
         <!-- Tactical Corner Reticles / Brackets -->
-        <div class="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#681826]/60 group-hover:border-[#D12636] transition-colors duration-300 pointer-events-none"></div>
-        <div class="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#681826]/60 group-hover:border-[#D12636] transition-colors duration-300 pointer-events-none"></div>
-        <div class="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#681826]/60 group-hover:border-[#D12636] transition-colors duration-300 pointer-events-none"></div>
-        <div class="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#681826]/60 group-hover:border-[#D12636] transition-colors duration-300 pointer-events-none"></div>
+        <div class="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary/60 group-hover:border-primary-glow transition-colors duration-300 pointer-events-none"></div>
+        <div class="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-primary/60 group-hover:border-primary-glow transition-colors duration-300 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-primary/60 group-hover:border-primary-glow transition-colors duration-300 pointer-events-none"></div>
+        <div class="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-primary/60 group-hover:border-primary-glow transition-colors duration-300 pointer-events-none"></div>
 
         <!-- Top Glow -->
-        <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#681826] to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
-        <div class="absolute -right-16 -top-16 w-36 h-36 bg-[#681826]/10 rounded-full blur-2xl group-hover:bg-[#681826]/20 transition-all duration-500 pointer-events-none"></div>
+        <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
+        <div class="absolute -right-16 -top-16 w-36 h-36 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all duration-500 pointer-events-none"></div>
 
         <!-- Card Header -->
         <div class="mb-6 relative z-10">
           <div class="flex items-center justify-between gap-2 mb-2">
             <div class="flex items-center gap-2">
-              <span class="font-mono text-[10px] font-bold text-[#D12636] bg-[#681826]/20 border border-[#681826]/40 px-2 py-0.5 rounded-xs tracking-wider">
+              <span class="font-mono text-[10px] font-bold text-primary-glow bg-primary/20 border border-primary/40 px-2 py-0.5 rounded-xs tracking-wider">
                 {group.id}
               </span>
               <span class="font-mono text-[11px] text-white/40 tracking-wider">
                 //{group.codename}
               </span>
             </div>
-            <span class="font-mono text-[10px] text-[#E0D5C9]/50 tracking-widest uppercase">
+            <span class="font-mono text-[10px] text-text/50 tracking-widest uppercase">
               {group.badge}
             </span>
           </div>
 
-          <h3 class="text-xl md:text-2xl font-bold text-white tracking-tight group-hover:text-[#E0D5C9] transition-colors flex items-center gap-2">
+          <h3 class="text-xl md:text-2xl font-bold text-white tracking-tight group-hover:text-text transition-colors flex items-center gap-2">
             {group.category}
           </h3>
           <p class="text-xs text-white/50 font-mono mt-1 leading-relaxed">
@@ -182,7 +182,7 @@ const getIcon = (name: string) => {
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 relative z-10">
           {group.items.map((tech) => (
             <div 
-              class="tech-item relative flex items-center justify-between p-3 bg-white/[0.02] hover:bg-[#681826]/20 border border-white/5 hover:border-[#681826]/70 rounded-xs transition-all duration-300 cursor-pointer select-none group/item active:scale-[0.98]"
+              class="tech-item relative flex items-center justify-between p-3 bg-white/[0.02] hover:bg-primary/20 border border-white/5 hover:border-primary/70 rounded-xs transition-all duration-300 cursor-pointer select-none group/item active:scale-[0.98]"
               data-tech={tech.name}
               data-icon={getIcon(tech.name)}
               role="button"
@@ -190,10 +190,10 @@ const getIcon = (name: string) => {
               aria-label={`Deploy ${tech.name} module`}
             >
               <!-- Hover Accent Line -->
-              <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-[#681826] opacity-0 group-hover/item:opacity-100 group-hover/item:bg-[#D12636] transition-all duration-300"></div>
+              <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-primary opacity-0 group-hover/item:opacity-100 group-hover/item:bg-primary-glow transition-all duration-300"></div>
 
               <div class="flex items-center gap-3 min-w-0">
-                <div class="w-8 h-8 rounded-xs bg-[#0F0F11] border border-white/10 group-hover/item:border-[#681826]/60 flex items-center justify-center p-1.5 transition-colors shrink-0 shadow-inner">
+                <div class="w-8 h-8 rounded-xs bg-background border border-white/10 group-hover/item:border-primary/60 flex items-center justify-center p-1.5 transition-colors shrink-0 shadow-inner">
                   <img 
                     src={getIcon(tech.name)} 
                     alt={tech.name} 
@@ -204,7 +204,7 @@ const getIcon = (name: string) => {
                 
                 <div class="min-w-0">
                   <div class="flex items-center gap-2">
-                    <span class="font-mono text-xs font-bold text-white tracking-wide group-hover/item:text-[#E0D5C9] truncate">
+                    <span class="font-mono text-xs font-bold text-white tracking-wide group-hover/item:text-text truncate">
                       {tech.name}
                     </span>
                   </div>
@@ -216,10 +216,10 @@ const getIcon = (name: string) => {
 
               <!-- Module Status & Trigger Indicator -->
               <div class="flex items-center gap-1.5 shrink-0 pl-2">
-                <span class="font-mono text-[9px] text-[#681826] group-hover/item:text-[#D12636] opacity-80 group-hover/item:opacity-100 uppercase tracking-wider hidden sm:inline">
+                <span class="font-mono text-[9px] text-primary group-hover/item:text-primary-glow opacity-80 group-hover/item:opacity-100 uppercase tracking-wider hidden sm:inline">
                   [{tech.status || "ARMED"}]
                 </span>
-                <div class="w-1.5 h-1.5 rounded-full bg-[#681826] group-hover/item:bg-[#D12636] group-hover/item:shadow-[0_0_6px_#D12636] transition-all"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-primary group-hover/item:bg-primary-glow group-hover/item:shadow-[0_0_6px_#D12636] transition-all"></div>
               </div>
             </div>
           ))}
@@ -229,7 +229,7 @@ const getIcon = (name: string) => {
         <div class="mt-5 pt-3 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-white/30">
           <span>PORT: 0x{group.id.slice(-2)}F</span>
           <span class="flex items-center gap-1">
-            <span class="inline-block w-1 h-1 bg-[#681826] rounded-full"></span>
+            <span class="inline-block w-1 h-1 bg-primary rounded-full"></span>
             SYS_LINK_READY
           </span>
         </div>
@@ -341,3 +341,4 @@ const getIcon = (name: string) => {
   initTechArsenal();
   document.addEventListener('astro:page-load', initTechArsenal);
 </script>
+

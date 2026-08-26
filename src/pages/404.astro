@@ -1,37 +1,37 @@
----
+﻿---
 import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="404 // Target Not Found | Jonathan Axl Wibowo">
   <main class="min-h-[85vh] flex items-center justify-center px-6 relative z-20 pt-24 pb-16">
     
-    <div class="max-w-xl w-full bg-[#1B1B1E]/90 backdrop-blur-2xl border border-[#681826]/50 p-8 md:p-12 rounded-xs shadow-[0_20px_50px_rgba(0,0,0,0.7)] relative group hover:border-[#D12636] transition-colors duration-500 text-center">
+    <div class="max-w-xl w-full bg-surface/90 backdrop-blur-2xl border border-primary/50 p-8 md:p-12 rounded-xs shadow-[0_20px_50px_rgba(0,0,0,0.7)] relative group hover:border-primary-glow transition-colors duration-500 text-center">
       
       <!-- Corner Reticles -->
-      <div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#D12636]/60"></div>
-      <div class="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#D12636]/60"></div>
-      <div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#D12636]/60"></div>
-      <div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#D12636]/60"></div>
+      <div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-primary-glow/60"></div>
+      <div class="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-primary-glow/60"></div>
+      <div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-primary-glow/60"></div>
+      <div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary-glow/60"></div>
 
       <!-- Top Header Code -->
-      <div class="flex items-center justify-between gap-2 mb-8 border-b border-[#681826]/30 pb-4 font-mono text-xs">
-        <span class="text-[#D12636] uppercase tracking-widest flex items-center gap-2 font-bold">
-          <span class="w-2 h-2 rounded-full bg-[#D12636] animate-ping"></span>
+      <div class="flex items-center justify-between gap-2 mb-8 border-b border-primary/30 pb-4 font-mono text-xs">
+        <span class="text-primary-glow uppercase tracking-widest flex items-center gap-2 font-bold">
+          <span class="w-2 h-2 rounded-full bg-primary-glow animate-ping"></span>
           // ERROR_SIGNAL: 404
         </span>
-        <span class="text-[#E0D5C9]/40 tracking-wider">SECTOR_UNREACHABLE</span>
+        <span class="text-text/40 tracking-wider">SECTOR_UNREACHABLE</span>
       </div>
 
       <!-- 404 Title -->
-      <h1 class="text-6xl md:text-8xl font-bold text-[#E0D5C9] font-mono tracking-tighter mb-4">
-        404<span class="text-[#D12636]">.</span>
+      <h1 class="text-6xl md:text-8xl font-bold text-text font-mono tracking-tighter mb-4">
+        404<span class="text-primary-glow">.</span>
       </h1>
 
-      <h2 class="text-xl md:text-2xl font-bold text-[#E0D5C9] mb-4">
+      <h2 class="text-xl md:text-2xl font-bold text-text mb-4">
         Tactical Signal Lost
       </h2>
 
-      <p class="text-sm md:text-base font-mono text-[#E0D5C9]/70 leading-relaxed mb-8">
+      <p class="text-sm md:text-base font-mono text-text/70 leading-relaxed mb-8">
         The requested coordinates do not correspond to any known mission archive or intelligence asset. Data stream terminated.
       </p>
 
@@ -39,7 +39,7 @@ import Layout from '../layouts/Layout.astro';
       <div class="flex justify-center">
         <a 
           href="/" 
-          class="inline-flex items-center gap-2 px-8 py-3.5 bg-[#681826]/20 border border-[#681826]/60 text-[#E0D5C9] hover:bg-[#D12636] hover:text-[#0F0F11] hover:border-[#D12636] transition-all duration-300 font-mono text-xs tracking-widest uppercase rounded-xs font-bold shadow-lg group/btn"
+          class="inline-flex items-center gap-2 px-8 py-3.5 bg-primary/20 border border-primary/60 text-text hover:bg-primary-glow hover:text-background hover:border-primary-glow transition-all duration-300 font-mono text-xs tracking-widest uppercase rounded-xs font-bold shadow-lg group/btn"
         >
           <svg class="w-4 h-4 transform group-hover/btn:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -49,7 +49,7 @@ import Layout from '../layouts/Layout.astro';
       </div>
 
       <!-- Bottom Telemetry -->
-      <div class="mt-8 pt-4 border-t border-[#681826]/20 font-mono text-[10px] text-[#E0D5C9]/40">
+      <div class="mt-8 pt-4 border-t border-primary/20 font-mono text-[10px] text-text/40">
         DIAGNOSTIC: 0xDEADBEEF // PACKET_DROP_DETECTED
       </div>
 
@@ -57,3 +57,4 @@ import Layout from '../layouts/Layout.astro';
 
   </main>
 </Layout>
+

@@ -6,6 +6,7 @@ import SpyCursor from '../components/interactive/SpyCursor';
 import Navbar from '../components/navigation/Navbar.astro';
 import TacticalOverlay from '../components/navigation/TacticalOverlay.astro';
 import TacticalCanvas from '../components/3d/TacticalCanvas';
+import ScrollConnector from '../components/navigation/ScrollConnector.astro';
 
 // Import Global Styles
 import '../styles/global.css'; 
@@ -17,8 +18,9 @@ interface Props {
 const { title } = Astro.props;
 ---
 
+
 <!doctype html>
-<html lang="en" class="scroll-smooth dark">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content="Jonathan Axl Wibowo - Full Stack Engineer" />
@@ -29,7 +31,9 @@ const { title } = Astro.props;
     <ClientRouter />
   </head>
 
-  <body class="bg-[#0F0F11] text-[#E0D5C9] font-sans antialiased min-h-screen overflow-x-hidden relative selection:bg-[#D12636] selection:text-[#0F0F11]">
+
+  <body class="font-sans antialiased min-h-screen overflow-x-hidden relative selection:bg-primary-glow selection:text-background"
+        style="background-color: rgb(var(--color-bg)); color: rgb(var(--color-text));">
     
     <!-- Ambient Semi-3D Web3 Canvas Layer -->
     <TacticalCanvas client:idle />
@@ -41,12 +45,16 @@ const { title } = Astro.props;
       <SpyCursor client:load /> 
     </div>
 
+    <!-- Scroll progress connector â€” left side rail -->
+    <ScrollConnector />
+
     <div id="site-wrapper" class="relative z-10 opacity-0"> 
       <Navbar />
       <main class="flex-grow flex flex-col relative w-full">
         <slot />
       </main>
     </div>
+
 
     <script>
       function revealSite() {

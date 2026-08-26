@@ -1,4 +1,4 @@
----
+﻿---
 import { socialLinks } from '../../config/site';
 
 const links = [
@@ -10,48 +10,48 @@ const links = [
 const currentYear = new Date().getFullYear();
 ---
 
-<footer id="contact" class="bg-[#0F0F11] border-t border-[#681826]/30 pt-20 pb-12 mt-20 font-mono transition-colors duration-500 relative z-20">
+<footer id="contact" class="bg-background border-t border-primary/30 pt-20 pb-12 mt-20 font-mono transition-colors duration-500 relative z-20">
   <div class="max-w-4xl mx-auto px-6">
     
     <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
       
       <!-- Tactical Terminal Window -->
-      <div class="bg-[#1B1B1E]/90 backdrop-blur-xl border border-[#681826]/50 rounded-xs p-6 shadow-[0_10px_35px_rgba(0,0,0,0.6)] relative group hover:border-[#D12636] transition-colors duration-500">
+      <div class="bg-surface/90 backdrop-blur-xl border border-primary/50 rounded-xs p-6 shadow-[0_10px_35px_rgba(0,0,0,0.6)] relative group hover:border-primary-glow transition-colors duration-500">
         
         {/* Tactical Corner Brackets */}
-        <div class="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#D12636]/50"></div>
-        <div class="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#D12636]/50"></div>
+        <div class="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary-glow/50"></div>
+        <div class="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-primary-glow/50"></div>
 
-        <div class="flex items-center justify-between gap-2 mb-4 border-b border-[#681826]/30 pb-3">
+        <div class="flex items-center justify-between gap-2 mb-4 border-b border-primary/30 pb-3">
           <div class="flex gap-2">
-            <div class="w-2.5 h-2.5 rounded-full bg-[#D12636]"></div>
-            <div class="w-2.5 h-2.5 rounded-full bg-[#681826]"></div>
-            <div class="w-2.5 h-2.5 rounded-full bg-[#E0D5C9]/30"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-primary-glow"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-primary"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-text/30"></div>
           </div>
-          <span class="text-[10px] text-[#E0D5C9]/40 tracking-widest uppercase">TERMINAL_LINK // 0xAF</span>
+          <span class="text-[10px] text-text/40 tracking-widest uppercase">TERMINAL_LINK // 0xAF</span>
         </div>
 
         <div class="space-y-4 text-sm font-mono">
           <div class="flex items-center">
-            <span class="text-[#D12636] font-bold mr-2">$</span>
-            <span class="text-[#E0D5C9]/80">initiate_contact_sequence</span>
+            <span class="text-primary-glow font-bold mr-2">$</span>
+            <span class="text-text/80">initiate_contact_sequence</span>
           </div>
           
-          <div class="text-[#E0D5C9]/60 pl-4 border-l border-[#681826]/40 space-y-1">
-            <p>Target: <span class="text-[#E0D5C9] font-bold">Jonathan Axl Wibowo</span></p>
+          <div class="text-text/60 pl-4 border-l border-primary/40 space-y-1">
+            <p>Target: <span class="text-text font-bold">Jonathan Axl Wibowo</span></p>
             <p>Status: <span class="text-emerald-400 font-semibold">[READY_FOR_DEPLOYMENT]</span></p>
-            <p>Location: <span class="text-[#E0D5C9]/80">Tangerang, ID (GMT+7)</span></p>
+            <p>Location: <span class="text-text/80">Tangerang, ID (GMT+7)</span></p>
           </div>
 
           <div class="flex items-center pt-2">
-             <span class="text-[#D12636] mr-2">➜</span>
-             <a href={`mailto:${socialLinks.email}`} class="text-[#E0D5C9] hover:text-[#D12636] underline decoration-[#681826] hover:decoration-[#D12636] underline-offset-4 transition-colors font-semibold">
+             <span class="text-primary-glow mr-2">âžœ</span>
+             <a href={`mailto:${socialLinks.email}`} class="text-text hover:text-primary-glow underline decoration-primary hover:decoration-primary-glow underline-offset-4 transition-colors font-semibold">
                Send_Email_Transmission()
              </a>
           </div>
 
-          <p class="text-[#E0D5C9] pt-2">
-            > <span class="inline-block w-2 h-4 bg-[#D12636] align-middle animate-pulse shadow-[0_0_8px_#D12636]"></span>
+          <p class="text-text pt-2">
+            > <span class="inline-block w-2 h-4 bg-primary-glow align-middle animate-pulse shadow-[0_0_8px_#D12636]"></span>
           </p>
         </div>
       </div>
@@ -59,8 +59,8 @@ const currentYear = new Date().getFullYear();
       <!-- Transmission Channels & System Status -->
       <div class="space-y-8">
         <div>
-          <h3 class="text-[#E0D5C9] font-bold text-base mb-4 flex items-center tracking-wide">
-            <span class="w-2 h-2 bg-[#D12636] mr-2.5 rounded-full animate-pulse"></span>
+          <h3 class="text-text font-bold text-base mb-4 flex items-center tracking-wide">
+            <span class="w-2 h-2 bg-primary-glow mr-2.5 rounded-full animate-pulse"></span>
             TRANSMISSION CHANNELS
           </h3>
           <div class="space-y-3">
@@ -69,23 +69,23 @@ const currentYear = new Date().getFullYear();
                 href={link.href} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                class="flex items-center text-[#E0D5C9]/70 hover:text-[#D12636] hover:translate-x-2 transition-all duration-300 group"
+                class="flex items-center text-text/70 hover:text-primary-glow hover:translate-x-2 transition-all duration-300 group"
               >
-                <span class="mr-3 opacity-0 group-hover:opacity-100 transition-opacity text-[#D12636] font-bold">></span>
+                <span class="mr-3 opacity-0 group-hover:opacity-100 transition-opacity text-primary-glow font-bold">></span>
                 {link.name}
               </a>
             ))}
           </div>
         </div>
 
-        <div class="pt-4 border-t border-[#681826]/20">
-          <h3 class="text-[#E0D5C9] font-bold text-base mb-3 flex items-center tracking-wide">
-            <span class="w-2 h-2 bg-[#D12636] mr-2.5 rounded-full"></span>
+        <div class="pt-4 border-t border-primary/20">
+          <h3 class="text-text font-bold text-base mb-3 flex items-center tracking-wide">
+            <span class="w-2 h-2 bg-primary-glow mr-2.5 rounded-full"></span>
             SYSTEM STATUS
           </h3>
-          <p class="text-[#E0D5C9]/60 text-xs leading-relaxed font-mono">
+          <p class="text-text/60 text-xs leading-relaxed font-mono">
             All systems operational. <br />
-            Built with <span class="text-[#D12636]">Astro</span> + <span class="text-[#D12636]">Tailwind</span> + <span class="text-[#D12636]">Three.js</span>.
+            Built with <span class="text-primary-glow">Astro</span> + <span class="text-primary-glow">Tailwind</span> + <span class="text-primary-glow">Three.js</span>.
             <br />
             <br />
             &copy; {currentYear} Jonathan Axl Wibowo.
@@ -96,3 +96,4 @@ const currentYear = new Date().getFullYear();
     </div>
   </div>
 </footer>
+

@@ -115,7 +115,7 @@ const Strands = () => {
 
 export default function Hero3D() {
   return (
-    <div className="absolute inset-0 -z-10 bg-[#0F0F11]">
+    <div className="absolute inset-0 -z-10 bg-background">
       <Canvas 
         camera={{ position: [0, 0, 6], fov: 35 }}
         dpr={[1, 2]}
@@ -127,3 +127,4 @@ export default function Hero3D() {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
----
+﻿---
 import { getCollection } from 'astro:content'; 
 import Layout from '../layouts/Layout.astro';
 import Hero3D from '../components/3d/Hero3D'; 
@@ -31,49 +31,49 @@ const projects = allProjects.sort((a, b) => {
       </div>
 
       <div class="relative z-10 text-center px-4 pointer-events-none">
-        <div class="inline-block mb-4 px-3 py-1 border border-[#681826]/50 bg-[#0F0F11]/90 backdrop-blur-md rounded-full pointer-events-auto shadow-[0_0_15px_rgba(104,24,38,0.3)]">
-          <span class="font-mono text-[#D12636] text-xs tracking-[0.2em] uppercase flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-[#D12636] animate-pulse"></span>
+        <div class="inline-block mb-4 px-3 py-1 border border-primary/50 bg-background/90 backdrop-blur-md rounded-full pointer-events-auto shadow-[0_0_15px_rgba(104,24,38,0.3)]">
+          <span class="font-mono text-primary-glow text-xs tracking-[0.2em] uppercase flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary-glow animate-pulse"></span>
             // System Online
           </span>
         </div>
         
-        <h1 class="text-5xl md:text-8xl font-bold tracking-tighter mb-6 text-[#E0D5C9] drop-shadow-2xl">
+        <h1 class="text-5xl md:text-8xl font-bold tracking-tighter mb-6 text-text drop-shadow-2xl">
           Jonathan <br class="md:hidden" />
-          <span class="text-[#D12636]">Axl Wibowo</span>
+          <span class="text-primary-glow">Axl Wibowo</span>
         </h1>
 
-        <p class="text-lg md:text-xl font-mono text-[#E0D5C9]/70 max-w-2xl mx-auto leading-relaxed mb-10">
-          Full-Stack Engineer specialized <span class="text-[#D12636]">in High-Performance Web Apps & AI Integration</span>
+        <p class="text-lg md:text-xl font-mono text-text/70 max-w-2xl mx-auto leading-relaxed mb-10">
+          Full-Stack Engineer specialized <span class="text-primary-glow">in High-Performance Web Apps & AI Integration</span>
         </p>
 
         <div class="flex justify-center gap-4 pointer-events-auto">
-          <a href="/cv.pdf" download class="group relative inline-flex items-center gap-3 px-7 py-3.5 bg-[#1B1B1E]/80 backdrop-blur-md border border-[#681826]/60 hover:border-[#D12636] transition-all duration-300 rounded-xs shadow-[0_0_20px_rgba(0,0,0,0.5)]">
-            <div class="absolute inset-0 bg-[#681826]/20 w-0 group-hover:w-full transition-all duration-300 ease-out pointer-events-none"></div>
+          <a href="/cv.pdf" download class="group relative inline-flex items-center gap-3 px-7 py-3.5 bg-surface/80 backdrop-blur-md border border-primary/60 hover:border-primary-glow transition-all duration-300 rounded-xs shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+            <div class="absolute inset-0 bg-primary/20 w-0 group-hover:w-full transition-all duration-300 ease-out pointer-events-none"></div>
             
-            <div class="relative z-10 text-[#D12636] group-hover:scale-110 transition-transform">
+            <div class="relative z-10 text-primary-glow group-hover:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M12 12.75l-3-3m3 3l3-3m-3 3V3" />
               </svg>
             </div>
 
-            <span class="relative z-10 font-mono text-xs tracking-widest uppercase text-[#E0D5C9] group-hover:text-white transition-colors">
+            <span class="relative z-10 font-mono text-xs tracking-widest uppercase text-text group-hover:text-white transition-colors">
               Download_CV
             </span>
           </a>
         </div>
       </div>
 
-      <div class="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-[#0F0F11] via-[#0F0F11]/80 to-transparent z-20 pointer-events-none"></div>
+      <div class="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-background via-background/80 to-transparent z-20 pointer-events-none"></div>
     </section>
 
-    <div class="relative z-30 bg-[#0F0F11] -mt-32">
+    <div class="relative z-30 bg-background -mt-32">
       <Manifesto />
       
       <!-- Operations Feed -->
-      <section class="py-20 border-y border-[#681826]/20 bg-[#1B1B1E]/20">
+      <section class="py-20 border-y border-primary/20 bg-surface/20">
         <div class="container mx-auto px-6 mb-4">
-          <h2 class="text-sm font-mono text-[#D12636]/80 tracking-[0.2em] uppercase">
+          <h2 class="text-sm font-mono text-primary-glow/80 tracking-[0.2em] uppercase">
             // ACTIVE_OPERATIONS_FEED
           </h2>
         </div>
@@ -81,7 +81,7 @@ const projects = allProjects.sort((a, b) => {
       </section>
         
       <!-- Neural Decryptor -->
-      <section id="neural-decryptor" class="py-20 border-b border-[#681826]/20 bg-[#1B1B1E]/10">
+      <section id="neural-decryptor" class="py-20 border-b border-primary/20 bg-surface/10">
         <NeuralDecryptor client:load />
       </section>
 
@@ -89,16 +89,16 @@ const projects = allProjects.sort((a, b) => {
 
       <!-- Selected Works Section with 3D-Tilt Cards -->
       <section id="works" class="py-24 relative z-20 max-w-6xl mx-auto px-6">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12 border-b border-[#681826]/30 pb-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12 border-b border-primary/30 pb-6">
           <div>
             <div class="flex items-center gap-2 mb-2">
-              <span class="font-mono text-xs text-[#D12636] tracking-widest uppercase">
+              <span class="font-mono text-xs text-primary-glow tracking-widest uppercase">
                 // DATABASE_ACCESS
               </span>
             </div>
-            <h2 class="text-4xl md:text-5xl font-bold text-[#E0D5C9]">Selected Works</h2>
+            <h2 class="text-4xl md:text-5xl font-bold text-text">Selected Works</h2>
           </div>
-          <div class="font-mono text-xs text-[#E0D5C9]/40">
+          <div class="font-mono text-xs text-text/40">
             INDEX: ACTIVE_PROJECTS ({projects.length.toString().padStart(2, '0')})
           </div>
         </div>
@@ -109,42 +109,42 @@ const projects = allProjects.sort((a, b) => {
               <a href={`/projects/${project.slug}`} class="flex flex-col justify-between h-full p-6 md:p-8 group/card">
                 <div>
                   <div class="flex items-center justify-between gap-4 mb-6">
-                    <span class="font-mono text-xs font-bold text-[#D12636] bg-[#681826]/20 border border-[#681826]/50 px-2.5 py-1 rounded-xs">
+                    <span class="font-mono text-xs font-bold text-primary-glow bg-primary/20 border border-primary/50 px-2.5 py-1 rounded-xs">
                       {(index + 1).toString().padStart(2, '0')} // TARGET_OP
                     </span>
-                    <div class="w-8 h-8 rounded-full border border-[#681826]/40 flex items-center justify-center group-hover/card:border-[#D12636] group-hover/card:bg-[#681826]/30 transition-all duration-300">
+                    <div class="w-8 h-8 rounded-full border border-primary/40 flex items-center justify-center group-hover/card:border-primary-glow group-hover/card:bg-primary/30 transition-all duration-300">
                       <svg 
                         xmlns="http://www.w3.org/2000/svg" 
                         fill="none" 
                         viewBox="0 0 24 24" 
                         stroke-width="1.5" 
                         stroke="currentColor" 
-                        class="w-4 h-4 text-[#E0D5C9] group-hover/card:text-[#D12636] transform -rotate-45 group-hover/card:rotate-0 transition-transform duration-300"
+                        class="w-4 h-4 text-text group-hover/card:text-primary-glow transform -rotate-45 group-hover/card:rotate-0 transition-transform duration-300"
                       >
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                       </svg>
                     </div>
                   </div>
 
-                  <h3 class="text-2xl md:text-3xl font-bold text-[#E0D5C9] group-hover/card:text-[#D12636] transition-colors duration-300 mb-3">
+                  <h3 class="text-2xl md:text-3xl font-bold text-text group-hover/card:text-primary-glow transition-colors duration-300 mb-3">
                     {project.data.title}
                   </h3>
 
-                  <p class="text-sm text-[#E0D5C9]/60 font-mono line-clamp-2 mb-6">
+                  <p class="text-sm text-text/60 font-mono line-clamp-2 mb-6">
                     {project.data.excerpt || "Classified project specifications and engineering execution records."}
                   </p>
                 </div>
 
-                <div class="pt-4 border-t border-[#681826]/20 flex items-center justify-between flex-wrap gap-2">
+                <div class="pt-4 border-t border-primary/20 flex items-center justify-between flex-wrap gap-2">
                   <div class="flex flex-wrap gap-2">
                     {(project.data.tags || []).slice(0, 3).map((tag) => (
-                      <span class="text-[10px] font-mono text-[#E0D5C9]/70 bg-[#0F0F11] border border-[#681826]/40 px-2 py-0.5 rounded-xs">
+                      <span class="text-[10px] font-mono text-text/70 bg-background border border-primary/40 px-2 py-0.5 rounded-xs">
                         {tag}
                       </span>
                     ))}
                   </div>
 
-                  <span class="text-[10px] font-mono text-[#D12636] opacity-0 group-hover/card:opacity-100 transition-opacity">
+                  <span class="text-[10px] font-mono text-primary-glow opacity-0 group-hover/card:opacity-100 transition-opacity">
                     ACCESS_LOG &rarr;
                   </span>
                 </div>
@@ -155,7 +155,7 @@ const projects = allProjects.sort((a, b) => {
       </section>
 
       <!-- GitHub Open Source Intel (client:only="react" to prevent hydration mismatch) -->
-      <section class="py-20 bg-[#0F0F11] relative z-10 border-y border-[#681826]/20">
+      <section class="py-20 bg-background relative z-10 border-y border-primary/20">
         <div class="container mx-auto px-6">
           <GitHubIntel client:only="react" username="Crazyrenan" />
         </div>

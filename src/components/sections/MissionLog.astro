@@ -1,4 +1,4 @@
----
+﻿---
 import TacticalCard from '../3d/TacticalCard';
 
 // MissionLog.astro - The "Experience" Section
@@ -6,7 +6,7 @@ const history = [
   {
     role: "Full-Stack Web Developer (Contract)",
     company: "PT Lautan Kencana Hidup",
-    period: "MAY 2026 — JUL 2026",
+    period: "MAY 2026 â€” JUL 2026",
     details: [
       "Mengembangkan platform web internal end-to-end untuk efisiensi alur kerja operasional perusahaan.",
       "Mengimplementasikan Role-Based Access Control (RBAC) dan arsitektur database relasional yang aman.",
@@ -16,9 +16,9 @@ const history = [
   {
     role: "AI Researcher & Lead Author (IEEE YESIST12)",
     company: "IEEE YESIST12 Competition",
-    period: "FEB 2026 — JUN 2026",
+    period: "FEB 2026 â€” JUN 2026",
     details: [
-      "Melakukan riset komparatif model Hybrid DenseNet–EfficientNetV2-B3 dan Vision Transformers untuk deteksi Tuberkulosis pada X-Ray.",
+      "Melakukan riset komparatif model Hybrid DenseNetâ€“EfficientNetV2-B3 dan Vision Transformers untuk deteksi Tuberkulosis pada X-Ray.",
       "Mengoptimasi pipeline preprocessing citra medis dan hyperparameter model untuk mencapai sensitivitas diagnosis tinggi.",
       "Menyusun laporan riset dan manuskrip ilmiah standar konferensi internasional IEEE."
     ]
@@ -26,7 +26,7 @@ const history = [
   {
     role: "IT Application Developer",
     company: "Indonesia Morowali Industrial Park (IMIP)",
-    period: "2025 — 2026",
+    period: "2025 â€” 2026",
     details: [
       "Developed a full-stack e-recruitment platform using designated frameworks.",
       "Optimized database queries, reducing load times by 40%.",
@@ -36,7 +36,7 @@ const history = [
   {
     role: "Freelance Editor",
     company: "None",
-    period: "2022 — 2025",
+    period: "2022 â€” 2025",
     details: [
       "Creating VFX and managing color correction.",
       "Helping to create company profile video.",
@@ -46,49 +46,49 @@ const history = [
 ];
 ---
 
-<section id="experience" class="py-24 relative border-t border-[#681826]/20 bg-[#0F0F11]/50">
+<section id="experience" class="py-24 relative border-t border-primary/20 bg-background/50">
   <div class="container mx-auto px-6 max-w-6xl">
     
-    <div class="flex flex-col sm:flex-row sm:items-end gap-3 mb-16 border-b border-[#681826]/30 pb-6">
+    <div class="flex flex-col sm:flex-row sm:items-end gap-3 mb-16 border-b border-primary/30 pb-6">
       <div>
-        <span class="font-mono text-[#D12636] text-xs tracking-widest uppercase block mb-2">
+        <span class="font-mono text-primary-glow text-xs tracking-widest uppercase block mb-2">
           // SERVICE_RECORD
         </span>
-        <h2 class="text-4xl md:text-5xl font-bold text-[#E0D5C9]">
-          Work <span class="text-[#D12636]">Experience</span>
+        <h2 class="text-4xl md:text-5xl font-bold text-text">
+          Work <span class="text-primary-glow">Experience</span>
         </h2>
       </div>
-      <span class="font-mono text-[#E0D5C9]/40 text-xs sm:ml-auto">DEPLOYMENT_HISTORY</span>
+      <span class="font-mono text-text/40 text-xs sm:ml-auto">DEPLOYMENT_HISTORY</span>
     </div>
 
     <div class="relative space-y-12 pl-4 md:pl-0">
-      <div class="absolute left-4 top-0 bottom-0 w-px bg-[#681826]/40 hidden md:block md:left-1/2"></div>
+      <div class="absolute left-4 top-0 bottom-0 w-px bg-primary/40 hidden md:block md:left-1/2"></div>
 
       {history.map((item, index) => (
         <div class={`relative flex flex-col md:flex-row gap-8 ${index % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
           
-          <div class="absolute left-4 md:left-1/2 w-3 h-3 bg-[#D12636] rounded-full border-2 border-[#0F0F11] transform -translate-x-1/2 mt-2 z-10 hidden md:block shadow-[0_0_10px_rgba(209,38,54,0.8)]"></div>
+          <div class="absolute left-4 md:left-1/2 w-3 h-3 bg-primary-glow rounded-full border-2 border-background transform -translate-x-1/2 mt-2 z-10 hidden md:block shadow-[0_0_10px_rgba(209,38,54,0.8)]"></div>
 
           <div class="md:w-1/2">
             <TacticalCard client:visible depth={22} className={`!p-0 ${index % 2 === 0 ? 'md:mr-8' : 'md:ml-8'}`}>
               <div class="p-6 md:p-7">
                 <div class="flex justify-between items-start mb-2 gap-3 flex-wrap">
-                  <h3 class="text-xl font-bold text-[#E0D5C9] group-hover:text-[#D12636] transition-colors">
+                  <h3 class="text-xl font-bold text-text group-hover:text-primary-glow transition-colors">
                     {item.role}
                   </h3>
-                  <span class="font-mono text-xs text-[#D12636] bg-[#681826]/20 border border-[#681826]/40 px-2.5 py-0.5 rounded-xs">
+                  <span class="font-mono text-xs text-primary-glow bg-primary/20 border border-primary/40 px-2.5 py-0.5 rounded-xs">
                     {item.period}
                   </span>
                 </div>
                 
-                <h4 class="text-xs font-mono text-[#E0D5C9]/50 mb-4 uppercase tracking-wider">
+                <h4 class="text-xs font-mono text-text/50 mb-4 uppercase tracking-wider">
                   @ {item.company}
                 </h4>
 
                 <ul class="space-y-2.5">
                   {item.details.map(detail => (
-                    <li class="flex items-start gap-2.5 text-sm text-[#E0D5C9]/75 font-mono">
-                      <span class="mt-1.5 w-1.5 h-1.5 bg-[#D12636] rounded-full shrink-0 shadow-[0_0_5px_#D12636]"></span>
+                    <li class="flex items-start gap-2.5 text-sm text-text/75 font-mono">
+                      <span class="mt-1.5 w-1.5 h-1.5 bg-primary-glow rounded-full shrink-0 shadow-[0_0_5px_#D12636]"></span>
                       <span>{detail}</span>
                     </li>
                   ))}
@@ -104,3 +104,4 @@ const history = [
 
   </div>
 </section>
+

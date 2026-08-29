@@ -1,4 +1,4 @@
-﻿@tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -27,4 +27,250 @@ body {
   background-color: rgb(var(--color-bg));
   color: rgb(var(--color-text));
   overflow-x: hidden;
+}
+
+/* ── Cinematic Hero Design Tokens ── */
+:root {
+  /* Navy palette */
+  --color-navy-950: #06091a;
+  --color-navy-900: #0b132b;
+  --color-navy-800: #131c3d;
+  --color-navy-700: #1c2850;
+  /* Hero accent (orange) */
+  --color-orange-500: #ff6600;
+  --color-orange-400: #ff8533;
+  --color-orange-glow: rgb(255 102 0 / 0.35);
+  /* Semantic hero tokens */
+  --bg-pinned-stage: var(--color-navy-950);
+  --accent-primary: var(--color-orange-500);
+  --accent-hover: var(--color-orange-400);
+  --accent-glow: var(--color-orange-glow);
+  --border-hud: rgb(255 102 0 / 0.5);
+  --text-muted-hero: rgb(255 255 255 / 0.4);
+  /* Typography */
+  --font-display-size: clamp(3.5rem, 12vw, 11rem);
+  --font-hud-size: clamp(0.6rem, 1vw, 0.75rem);
+  /* Rim light */
+  --rim-light-color: rgb(255 255 255 / 0.55);
+  --rim-shadow-color: rgb(0 0 0 / 0.65);
+  /* Motion */
+  --ease-cinematic: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-hud: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ── Hero Stage Layout ── */
+.hero-stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 600px;
+  overflow: hidden;
+  background: var(--bg-pinned-stage);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-wordmark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: var(--font-display-size);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgb(255 255 255 / 0.06);
+  text-transform: uppercase;
+  user-select: none;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+}
+
+.hero-portrait-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hero-portrait-stage img {
+  max-height: 92vh;
+  max-width: 55vw;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: bottom center;
+  filter:
+    drop-shadow(3px -3px 0px rgb(255 102 0 / 0.55))
+    drop-shadow(1px -1px 6px rgb(255 255 255 / 0.35))
+    drop-shadow(-12px 20px 40px rgb(0 0 0 / 0.6));
+  will-change: transform;
+  display: block;
+}
+
+@media (max-width: 767px) {
+  .hero-portrait-stage img {
+    max-width: 90vw;
+    max-height: 75vh;
+  }
+  .hero-wordmark {
+    font-size: clamp(2.5rem, 18vw, 6rem);
+    letter-spacing: 0.02em;
+  }
+}
+
+.hero-video-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 3;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.hero-video-stage video {
+  max-height: 92vh;
+  max-width: 55vw;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: bottom center;
+  will-change: transform;
+  display: block;
+}
+
+@media (max-width: 767px) {
+  .hero-video-stage video {
+    max-width: 90vw;
+    max-height: 75vh;
+  }
+}
+
+.hero-foreground {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 2.5rem 3.5rem;
+}
+
+@media (min-width: 768px) {
+  .hero-foreground {
+    padding: 0 4rem 4rem;
+  }
+}
+
+/* ── HUD Overlay ── */
+.hud-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hud-corner {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  opacity: 0;
+}
+.hud-corner--tl { top: 20px; left: 20px; }
+.hud-corner--tr { top: 20px; right: 20px; }
+.hud-corner--bl { bottom: 56px; left: 20px; }
+.hud-corner--br { bottom: 56px; right: 20px; }
+
+.hud-readout {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--font-hud-size);
+  color: rgb(255 102 0 / 0.7);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.8;
+  opacity: 0;
+}
+
+.hud-label-block {
+  position: absolute;
+  top: 64px;
+  left: 20px;
+}
+
+.hud-readout-tr {
+  position: absolute;
+  top: 64px;
+  right: 20px;
+  text-align: right;
+}
+
+.hud-coords-bl {
+  position: absolute;
+  bottom: 56px;
+  left: 64px;
+}
+
+.hud-clock-br {
+  position: absolute;
+  bottom: 56px;
+  right: 64px;
+  text-align: right;
+}
+
+.hud-progress-bar {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(280px, 70vw);
+  height: 1px;
+  background: rgb(255 255 255 / 0.1);
+  opacity: 0;
+}
+
+.hud-progress-fill {
+  height: 100%;
+  background: var(--color-orange-500);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+.hud-sector-label {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: rgb(255 102 0 / 0.5);
+  text-transform: uppercase;
+  opacity: 0;
+  white-space: nowrap;
+}
+
+/* reduced-motion: keep everything static */
+@media (prefers-reduced-motion: reduce) {
+  .hero-portrait-stage img,
+  .hero-video-stage video,
+  .hero-wordmark,
+  .hud-overlay * {
+    animation: none !important;
+    transition: none !important;
+  }
 }

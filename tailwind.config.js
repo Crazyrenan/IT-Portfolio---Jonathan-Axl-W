@@ -1,4 +1,4 @@
-﻿/** @type {import('tailwindcss').Config} */
+/** @type {import('tailwindcss').Config} */
 import typography from '@tailwindcss/typography';
 
 export default {
@@ -16,6 +16,24 @@ export default {
         border: 'rgba(var(--color-border), 0.12)',
         grid: 'rgba(var(--color-grid), 0.05)',
         'nav-bg': 'rgba(var(--color-nav-bg), 0.85)',
+        // Cinematic hero tokens
+        navy: {
+          950: 'var(--color-navy-950)',
+          900: 'var(--color-navy-900)',
+          800: 'var(--color-navy-800)',
+          700: 'var(--color-navy-700)',
+        },
+        'accent-orange': {
+          DEFAULT: 'var(--color-orange-500)',
+          hover: 'var(--color-orange-400)',
+          glow: 'var(--color-orange-glow)',
+        },
+      },
+      dropShadow: {
+        'rim-light': [
+          '6px -6px 0 rgb(255 102 0 / 0.15)',
+          '0 24px 48px rgb(0 0 0 / 0.55)',
+        ],
       },
       fontFamily: {
         sans: ['"Space Grotesk"', 'sans-serif'],

@@ -3,6 +3,8 @@ import '@fontsource/space-grotesk';
 import '@fontsource/jetbrains-mono';
 import { ClientRouter } from 'astro:transitions';
 
+import { FloatingRetroBackground } from '../components/retro/FloatingRetroBackground';
+
 // Import Global Styles
 import '../styles/global.css'; 
 
@@ -27,6 +29,9 @@ const { title } = Astro.props;
 
   <body class="font-sans antialiased min-h-screen overflow-x-hidden relative selection:bg-[#FFEA00] selection:text-black">
     
+    <!-- Floating Background Layer -->
+    <FloatingRetroBackground client:idle />
+
     <!-- CRT Scanlines Overlay -->
     <div class="crt-scanlines"></div>
 

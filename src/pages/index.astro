@@ -1,132 +1,42 @@
 ---
-import { getCollection } from 'astro:content'; 
 import Layout from '../layouts/Layout.astro';
-import CinematicHero from '../components/react/hero/CinematicHero';
-import TacticalCard from '../components/3d/TacticalCard';
-import Manifesto from '../components/sections/Manifesto.astro';
-import ActiveMission from '../components/sections/ActiveMission.astro';
-import TechArsenal from '../components/sections/TechArsenal.astro';
-import MissionLog from '../components/sections/MissionLog.astro';
-import About from '../components/sections/About.astro';
-import ContactTerminal from '../components/sections/ContactTerminal.astro';
-import NeuralDecryptor from '../components/interactive/NeuralDecryptor';
-import GitHubIntel from '../components/interactive/GitHubIntel'; 
-
-// Fetch Projects from CMS & Sort by Date (Newest first)
-const allProjects = await getCollection('projects');
-const projects = allProjects.sort((a, b) => {
-  const dateA = a.data.date ? new Date(a.data.date).valueOf() : 0;
-  const dateB = b.data.date ? new Date(b.data.date).valueOf() : 0;
-  return dateB - dateA;
-});
+import { PixelHero } from '../components/retro/PixelHero';
+import { RetroSkillsGrid } from '../components/retro/RetroSkillsGrid';
+import { RetroProjectsDossier } from '../components/retro/RetroProjectsDossier';
+import { RetroTimeline } from '../components/retro/RetroTimeline';
+import { RetroTerminal } from '../components/retro/RetroTerminal';
+import RetroTaskbar from '../components/retro/RetroTaskbar.astro';
 ---
 
 <Layout title="Jonathan Axl Wibowo | Full Stack Engineer">
-  <main class="relative w-full overflow-hidden">
-    
-    <!-- Cinematic Hero — Sprint 2 -->
-    <CinematicHero client:load />
+  <main class="relative w-full overflow-hidden pb-16">
 
-    <div class="relative z-30 bg-background -mt-32">
-      <Manifesto />
-      
-      <!-- Operations Feed -->
-      <section class="py-20 border-y border-primary/20 bg-surface/20">
-        <div class="container mx-auto px-6 mb-4">
-          <h2 class="text-sm font-mono text-primary-glow/80 tracking-[0.2em] uppercase">
-            // ACTIVE_OPERATIONS_FEED
-          </h2>
-        </div>
-        <ActiveMission />
-      </section>
-        
-      <!-- Neural Decryptor -->
-      <section id="neural-decryptor" class="py-20 border-b border-primary/20 bg-surface/10">
-        <NeuralDecryptor client:load />
-      </section>
+    <!-- ── Phase 1: 8-Bit Hero Stage ── -->
+    <div id="hero" class="scroll-mt-20">
+      <PixelHero client:load />
+    </div>
 
-      <About />
-
-      <!-- Selected Works Section with 3D-Tilt Cards -->
-      <section id="works" class="py-24 relative z-20 max-w-6xl mx-auto px-6">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12 border-b border-primary/30 pb-6">
-          <div>
-            <div class="flex items-center gap-2 mb-2">
-              <span class="font-mono text-xs text-primary-glow tracking-widest uppercase">
-                // DATABASE_ACCESS
-              </span>
-            </div>
-            <h2 class="text-4xl md:text-5xl font-bold text-text">Selected Works</h2>
-          </div>
-          <div class="font-mono text-xs text-text/40">
-            INDEX: ACTIVE_PROJECTS ({projects.length.toString().padStart(2, '0')})
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {projects.map((project, index) => (
-            <TacticalCard client:only="react" depth={25} className="!p-0 h-full flex flex-col justify-between">
-              <a href={`/projects/${project.slug}`} class="flex flex-col justify-between h-full p-6 md:p-8 group/card">
-                <div>
-                  <div class="flex items-center justify-between gap-4 mb-6">
-                    <span class="font-mono text-xs font-bold text-primary-glow bg-primary/20 border border-primary/50 px-2.5 py-1 rounded-xs">
-                      {(index + 1).toString().padStart(2, '0')} // TARGET_OP
-                    </span>
-                    <div class="w-8 h-8 rounded-full border border-primary/40 flex items-center justify-center group-hover/card:border-primary-glow group-hover/card:bg-primary/30 transition-all duration-300">
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        fill="none" 
-                        viewBox="0 0 24 24" 
-                        stroke-width="1.5" 
-                        stroke="currentColor" 
-                        class="w-4 h-4 text-text group-hover/card:text-primary-glow transform -rotate-45 group-hover/card:rotate-0 transition-transform duration-300"
-                      >
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                      </svg>
-                    </div>
-                  </div>
-
-                  <h3 class="text-2xl md:text-3xl font-bold text-text group-hover/card:text-primary-glow transition-colors duration-300 mb-3">
-                    {project.data.title}
-                  </h3>
-
-                  <p class="text-sm text-text/60 font-mono line-clamp-2 mb-6">
-                    {project.data.excerpt || "Classified project specifications and engineering execution records."}
-                  </p>
-                </div>
-
-                <div class="pt-4 border-t border-primary/20 flex items-center justify-between flex-wrap gap-2">
-                  <div class="flex flex-wrap gap-2">
-                    {(project.data.tags || []).slice(0, 3).map((tag) => (
-                      <span class="text-[10px] font-mono text-text/70 bg-background border border-primary/40 px-2 py-0.5 rounded-xs">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  <span class="text-[10px] font-mono text-primary-glow opacity-0 group-hover/card:opacity-100 transition-opacity">
-                    ACCESS_LOG &rarr;
-                  </span>
-                </div>
-              </a>
-            </TacticalCard>
-          ))}
-        </div>
-      </section>
-
-      <!-- GitHub Open Source Intel (client:only="react" to prevent hydration mismatch) -->
-      <section class="py-20 bg-background relative z-10 border-y border-primary/20">
-        <div class="container mx-auto px-6">
-          <GitHubIntel client:only="react" username="Crazyrenan" />
-        </div>
-      </section>
-
-      <TechArsenal />
-      <div id="mission-log">
-        <MissionLog />
+    <!-- ── Sprint 2: 8-Bit Skills Matrix & Retro Projects Dossier ── -->
+    <div class="relative z-30 w-full flex flex-col items-center -mt-8 md:-mt-16">
+      <div id="skills" class="w-full scroll-mt-20">
+        <RetroSkillsGrid client:load />
       </div>
-      <ContactTerminal />
+      <div id="projects" class="w-full scroll-mt-20">
+        <RetroProjectsDossier client:load />
+      </div>
+    </div>
+
+    <!-- ── Sprint 3: Experience Quest Log & Contact Console ── -->
+    <div class="relative z-30 w-full flex flex-col items-center mt-8">
+      <div id="experience" class="w-full scroll-mt-20">
+        <RetroTimeline client:visible />
+      </div>
+      <div id="contact" class="w-full scroll-mt-20">
+        <RetroTerminal client:visible />
+      </div>
     </div>
 
   </main>
+  
+  <RetroTaskbar />
 </Layout>

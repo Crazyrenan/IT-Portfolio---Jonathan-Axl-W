@@ -5,7 +5,7 @@ import { gsap } from 'gsap';
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface HUDOverlayProps {
   /** Ref to the progress fill div — parent drives scaleX via ScrollTrigger onUpdate */
-  progressFillRef: RefObject<HTMLDivElement>;
+  progressFillRef?: RefObject<HTMLDivElement | null>;
 }
 
 // ── Corner bracket SVG path (L-shape, top-left orientation) ──────────────────
@@ -15,7 +15,7 @@ function CornerBracket({
   svgRef,
   flip,
 }: {
-  svgRef: RefObject<SVGSVGElement>;
+  svgRef: RefObject<SVGSVGElement | null>;
   flip: { x: boolean; y: boolean };
 }) {
   const scaleX = flip.x ? -1 : 1;

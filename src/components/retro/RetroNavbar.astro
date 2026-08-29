@@ -1,0 +1,71 @@
+---
+---
+
+<nav class="sticky top-0 z-50 w-full border-b-2 border-black bg-[#1B2B5A]/95 backdrop-blur font-mono text-white select-none">
+  <div class="max-w-[1920px] mx-auto px-4 flex flex-col xl:flex-row justify-between items-center h-auto xl:h-12 py-2 xl:py-0 gap-2 xl:gap-0">
+    
+    <!-- Left Side: Branding & Links -->
+    <div class="flex flex-col md:flex-row items-center justify-center xl:justify-start gap-2 md:gap-4 xl:gap-6 w-full xl:w-auto">
+      <div class="font-bold text-[#FFEA00] text-sm md:text-base tracking-widest px-2 py-1 border-2 border-transparent whitespace-nowrap">
+        [🕹️ AXL_OS.SYS]
+      </div>
+      
+      <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-hide">
+        <a href="#hero" class="text-xs md:text-sm font-bold border-2 border-transparent px-2 py-1 transition-all duration-150 hover:bg-[#FFEA00] hover:text-black hover:-translate-y-[2px] hover:shadow-[2px_2px_0px_#000] whitespace-nowrap">
+          [1] HERO
+        </a>
+        <a href="#skills" class="text-xs md:text-sm font-bold border-2 border-transparent px-2 py-1 transition-all duration-150 hover:bg-[#FFEA00] hover:text-black hover:-translate-y-[2px] hover:shadow-[2px_2px_0px_#000] whitespace-nowrap">
+          [2] SKILLS
+        </a>
+        <a href="#projects" class="text-xs md:text-sm font-bold border-2 border-transparent px-2 py-1 transition-all duration-150 hover:bg-[#FFEA00] hover:text-black hover:-translate-y-[2px] hover:shadow-[2px_2px_0px_#000] whitespace-nowrap">
+          [3] DOSSIER
+        </a>
+        <a href="#experience" class="text-xs md:text-sm font-bold border-2 border-transparent px-2 py-1 transition-all duration-150 hover:bg-[#FFEA00] hover:text-black hover:-translate-y-[2px] hover:shadow-[2px_2px_0px_#000] whitespace-nowrap">
+          [4] QUEST_LOG
+        </a>
+        <a href="#contact" class="text-xs md:text-sm font-bold border-2 border-transparent px-2 py-1 transition-all duration-150 hover:bg-[#FFEA00] hover:text-black hover:-translate-y-[2px] hover:shadow-[2px_2px_0px_#000] whitespace-nowrap">
+          [5] COMM_LINK
+        </a>
+      </div>
+    </div>
+
+    <!-- Right Side: Telemetry & Actions -->
+    <div class="flex items-center gap-4">
+      <div class="hidden md:flex items-center gap-2 text-xs font-bold text-[#6674A3] tracking-widest border-2 border-black bg-black px-3 py-1 shadow-[inset_2px_2px_0px_rgba(0,0,0,0.5)]">
+        <div class="w-2 h-2 rounded-full bg-[#FF0026] animate-pulse"></div>
+        <span>STATUS: ONLINE // 60 FPS</span>
+      </div>
+
+      <div class="hidden md:flex items-center text-xs font-bold text-[#FFEA00] tracking-widest border-2 border-black bg-black px-3 py-1 shadow-[inset_2px_2px_0px_rgba(0,0,0,0.5)] min-w-[105px] justify-center">
+        <span id="nav-clock">00:00:00</span>
+      </div>
+
+      <a href="/Jonathan_Axl_Wibowo_CV.pdf" target="_blank" rel="noopener noreferrer" class="border-2 border-black bg-[#FF0026] text-white px-4 py-1 text-xs md:text-sm font-bold uppercase transition-transform duration-[160ms] ease-out active:translate-x-[2px] active:translate-y-[2px] shadow-[2px_2px_0px_#000] active:shadow-none hover:bg-black hover:text-[#FF0026]">
+        [CV.EXE]
+      </a>
+    </div>
+
+  </div>
+</nav>
+
+<script>
+  function updateNavClock() {
+    const clockEl = document.getElementById('nav-clock');
+    if (!clockEl) return;
+    
+    const now = new Date();
+    // Jakarta is UTC+7
+    const options: Intl.DateTimeFormatOptions = { 
+      timeZone: 'Asia/Jakarta',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    };
+    const timeString = new Intl.DateTimeFormat('en-GB', options).format(now);
+    clockEl.textContent = `${timeString} WIB`;
+  }
+
+  updateNavClock();
+  setInterval(updateNavClock, 1000);
+</script>

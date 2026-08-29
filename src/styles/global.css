@@ -24,9 +24,54 @@ html {
 }
 
 body {
-  background-color: rgb(var(--color-bg));
-  color: rgb(var(--color-text));
+  background-color: #008080; /* Windows 95 default desktop color fallback */
+  background-image: url('https://upload.wikimedia.org/wikipedia/en/2/21/Bliss_%28Windows_XP%29.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: #000000;
   overflow-x: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+@layer utilities {
+  .win95-raised {
+    background-color: #c0c0c0;
+    border-top: 2px solid #ffffff;
+    border-left: 2px solid #ffffff;
+    border-bottom: 2px solid #000000;
+    border-right: 2px solid #000000;
+    box-shadow: inset -1px -1px 0px #808080, inset 1px 1px 0px #dfdfdf;
+  }
+  .win95-sunken {
+    background-color: #ffffff;
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-bottom: 2px solid #ffffff;
+    border-right: 2px solid #ffffff;
+    box-shadow: inset 1px 1px 0px #000000, inset -1px -1px 0px #dfdfdf;
+  }
+  .win95-btn {
+    background-color: #c0c0c0;
+    border-top: 2px solid #ffffff;
+    border-left: 2px solid #ffffff;
+    border-bottom: 2px solid #000000;
+    border-right: 2px solid #000000;
+    box-shadow: inset -1px -1px 0px #808080, inset 1px 1px 0px #dfdfdf;
+    padding: 2px 8px;
+    color: black;
+  }
+  .win95-btn:active {
+    border-top: 2px solid #000000;
+    border-left: 2px solid #000000;
+    border-bottom: 2px solid #ffffff;
+    border-right: 2px solid #ffffff;
+    box-shadow: inset 1px 1px 0px #808080, inset -1px -1px 0px #dfdfdf;
+    padding: 3px 7px 1px 9px;
+  }
+  .win95-titlebar {
+    background: linear-gradient(to right, #000080, #1084d0);
+  }
 }
 
 /* ── Cinematic Hero Design Tokens ── */
@@ -90,70 +135,10 @@ body {
   margin: 0;
   padding: 0;
 }
-
-.hero-portrait-stage {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.hero-portrait-stage img {
-  max-height: 92vh;
-  max-width: 55vw;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  object-position: bottom center;
-  filter:
-    drop-shadow(3px -3px 0px rgb(255 102 0 / 0.55))
-    drop-shadow(1px -1px 6px rgb(255 255 255 / 0.35))
-    drop-shadow(-12px 20px 40px rgb(0 0 0 / 0.6));
-  will-change: transform;
-  display: block;
-}
-
 @media (max-width: 767px) {
-  .hero-portrait-stage img {
-    max-width: 90vw;
-    max-height: 75vh;
-  }
   .hero-wordmark {
     font-size: clamp(2.5rem, 18vw, 6rem);
     letter-spacing: 0.02em;
-  }
-}
-
-.hero-video-stage {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  z-index: 3;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.hero-video-stage video {
-  max-height: 92vh;
-  max-width: 55vw;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  object-position: bottom center;
-  will-change: transform;
-  display: block;
-}
-
-@media (max-width: 767px) {
-  .hero-video-stage video {
-    max-width: 90vw;
-    max-height: 75vh;
   }
 }
 
@@ -264,13 +249,32 @@ body {
   white-space: nowrap;
 }
 
-/* reduced-motion: keep everything static */
+/* reduced-motion: keep everything static, reveal GSAP-deferred elements */
 @media (prefers-reduced-motion: reduce) {
-  .hero-portrait-stage img,
-  .hero-video-stage video,
   .hero-wordmark,
   .hud-overlay * {
     animation: none !important;
     transition: none !important;
+  }
+
+  /* Force-reveal elements that start at opacity:0 awaiting GSAP */
+  .hud-corner,
+  .hud-readout,
+  .hud-progress-bar,
+  .hud-sector-label {
+    opacity: 1 !important;
+  }
+
+  /* Fully draw HUD bracket stroke paths */
+  .hud-corner svg path {
+    stroke-dashoffset: 0 !important;
+  }
+}
+
+/* Forced-colors / Windows High Contrast: ensure focus rings are visible system-color */
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 3px solid ButtonText !important;
+    outline-offset: 2px !important;
   }
 }

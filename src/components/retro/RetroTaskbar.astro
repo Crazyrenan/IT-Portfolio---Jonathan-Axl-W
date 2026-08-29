@@ -1,0 +1,60 @@
+---
+---
+
+<div class="fixed bottom-0 left-0 right-0 z-50 bg-[#c0c0c0] border-t-2 border-white flex items-center p-1 font-[Tahoma,sans-serif] text-black shadow-[0px_-1px_0px_#808080] select-none h-10">
+  
+  <div class="flex items-center gap-2 h-full">
+    <!-- START Button -->
+    <button class="win95-raised px-2 py-1 flex items-center gap-1 font-bold text-sm h-full active:border-t-[#808080] active:border-l-[#808080] active:border-b-white active:border-r-white active:bg-[#dfdfdf]">
+      <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" alt="Start" class="w-4 h-4" />
+      <span class="mt-0.5">Start</span>
+    </button>
+  </div>
+
+  <div class="hidden md:flex items-center gap-1 ml-4 h-full flex-1">
+    <!-- Active Windows Tabs -->
+    <a href="#hero" class="win95-sunken px-2 py-1 flex items-center gap-1 text-sm h-full font-bold w-32 truncate bg-[#dfdfdf] active:bg-white">
+      <img src="https://win98icons.alexmeub.com/icons/png/paint_file-1.png" alt="icon" class="w-4 h-4" />
+      Profile.bmp
+    </a>
+    <a href="#skills" class="win95-raised px-2 py-1 flex items-center gap-1 text-sm h-full w-32 truncate hover:bg-[#dfdfdf]">
+      <img src="https://win98icons.alexmeub.com/icons/png/hardware_wiz-1.png" alt="icon" class="w-4 h-4" />
+      Skills.exe
+    </a>
+    <a href="#projects" class="win95-raised px-2 py-1 flex items-center gap-1 text-sm h-full w-32 truncate hover:bg-[#dfdfdf]">
+      <img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png" alt="icon" class="w-4 h-4" />
+      Projects
+    </a>
+  </div>
+
+  <div class="flex items-center gap-2 h-full ml-auto">
+    <!-- System Tray -->
+    <div class="win95-sunken px-2 flex items-center h-full gap-2">
+      <img src="https://win98icons.alexmeub.com/icons/png/loudspeaker_rays-0.png" alt="Volume" class="w-4 h-4" />
+      <span id="retro-clock" class="text-xs mt-0.5">00:00 AM</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function updateClock() {
+    const clockEl = document.getElementById('retro-clock');
+    if (!clockEl) return;
+    
+    const now = new Date();
+    // Jakarta is UTC+7
+    const options: Intl.DateTimeFormatOptions = { 
+      timeZone: 'Asia/Jakarta',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    };
+    const timeString = new Intl.DateTimeFormat('en-US', options).format(now);
+    clockEl.textContent = timeString;
+  }
+
+  // Update immediately and then every minute
+  updateClock();
+  setInterval(updateClock, 1000);
+</script>

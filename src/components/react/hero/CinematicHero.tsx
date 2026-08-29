@@ -7,133 +7,72 @@ import HUDOverlay from './HUDOverlay';
 // ── Register once at module level (never inside component body) ───────────────
 gsap.registerPlugin(ScrollTrigger);
 
-// ── Constants ─────────────────────────────────────────────────────────────────
-const VIDEO_SRC = '/assets/Cinematic_subtle_portrait_moti.mp4';
-const PORTRAIT_SRC = '/assets/data diri.png';
-
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function CinematicHero() {
   const rootRef = useRef<HTMLElement>(null);
   const typographyRef = useRef<HTMLHeadingElement>(null);
-  const portraitStageRef = useRef<HTMLDivElement>(null);
-  const videoStageRef = useRef<HTMLDivElement>(null);
-  const videoElRef = useRef<HTMLVideoElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const progressFillRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
 
-  // ── GSAP pinned timeline (desktop/tablet) ─────────────────────────────────
+  // ── GSAP entrance animation & scroll binding ──────────────────────────────
   useGsapContext(
     rootRef as React.RefObject<HTMLElement>,
     () => {
       // ── Reduced-motion bailout ─────────────────────────────────────────────
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        // Set static visibility
+        gsap.set(typographyRef.current, { opacity: 0.06 });
+        if (contentRef.current) {
+          gsap.set(contentRef.current.children, { opacity: 1, y: 0 });
+        }
+        return;
+      }
 
-      // ── Lazy-load video when scroll reaches 40% of hero ───────────────────
+      const tl = gsap.timeline();
+
+      // Phase 1: Ghost wordmark entrance
+      tl.fromTo(
+        typographyRef.current,
+        { opacity: 0, scale: 0.95, letterSpacing: '0em' },
+        {
+          opacity: 0.06,
+          scale: 1,
+          letterSpacing: '-0.02em',
+          duration: 2,
+          ease: 'power3.out',
+        },
+        0
+      );
+
+      // Phase 2: Foreground content stagger entrance
+      if (contentRef.current) {
+        tl.fromTo(
+          contentRef.current.children,
+          { opacity: 0, y: 24 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            stagger: 0.15,
+            ease: 'power3.out',
+          },
+          0.5 // Start slightly after wordmark
+        );
+      }
+
+      // Phase 3: Global scroll progress bound to HUD fill
       ScrollTrigger.create({
-        trigger: rootRef.current,
-        start: '40% top',
-        once: true,
-        onEnter: () => {
-          if (videoElRef.current && !videoElRef.current.src) {
-            videoElRef.current.src = VIDEO_SRC;
-            videoElRef.current.load();
+        trigger: document.body,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0,
+        onUpdate: (self) => {
+          if (progressFillRef.current) {
+            gsap.set(progressFillRef.current, {
+              scaleX: self.progress,
+            });
           }
-        },
-      });
-
-      // ── Responsive scroll behaviour ────────────────────────────────────────
-      ScrollTrigger.matchMedia({
-        // ── Desktop / tablet: full pinned timeline ─────────────────────────
-        '(min-width: 768px)': () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: rootRef.current,
-              start: 'top top',
-              end: '+=150%',
-              scrub: 0.6,
-              pin: true,
-              anticipatePin: 1,
-              invalidateOnRefresh: true,
-              onUpdate: (self) => {
-                // Drive the HUD progress fill
-                if (progressFillRef.current) {
-                  gsap.set(progressFillRef.current, {
-                    scaleX: self.progress,
-                  });
-                }
-              },
-            },
-          });
-
-          tl
-            // Phase 1: fade wordmark out + letter-spacing expand
-            .to(
-              typographyRef.current,
-              {
-                opacity: 0,
-                letterSpacing: '0.1em',
-                ease: 'power1.out',
-                duration: 1,
-              },
-              0
-            )
-            // Phase 1: portrait zooms toward final docked position
-            .to(
-              portraitStageRef.current,
-              {
-                scale: 0.38,
-                y: () => window.innerHeight * -0.14,
-                ease: 'power2.inOut',
-                duration: 1,
-              },
-              0
-            )
-            // Phase 2: video cross-fades in (overlapping portrait phase end)
-            .to(
-              videoStageRef.current,
-              {
-                autoAlpha: 1,
-                ease: 'power1.in',
-                duration: 0.5,
-              },
-              '-=0.35'
-            )
-            // Phase 2: trigger video play once cross-fade starts
-            .call(
-              () => {
-                if (videoElRef.current) {
-                  videoElRef.current.play().catch(() => {
-                    // autoplay blocked — silently ignore (video is decorative)
-                  });
-                }
-              },
-              [],
-              '-=0.2'
-            );
-
-          return () => {
-            // ScrollTrigger created inside matchMedia is auto-killed on media change
-            tl.kill();
-          };
-        },
-
-        // ── Mobile: simple entrance fade, no pin ───────────────────────────
-        '(max-width: 767px)': () => {
-          gsap.fromTo(
-            [typographyRef.current, portraitStageRef.current],
-            { opacity: 0, y: 24 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 1,
-              stagger: 0.15,
-              ease: 'power2.out',
-              scrollTrigger: {
-                trigger: rootRef.current,
-                start: 'top 80%',
-                toggleActions: 'play none none none',
-              },
-            }
-          );
         },
       });
     },
@@ -149,31 +88,45 @@ export default function CinematicHero() {
       return;
     }
 
-    const stage = portraitStageRef.current;
-    if (!stage) return;
+    const wordmark = typographyRef.current;
+    const glow = glowRef.current;
+    if (!wordmark || !glow) return;
 
-    const quickX = gsap.quickTo(stage, 'x', {
-      duration: 0.6,
+    const quickX = gsap.quickTo(wordmark, 'x', {
+      duration: 0.8,
       ease: 'power3.out',
     });
-    const quickY = gsap.quickTo(stage, 'y', {
-      duration: 0.6,
+    const quickY = gsap.quickTo(wordmark, 'y', {
+      duration: 0.8,
+      ease: 'power3.out',
+    });
+    
+    const quickGlowX = gsap.quickTo(glow, 'x', {
+      duration: 1.5,
+      ease: 'power3.out',
+    });
+    const quickGlowY = gsap.quickTo(glow, 'y', {
+      duration: 1.5,
       ease: 'power3.out',
     });
 
     const onMove = (e: MouseEvent) => {
       const cx = window.innerWidth / 2;
       const cy = window.innerHeight / 2;
-      const dx = ((e.clientX - cx) / cx) * 8;   // ±8px
-      const dy = ((e.clientY - cy) / cy) * 8;
+      const dx = ((e.clientX - cx) / cx) * -15; // inverse parallax
+      const dy = ((e.clientY - cy) / cy) * -15;
       quickX(dx);
       quickY(dy);
+
+      // Glow follows mouse softly
+      quickGlowX(e.clientX - cx);
+      quickGlowY(e.clientY - cy);
     };
 
     window.addEventListener('mousemove', onMove, { passive: true });
     return () => {
       window.removeEventListener('mousemove', onMove);
-      gsap.set(stage, { x: 0, y: 0 });
+      gsap.set([wordmark, glow], { x: 0, y: 0 });
     };
   }, []);
 
@@ -184,47 +137,54 @@ export default function CinematicHero() {
       className="hero-stage"
       aria-label="Portfolio hero"
     >
+      {/* ── Subtle grid overlay ── */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: 'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)',
+          backgroundSize: '4rem 4rem',
+          backgroundPosition: 'center center',
+          maskImage: 'radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%)',
+          WebkitMaskImage: 'radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+        aria-hidden="true"
+      />
+
+      {/* ── Ambient Radial Glow ── */}
+      <div
+        ref={glowRef}
+        style={{
+          position: 'absolute',
+          top: '-20%',
+          right: '-10%',
+          width: '60vw',
+          height: '60vw',
+          background: 'radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%)',
+          filter: 'blur(60px)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+        aria-hidden="true"
+      />
+
       {/* ── Giant ghost wordmark (z-1) ── */}
-      <h2 ref={typographyRef} className="hero-wordmark" aria-hidden="true">
+      <h2 
+        ref={typographyRef} 
+        className="hero-wordmark" 
+        style={{ color: 'rgb(255 255 255 / 0.06)' }}
+        aria-hidden="true"
+      >
         PORTFOLIO
       </h2>
-
-      {/* ── Portrait layer (z-2) ── */}
-      <div ref={portraitStageRef} className="hero-portrait-stage">
-        <picture>
-          {/* Source: 3.3 MB PNG with alpha — served directly (no build-time optimization yet) */}
-          <img
-            src={PORTRAIT_SRC}
-            alt="Jonathan Axl Wibowo — Full-Stack Engineer"
-            // @ts-expect-error – fetchpriority is a valid HTML attribute
-            fetchpriority="high"
-            loading="eager"
-            decoding="async"
-          />
-        </picture>
-      </div>
-
-      {/* ── Video cross-fade layer (z-3) — starts invisible ── */}
-      <div ref={videoStageRef} className="hero-video-stage">
-        {/*
-          preload="none" — src is assigned programmatically by ScrollTrigger
-          to avoid eager network cost on slow connections.
-        */}
-        <video
-          ref={videoElRef}
-          muted
-          loop
-          playsInline
-          preload="none"
-          aria-hidden="true"
-        />
-      </div>
 
       {/* ── HUD telemetry decoration (z-20) ── */}
       <HUDOverlay progressFillRef={progressFillRef} />
 
       {/* ── Foreground identity copy (z-10) ── */}
-      <div className="hero-foreground" aria-label="Identity">
+      <div ref={contentRef} className="hero-foreground" aria-label="Identity">
         {/* Status badge */}
         <div
           style={{
@@ -287,7 +247,7 @@ export default function CinematicHero() {
             marginBottom: '1.5rem',
           }}
         >
-          Full-Stack Engineer · High-Performance Web &amp; AI
+          Full-Stack Engineer × AI &amp; Data Systems
         </p>
 
         {/* CTA */}
@@ -295,6 +255,7 @@ export default function CinematicHero() {
           <a
             href="/cv.pdf"
             download
+            aria-label="Download Jonathan Axl Wibowo's CV as PDF"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -309,7 +270,17 @@ export default function CinematicHero() {
               color: 'rgb(224 213 201)',
               textDecoration: 'none',
               backdropFilter: 'blur(8px)',
-              transition: 'border-color 0.2s, background 0.2s',
+              transition: 'border-color 0.2s, background 0.2s, outline-color 0.2s',
+              outline: '2px solid transparent',
+              outlineOffset: '2px',
+            }}
+            onFocus={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.outlineColor = 'rgba(255,102,0,0.7)';
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,102,0,0.6)';
+            }}
+            onBlur={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.outlineColor = 'transparent';
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgb(104 24 38 / 0.6)';
             }}
           >
             <svg

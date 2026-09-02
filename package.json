@@ -9,6 +9,8 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@ag-kit/agents": "^0.0.10",
+    "@ag-kit/server": "^0.0.10",
     "@astrojs/markdoc": "^0.15.10",
     "@astrojs/node": "^9.5.5",
     "@astrojs/react": "^4.4.2",
@@ -24,6 +26,7 @@
     "@types/react-dom": "^19.2.3",
     "@types/three": "^0.182.0",
     "astro": "^5.17.1",
+    "dotenv": "^17.4.2",
     "framer-motion": "^12.33.0",
     "gsap": "^3.14.2",
     "react": "^19.2.4",
@@ -33,6 +36,9 @@
     "three": "^0.182.0"
   },
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.19"
+    "@tailwindcss/typography": "^0.5.19",
+    "@types/node": "^26.4.1",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.3"
   }
 }

@@ -1,9 +1,8 @@
-﻿---
+---
 /**
  * ScrollConnector
  * A thin vertical progress rail fixed on the left side of the
- * viewport. The crimson fill grows from top to bottom as the user
- * scrolls. Uses a passive scroll listener so the browser never blocks paint.
+ * viewport.
  */
 ---
 
@@ -14,28 +13,31 @@
   class="fixed left-5 top-20 bottom-5 w-px pointer-events-none z-30 hidden md:block"
 >
   <!-- Ghost track (faint line) -->
-  <div class="absolute inset-0 opacity-30 rounded-full" style="background: rgb(var(--color-));"></div>
+  <div class="absolute inset-0 opacity-30 rounded-full bg-gray-400"></div>
 
   <!-- Filled progress bar -->
   <div
     id="scroll-fill"
-    class="absolute top-0 left-0 w-full rounded-full origin-top"
-    style="background: rgb(var(--color-)); box-shadow: (var(--color-)); height: 0%; will-change: height;"
+    class="absolute top-0 left-0 w-full rounded-full origin-top bg-[#000080]"
+    style="height: 0%; will-change: height;"
   ></div>
 
   <!-- Trailing dot at the tip of the fill -->
   <div
     id="scroll-dot"
-    class="absolute left-1/2 -translate-x-1/2 w-2 h-2 rounded-full -ml-0.5"
-    style="background: rgb(var(--color-)); box-shadow: (var(--color-)); top: 0%; will-change: top;"
+    class="absolute left-1/2 -translate-x-1/2 w-2 h-2 rounded-full -ml-0.5 bg-[#000080]"
+    style="top: 0%; will-change: top;"
   ></div>
 </div>
 
 <script>
   function initScrollConnector() {
-    const fill = document.getElementById('scroll-fill') as HTMLElement | null;
-    const dot  = document.getElementById('scroll-dot')  as HTMLElement | null;
-    if (!fill || !dot) return;
+    const fillEl = document.getElementById('scroll-fill');
+    const dotEl  = document.getElementById('scroll-dot');
+    if (!fillEl || !dotEl) return;
+
+    const fill = fillEl as HTMLElement;
+    const dot  = dotEl as HTMLElement;
 
     function update() {
       const scrollTop = window.scrollY || document.documentElement.scrollTop;

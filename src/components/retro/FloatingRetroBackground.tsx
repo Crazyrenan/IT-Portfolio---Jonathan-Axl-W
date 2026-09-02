@@ -11,27 +11,26 @@ export function FloatingRetroBackground() {
 
   if (!mounted) return null;
 
-  // Animation variants
-  const floatA = shouldReduceMotion ? {} : {
+  const floatA: any = shouldReduceMotion ? {} : {
     y: [-8, 8, -8],
     rotate: [-1, 1.5, -1],
     transition: { duration: 6.5, repeat: Infinity, ease: 'easeInOut' }
   };
 
-  const floatB = shouldReduceMotion ? {} : {
+  const floatB: any = shouldReduceMotion ? {} : {
     y: [6, -6, 6],
     rotate: [1, -1.5, 1],
     transition: { duration: 8, repeat: Infinity, ease: 'easeInOut' }
   };
 
-  const floatC = shouldReduceMotion ? {} : {
+  const floatC: any = shouldReduceMotion ? {} : {
     y: [-5, 7, -5],
     rotate: [-0.5, 1, -0.5],
     transition: { duration: 7.2, repeat: Infinity, ease: 'easeInOut' }
   };
 
-  const initialFade = { opacity: 0, scale: 0.95 };
-  const animateFade = { opacity: 1, scale: 1, transition: { duration: 1.2, ease: 'easeOut' } };
+  const initialFade: any = { opacity: 0, scale: 0.95 };
+  const animateFade: any = { opacity: 1, scale: 1, transition: { duration: 1.2, ease: 'easeOut' } };
 
   return (
     <div className="fixed inset-0 z-0 pointer-events-none hidden md:block overflow-hidden">
@@ -39,7 +38,7 @@ export function FloatingRetroBackground() {
       {/* Window A: Winamp (Top Right) */}
       <motion.div 
         initial={initialFade}
-        animate={{ ...animateFade, ...(shouldReduceMotion ? {} : floatA) }}
+        animate={shouldReduceMotion ? animateFade : { ...animateFade, ...floatA }}
         className="absolute top-[10%] right-[10%] w-64 win95-raised p-1 opacity-70"
         style={{ transformOrigin: 'center' }}
       >
@@ -81,7 +80,7 @@ export function FloatingRetroBackground() {
       {/* Window B: Projects Explorer (Mid Left) */}
       <motion.div 
         initial={initialFade}
-        animate={{ ...animateFade, ...(shouldReduceMotion ? {} : floatB) }}
+        animate={shouldReduceMotion ? animateFade : { ...animateFade, ...floatB }}
         className="absolute top-[40%] left-[8%] w-72 win95-raised p-1 opacity-60"
         style={{ transformOrigin: 'center' }}
       >
@@ -114,7 +113,7 @@ export function FloatingRetroBackground() {
       {/* Window C: Video Player (Bottom Right) */}
       <motion.div 
         initial={initialFade}
-        animate={{ ...animateFade, ...(shouldReduceMotion ? {} : floatC) }}
+        animate={shouldReduceMotion ? animateFade : { ...animateFade, ...floatC }}
         className="absolute bottom-[20%] right-[15%] w-60 win95-raised p-1 opacity-65"
         style={{ transformOrigin: 'center' }}
       >
@@ -128,7 +127,6 @@ export function FloatingRetroBackground() {
           </div>
         </div>
         <div className="bg-black p-1 mt-1 border-2 border-t-[#808080] border-l-[#808080] border-b-white border-r-white relative h-32 overflow-hidden flex items-center justify-center">
-          {/* Subtle Scanline Simulation */}
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_50%,rgba(0,0,0,0.1)_50%)] bg-[length:100%_4px] z-10 pointer-events-none"></div>
           <div className="font-mono text-[#00FF00] text-xs opacity-50 text-center animate-pulse">
             BUFFERING...<br/>[##-------] 24%

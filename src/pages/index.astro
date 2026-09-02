@@ -8,35 +8,36 @@ import { RetroTerminal } from '../components/retro/RetroTerminal';
 import RetroTaskbar from '../components/retro/RetroTaskbar.astro';
 ---
 
-<Layout title="Jonathan Axl Wibowo | Full Stack Engineer">
+<Layout title="Jonathan Axl Wibowo | 8-Bit Neo-Retro OS Portfolio">
   <main class="relative w-full overflow-hidden pb-16">
 
-    <!-- ── Phase 1: 8-Bit Hero Stage ── -->
-    <div id="hero" class="scroll-mt-20">
+    <!-- ── Section 1: Hero Window (Profile.bmp) ── -->
+    <div id="hero" class="scroll-mt-6">
       <PixelHero client:load />
     </div>
 
-    <!-- ── Sprint 2: 8-Bit Skills Matrix & Retro Projects Dossier ── -->
-    <div class="relative z-30 w-full flex flex-col items-center -mt-8 md:-mt-16">
-      <div id="skills" class="w-full scroll-mt-20">
-        <RetroSkillsGrid client:load />
-      </div>
-      <div id="projects" class="w-full scroll-mt-20">
-        <RetroProjectsDossier client:load />
-      </div>
+    <!-- ── Section 2: Skill Viewer (Skill_viewer.exe) ── -->
+    <div id="skills" class="w-full scroll-mt-6">
+      <RetroSkillsGrid client:visible />
     </div>
 
-    <!-- ── Sprint 3: Experience Quest Log & Contact Console ── -->
-    <div class="relative z-30 w-full flex flex-col items-center mt-8">
-      <div id="experience" class="w-full scroll-mt-20">
-        <RetroTimeline client:visible />
-      </div>
-      <div id="contact" class="w-full scroll-mt-20">
-        <RetroTerminal client:visible />
-      </div>
+    <!-- ── Section 3: Project Explorer (Project_Explorer.exe) ── -->
+    <div id="projects" class="w-full scroll-mt-6">
+      <RetroProjectsDossier client:visible />
+    </div>
+
+    <!-- ── Section 4: Experience Log (Experience_Log.txt) ── -->
+    <div id="experience" class="w-full scroll-mt-6">
+      <RetroTimeline client:visible />
+    </div>
+
+    <!-- ── Section 5: Contact Terminal (Contact_Form.exe) ── -->
+    <div id="contact" class="w-full scroll-mt-6">
+      <RetroTerminal client:visible />
     </div>
 
   </main>
   
+  <!-- System Taskbar -->
   <RetroTaskbar />
 </Layout>

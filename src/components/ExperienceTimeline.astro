@@ -1,0 +1,80 @@
+---
+// ExperienceTimeline.astro — Chronological professional timeline
+
+const experiences = [
+  {
+    company: "PT Lautan Kencana Hidup",
+    year: "2026",
+    role: "Full-Stack Engineer (Intern)",
+    description: "Merancang arsitektur dan mengembangkan Intranet SaaS platform dengan Two-Stage Inventory, Work Orders, dan Cryptographic Blockchain Ledger (SHA-256). Stack: FastAPI, React 18, PostgreSQL, Zustand, TanStack Query v5.",
+    tags: ["Enterprise", "Full-Stack", "Blockchain", "FastAPI", "React 18"],
+    dotColor: "bg-[#223971]"
+  },
+  {
+    company: "IEEE YESIST12 — Riset AI Medis",
+    year: "2026",
+    role: "AI/Deep Learning Researcher",
+    description: "Mengembangkan dan mempublikasikan riset deteksi Tuberkulosis menggunakan Hybrid CNN (DenseNet–EfficientNetV2-B3) vs Vision Transformers. Mencapai 97.0% Accuracy/F1-Score dengan visualisasi Grad-CAM.",
+    tags: ["Research", "Computer Vision", "PyTorch", "IEEE"],
+    dotColor: "bg-[#FFC906]"
+  },
+  {
+    company: "PT Indonesia Morowali Industrial Park (IMIP)",
+    year: "2025–2026",
+    role: "Full-Stack Software Developer (Intern)",
+    description: "Mengembangkan E-Recruitment Portal korporat dengan arsitektur RBAC, validasi berkas massal, Figma to Laravel Blade/SCSS, dan AI Search Livewire.",
+    tags: ["Enterprise", "Laravel", "RBAC", "MySQL", "Livewire"],
+    dotColor: "bg-[#223971]"
+  },
+  {
+    company: "Universitas Multimedia Nusantara",
+    year: "2022–2026",
+    role: "S1 Sistem Informasi — IPK 3.78",
+    description: "Mendalami rekayasa perangkat lunak, basis data, dan kecerdasan buatan. Mengembangkan multiple proyek termasuk Intelligent IT Help Desk (reduksi 40% tiket duplikat), Telegram OCR Bot, dan Windbreaker AI.",
+    tags: ["Akademik", "Riset", "Software Engineering"],
+    dotColor: "bg-[#CB2026]"
+  }
+];
+---
+
+<section id="experience" class="py-20 md:py-24 bg-gray-50/70 border-t border-[#E5E7EB]">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-14">
+      <span class="font-mono text-xs tracking-[0.2em] uppercase text-[#223971] font-semibold block mb-3">
+        Riwayat Profesional
+      </span>
+      <h2 class="text-3xl md:text-4xl font-bold text-[#111827]">
+        Pengalaman &amp; Perjalanan Karier
+      </h2>
+    </div>
+
+    <div class="relative border-l-2 border-gray-300 ml-3 md:ml-4">
+      {experiences.map((exp) => (
+        <div class="mb-12 relative pl-8 md:pl-12 last:mb-0">
+          <div class={`absolute w-4 h-4 rounded-full border-[3px] border-white -left-[9px] top-1.5 ${exp.dotColor} shadow-sm ring-2 ring-gray-200`}></div>
+          <div class="bg-white rounded-xl border border-[#E5E7EB] p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4">
+              <div>
+                <h3 class="font-bold text-lg text-[#111827]">{exp.role}</h3>
+                <div class="text-[#223971] font-semibold mt-0.5">{exp.company}</div>
+              </div>
+              <span class="font-mono text-xs bg-[#223971] text-white px-3 py-1 rounded-full w-fit flex-shrink-0 font-medium">
+                {exp.year}
+              </span>
+            </div>
+            <p class="text-[#4B5563] text-sm leading-relaxed mb-4">
+              {exp.description}
+            </p>
+            <div class="flex flex-wrap gap-2">
+              {exp.tags.map((tag) => (
+                <span class="font-mono text-[10px] tracking-wider uppercase bg-gray-100 text-gray-700 px-2 py-0.5 rounded font-medium">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

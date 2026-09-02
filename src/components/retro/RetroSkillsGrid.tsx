@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RetroWindow } from './RetroWindow';
+import { RetroWindow, type RetroWindowProps } from './RetroWindow';
 
 interface SkillItem {
   name: string;
@@ -246,7 +246,7 @@ const SKILLS_DATA: SkillItem[] = [
 
 const CATEGORIES = ['All', 'Backend & Database', 'Frontend & Web', 'AI/ML & Vision', 'DevOps & Tools'] as const;
 
-export function RetroSkillsGrid() {
+export function RetroSkillsGrid(props?: Partial<RetroWindowProps>) {
   const [selectedCategory, setSelectedCategory] = useState<typeof CATEGORIES[number]>('All');
   const [activeSkill, setActiveSkill] = useState<SkillItem>(SKILLS_DATA[0]);
 
@@ -255,8 +255,14 @@ export function RetroSkillsGrid() {
     : SKILLS_DATA.filter(s => s.category === selectedCategory);
 
   return (
-    <section className="w-full max-w-4xl mx-auto p-4 mb-8">
-      <RetroWindow title="C:\SYSTEM\Skill_viewer.exe" hasMenu={true}>
+    <section className="w-full max-w-4xl mx-auto p-2 sm:p-4 mb-4">
+      <RetroWindow 
+        id="skills"
+        title="C:\SYSTEM\Skills.sys" 
+        icon="https://win98icons.alexmeub.com/icons/png/hardware_wiz-1.png"
+        hasMenu={true}
+        {...props}
+      >
         <div className="bg-[#c0c0c0] p-2 flex flex-col gap-3 font-[Tahoma,sans-serif] text-black">
           
           {/* Top Category Filter Toolbar */}

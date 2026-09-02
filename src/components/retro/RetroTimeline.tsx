@@ -1,5 +1,5 @@
 import React from 'react';
-import { RetroWindow } from './RetroWindow';
+import { RetroWindow, type RetroWindowProps } from './RetroWindow';
 
 const EXPERIENCE = [
   {
@@ -36,10 +36,16 @@ const EXPERIENCE = [
   }
 ];
 
-export function RetroTimeline() {
+export function RetroTimeline(props?: Partial<RetroWindowProps>) {
   return (
-    <section className="w-full max-w-4xl mx-auto p-4 mb-8">
-      <RetroWindow title="Experience_Log.txt - Notepad" hasMenu={true}>
+    <section className="w-full max-w-4xl mx-auto p-2 sm:p-4 mb-4">
+      <RetroWindow 
+        id="experience"
+        title="C:\LOGS\Quest_Log.bat" 
+        icon="https://win98icons.alexmeub.com/icons/png/notepad_file-2.png"
+        hasMenu={true}
+        {...props}
+      >
         <div className="bg-white win95-sunken p-4 h-[400px] overflow-y-auto text-black text-xs font-mono leading-relaxed">
           <div className="text-gray-500 mb-4 pb-2 border-b border-gray-300">
             [SYSTEM LOG] C:\LOGS\CAREER_HISTORY.LOG — READ ONLY (4 RECORDS FOUND)

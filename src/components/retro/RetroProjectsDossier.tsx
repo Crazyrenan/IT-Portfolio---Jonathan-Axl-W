@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RetroWindow } from './RetroWindow';
+import { RetroWindow, type RetroWindowProps } from './RetroWindow';
 
 interface ProjectDoc {
   id: string;
@@ -343,14 +343,20 @@ WEBGL & GSAP PERFORMANCE TUNING
   }
 ];
 
-export function RetroProjectsDossier() {
+export function RetroProjectsDossier(props?: Partial<RetroWindowProps>) {
   const [activeProject, setActiveProject] = useState<ProjectDoc>(PROJECTS_LIST[0]);
   const [activeSubTab, setActiveSubTab] = useState<'overview' | 'architecture' | 'docs'>('overview');
   const [selectedDocIndex, setSelectedDocIndex] = useState<number>(0);
 
   return (
-    <section className="w-full max-w-4xl mx-auto p-4 mb-8">
-      <RetroWindow title="C:\EXPLORER\Project_Explorer.exe" hasMenu={true}>
+    <section className="w-full max-w-4xl mx-auto p-2 sm:p-4 mb-4">
+      <RetroWindow 
+        id="projects"
+        title="C:\EXPLORER\Projects.exe" 
+        icon="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"
+        hasMenu={true}
+        {...props}
+      >
         <div className="bg-[#C0C0C0] p-2 flex flex-col gap-2 font-[Tahoma,sans-serif] text-black">
           
           {/* Address Bar */}

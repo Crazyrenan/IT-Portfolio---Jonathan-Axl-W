@@ -1,11 +1,17 @@
 import React from 'react';
-import { RetroWindow } from './RetroWindow';
+import { RetroWindow, type RetroWindowProps } from './RetroWindow';
 
-export function PixelHero() {
+export function PixelHero(props?: Partial<RetroWindowProps>) {
   return (
-    <section className="w-full pt-8 md:pt-16 pb-6 flex items-center justify-center p-4">
+    <section className="w-full pt-4 pb-4 flex items-center justify-center p-2 sm:p-4">
       <div className="w-full max-w-4xl">
-        <RetroWindow title="Profile.bmp - Paint" hasMenu={true}>
+        <RetroWindow 
+          id="hero"
+          title="C:\SYSTEM\Hero.exe" 
+          icon="https://win98icons.alexmeub.com/icons/png/paint_file-1.png"
+          hasMenu={true}
+          {...props}
+        >
           <div className="flex flex-col md:flex-row gap-4 items-stretch p-2 bg-[#808080]">
             
             {/* Left: Retro Paint Tools */}

@@ -29,7 +29,7 @@ const EXPERIENCE = [
   {
     id: 'umn',
     company: 'Universitas Multimedia Nusantara',
-    role: 'S1 Sistem Informasi (IPK 3.23 / 4.00)',
+    role: 'S1 Sistem Informasi (IPK 3.78 / 4.00)',
     date: '2022 - 2026',
     description: 'Mendalami rekayasa perangkat lunak skala besar, basis data terdistribusi, dan kecerdasan buatan terapan. Mengembangkan multiple sistem terverifikasi termasuk Intelligent IT Help Desk (reduksi 40% tiket duplikat), Telegram OCR Bot, dan Windbreaker AI.',
     tags: ['Akademik', 'IPK 3.78', 'Software Engineering', 'Applied AI', 'Data Architecture']

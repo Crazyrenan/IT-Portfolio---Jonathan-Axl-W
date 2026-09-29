@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import { RetroBootScreen } from './RetroBootScreen';
 import { PixelHero } from './PixelHero';
 import { RetroSkillsGrid } from './RetroSkillsGrid';
 import { RetroProjectsDossier } from './RetroProjectsDossier';
@@ -84,6 +85,12 @@ export function DesktopManager() {
   const [highestZIndex, setHighestZIndex] = useState<number>(20);
   const [hasInteracted, setHasInteracted] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [isBooting, setIsBooting] = useState<boolean>(true);
+
+  // Reboot System
+  const rebootOS = useCallback(() => {
+    setIsBooting(true);
+  }, []);
 
   // Responsive Mobile Fallback Check (< 768px)
   useEffect(() => {
@@ -342,6 +349,21 @@ export function DesktopManager() {
             Launch_All.bat
           </span>
         </button>
+
+        {/* Reboot OS Shortcut */}
+        <button
+          type="button"
+          onClick={rebootOS}
+          className="group flex flex-col items-center justify-center w-20 p-1.5 rounded text-center hover:bg-white/10 text-white border border-transparent focus:outline-none"
+          title="Reboot System & Replay Boot Animation"
+        >
+          <div className="w-10 h-10 flex items-center justify-center p-1 bg-black/40 rounded border border-gray-500/50 group-hover:scale-105 transition-transform shadow-lg">
+            <span className="text-xl">🔄</span>
+          </div>
+          <span className="text-[10px] font-bold font-mono tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/60 rounded truncate max-w-full">
+            Reboot_OS.bat
+          </span>
+        </button>
       </div>
 
       {/* Pristine Desktop Initial Prompt Banner (When All Closed on Desktop) */}
@@ -476,8 +498,18 @@ export function DesktopManager() {
         onLaunchAll={launchAll}
         onMinimizeAll={minimizeAll}
         onCloseAll={closeAll}
+        onReboot={rebootOS}
         hasInteracted={hasInteracted}
       />
+
+      {/* ── Retro Windows XP / 95 Boot Loading Screen ── */}
+      <AnimatePresence>
+        {isBooting && (
+          <RetroBootScreen
+            onComplete={() => setIsBooting(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -17,6 +17,7 @@ export interface RetroTaskbarProps {
   onLaunchAll: () => void;
   onMinimizeAll: () => void;
   onCloseAll: () => void;
+  onReboot?: () => void;
   hasInteracted: boolean;
 }
 
@@ -27,6 +28,7 @@ export function RetroTaskbar({
   onLaunchAll,
   onMinimizeAll,
   onCloseAll,
+  onReboot,
   hasInteracted
 }: RetroTaskbarProps) {
   const [startMenuOpen, setStartMenuOpen] = useState(false);
@@ -191,6 +193,17 @@ export function RetroTaskbar({
             >
               <span>✕</span>
               <span>Close All Windows</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                onReboot?.();
+                setStartMenuOpen(false);
+              }}
+              className="flex items-center gap-2 px-2 py-1 hover:bg-[#000080] hover:text-white text-left text-red-950 hover:text-white font-bold"
+            >
+              <span>🔄</span>
+              <span>Restart AXL_OS (Reboot)...</span>
             </button>
           </div>
         </div>

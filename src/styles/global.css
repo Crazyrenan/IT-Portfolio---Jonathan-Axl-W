@@ -102,6 +102,20 @@ body {
   }
 }
 
+/* ── Windows XP Caterpillar Loader Keyframes ── */
+@keyframes xp-caterpillar {
+  0% {
+    transform: translateX(-50px);
+  }
+  100% {
+    transform: translateX(270px);
+  }
+}
+
+.animate-xp-caterpillar {
+  animation: xp-caterpillar 1.35s infinite linear;
+}
+
 /* ── Cinematic Hero Design Tokens ── */
 :root {
   /* Navy palette */

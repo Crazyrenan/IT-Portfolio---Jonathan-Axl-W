@@ -79,7 +79,7 @@ export function RetroTaskbar({
       {startMenuOpen && (
         <div
           ref={startMenuRef}
-          className="fixed bottom-10 left-1 z-50 win95-raised flex shadow-2xl font-[Tahoma,sans-serif] text-black w-64 select-none border-2 border-white"
+          className="fixed bottom-10 left-1 z-50 win95-raised flex shadow-2xl font-[Tahoma,sans-serif] text-black w-64 max-w-[90vw] select-none border-2 border-white"
         >
           {/* Left Vertical Brand Banner */}
           <div className="w-8 bg-gradient-to-t from-[#000080] via-[#1084d0] to-[#000080] flex items-end justify-center pb-3">
@@ -100,7 +100,7 @@ export function RetroTaskbar({
               className="flex items-center gap-2 px-2 py-1.5 hover:bg-[#000080] hover:text-white text-left font-bold"
             >
               <span className="text-base">⚡</span>
-              <span>Launch All Applications</span>
+              <span>Buka Semua Jendela</span>
             </button>
 
             <div className="h-[2px] bg-[#808080] border-b border-white my-0.5" />
@@ -148,7 +148,7 @@ export function RetroTaskbar({
                 alt="Resume"
                 className="w-4 h-4 object-contain"
               />
-              <span>Download Resume (PDF)</span>
+              <span>Unduh CV / Resume (PDF)</span>
             </a>
 
             {/* GitHub */}
@@ -164,7 +164,7 @@ export function RetroTaskbar({
                 alt="GitHub"
                 className="w-4 h-4 object-contain"
               />
-              <span>GitHub Profile</span>
+              <span>Profil GitHub ↗</span>
             </a>
 
             <div className="h-[2px] bg-[#808080] border-b border-white my-0.5" />
@@ -179,7 +179,7 @@ export function RetroTaskbar({
               className="flex items-center gap-2 px-2 py-1 hover:bg-[#000080] hover:text-white text-left"
             >
               <span>🗕</span>
-              <span>Minimize All Windows</span>
+              <span>Minimalkan Semua Jendela</span>
             </button>
             <button
               type="button"
@@ -190,7 +190,7 @@ export function RetroTaskbar({
               className="flex items-center gap-2 px-2 py-1 hover:bg-[#000080] hover:text-white text-left"
             >
               <span>✕</span>
-              <span>Close All Windows</span>
+              <span>Tutup Semua Jendela</span>
             </button>
           </div>
         </div>
@@ -210,7 +210,7 @@ export function RetroTaskbar({
             onClick={() => setStartMenuOpen(!startMenuOpen)}
             className={`${
               startMenuOpen ? 'win95-sunken bg-[#dfdfdf]' : 'win95-raised'
-            } px-2.5 py-1 flex items-center gap-1.5 font-bold text-xs h-full text-black select-none focus:outline-none`}
+            } px-2 sm:px-2.5 py-1 flex items-center gap-1 sm:gap-1.5 font-bold text-xs h-full text-black select-none focus:outline-none`}
             aria-expanded={startMenuOpen}
           >
             <img
@@ -225,14 +225,14 @@ export function RetroTaskbar({
           <button
             type="button"
             onClick={allOpen ? onMinimizeAll : onLaunchAll}
-            title="Recruiter Quick View: Open and tile all portfolio sections"
-            className={`win95-raised px-2 py-1 flex items-center gap-1 font-bold text-[11px] h-full text-black hover:bg-[#dfdfdf] transition-none select-none ${
+            title="Recruiter Quick View: Buka semua ringkasan portofolio"
+            className={`win95-raised px-1.5 sm:px-2 py-1 flex items-center gap-1 font-bold text-[11px] h-full text-black hover:bg-[#dfdfdf] transition-none select-none ${
               !hasInteracted ? 'animate-pulse ring-1 ring-blue-700 bg-[#e8e8e8]' : ''
             }`}
           >
             <span>{allOpen ? '🗕' : '⚡'}</span>
-            <span className="hidden xs:inline sm:inline">
-              {allOpen ? 'Minimize All' : 'Launch All'}
+            <span className="hidden sm:inline">
+              {allOpen ? 'Minimalkan' : 'Buka Semua'}
             </span>
           </button>
         </div>
@@ -262,7 +262,7 @@ export function RetroTaskbar({
                 type="button"
                 onClick={() => onToggleWindow(win.id)}
                 title={win.exeName}
-                className={`${tabStyle} px-2 py-1 flex items-center gap-1.5 text-xs h-full min-w-[95px] max-w-[140px] flex-shrink-0 truncate select-none transition-none`}
+                className={`${tabStyle} px-1.5 sm:px-2 py-1 flex items-center gap-1 sm:gap-1.5 text-xs h-full min-w-[34px] sm:min-w-[85px] max-w-[130px] flex-shrink-0 truncate select-none transition-none justify-center sm:justify-start`}
               >
                 <img
                   src={win.icon}
@@ -274,9 +274,9 @@ export function RetroTaskbar({
                     target.src = 'https://win98icons.alexmeub.com/icons/png/windows-0.png';
                   }}
                 />
-                <span className="truncate text-[11px]">{win.exeName}</span>
+                <span className="hidden sm:inline truncate text-[10.5px]">{win.exeName}</span>
                 {win.isOpen && !win.isMinimized && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600 ml-auto flex-shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600 ml-auto flex-shrink-0 hidden sm:block" />
                 )}
               </button>
             );

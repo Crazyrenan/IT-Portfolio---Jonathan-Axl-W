@@ -283,24 +283,24 @@ export function RetroSkillsGrid(props?: Partial<RetroWindowProps>) {
           </div>
 
           {/* Main Content Area */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-3 min-h-[380px]">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-3 min-h-0 md:min-h-[360px]">
             
             {/* Left: Skill Grid (7 cols on desktop) */}
-            <div className="md:col-span-7 win95-sunken bg-white p-2 overflow-y-auto max-h-[400px]">
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <div className="md:col-span-7 win95-sunken bg-white p-1.5 sm:p-2 overflow-y-auto max-h-[260px] sm:max-h-[320px] md:max-h-[400px]">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 sm:gap-2">
                 {filteredSkills.map(skill => {
                   const isSelected = activeSkill.name === skill.name;
                   return (
                     <button
                       key={skill.name}
                       onClick={() => setActiveSkill(skill)}
-                      className={`flex flex-col items-center justify-center p-2 text-center rounded-none border transition-none select-none ${
+                      className={`flex flex-col items-center justify-center p-1.5 sm:p-2 text-center rounded-none border transition-none select-none ${
                         isSelected
                           ? 'bg-[#000080] text-white border-dotted border-white'
                           : 'bg-[#f0f0f0] text-black border-gray-300 hover:bg-[#dfdfdf]'
                       }`}
                     >
-                      <div className="w-7 h-7 flex items-center justify-center mb-1 bg-white border border-gray-400 p-1">
+                      <div className="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center mb-1 bg-white border border-gray-400 p-1">
                         <img
                           src={`https://cdn.simpleicons.org/${skill.slug}/${skill.color}`}
                           alt={skill.name}
@@ -313,10 +313,10 @@ export function RetroSkillsGrid(props?: Partial<RetroWindowProps>) {
                           }}
                         />
                       </div>
-                      <span className="text-[11px] font-bold truncate w-full leading-tight">
+                      <span className="text-[10.5px] sm:text-[11px] font-bold truncate w-full leading-tight">
                         {skill.name}
                       </span>
-                      <span className={`text-[9px] truncate w-full ${isSelected ? 'text-gray-200' : 'text-gray-500'}`}>
+                      <span className={`text-[8.5px] sm:text-[9px] truncate w-full ${isSelected ? 'text-gray-200' : 'text-gray-500'}`}>
                         {skill.category.split('&')[0].trim()}
                       </span>
                     </button>
@@ -326,11 +326,11 @@ export function RetroSkillsGrid(props?: Partial<RetroWindowProps>) {
             </div>
 
             {/* Right: Interactive Properties Pane (5 cols on desktop) */}
-            <div className="md:col-span-5 win95-raised p-3 flex flex-col justify-between bg-[#c0c0c0]">
+            <div className="md:col-span-5 win95-raised p-2.5 sm:p-3 flex flex-col justify-between bg-[#c0c0c0]">
               <div>
                 {/* Header in Properties */}
-                <div className="flex items-center gap-2 pb-2 border-b border-gray-400 mb-3">
-                  <div className="w-9 h-9 win95-sunken bg-white p-1.5 flex items-center justify-center flex-shrink-0">
+                <div className="flex items-center gap-2 pb-2 border-b border-gray-400 mb-2.5">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 win95-sunken bg-white p-1 flex items-center justify-center flex-shrink-0">
                     <img
                       src={`https://cdn.simpleicons.org/${activeSkill.slug}/${activeSkill.color}`}
                       alt={activeSkill.name}
@@ -343,31 +343,31 @@ export function RetroSkillsGrid(props?: Partial<RetroWindowProps>) {
                     />
                   </div>
                   <div className="overflow-hidden">
-                    <h4 className="font-bold text-sm text-black leading-tight truncate">
+                    <h4 className="font-bold text-xs sm:text-sm text-black leading-tight truncate">
                       {activeSkill.name}
                     </h4>
-                    <span className="text-[10px] text-[#000080] font-bold block">
+                    <span className="text-[9.5px] sm:text-[10px] text-[#000080] font-bold block">
                       [{activeSkill.category}]
                     </span>
                   </div>
                 </div>
 
                 {/* Properties fields */}
-                <div className="space-y-2.5 text-xs">
+                <div className="space-y-2 text-xs">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-gray-700 block mb-0.5">
-                      Verified Project Context:
+                    <span className="text-[9.5px] sm:text-[10px] uppercase font-bold text-gray-700 block mb-0.5">
+                      Pernah Dipakai di Proyek:
                     </span>
-                    <div className="win95-sunken bg-white p-2 text-[11px] text-black leading-snug">
+                    <div className="win95-sunken bg-white p-1.5 sm:p-2 text-[10.5px] sm:text-[11px] text-black leading-snug">
                       {activeSkill.projectContext}
                     </div>
                   </div>
 
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-gray-700 block mb-0.5">
-                      Technical Spec & Capabilities:
+                    <span className="text-[9.5px] sm:text-[10px] uppercase font-bold text-gray-700 block mb-0.5">
+                      Deskripsi &amp; Penggunaan:
                     </span>
-                    <div className="win95-sunken bg-white p-2 text-[11px] text-gray-800 leading-relaxed min-h-[70px]">
+                    <div className="win95-sunken bg-white p-1.5 sm:p-2 text-[10.5px] sm:text-[11px] text-gray-800 leading-relaxed min-h-[55px] sm:min-h-[70px]">
                       {activeSkill.description}
                     </div>
                   </div>
@@ -375,9 +375,9 @@ export function RetroSkillsGrid(props?: Partial<RetroWindowProps>) {
               </div>
 
               {/* Status bar footer */}
-              <div className="mt-3 pt-2 border-t border-gray-400 win95-sunken bg-[#dfdfdf] px-2 py-1 text-[10px] text-gray-700 flex justify-between items-center font-mono">
-                <span>STATUS: DRIVER_LOADED</span>
-                <span className="text-green-700 font-bold">● OK</span>
+              <div className="mt-2.5 pt-1.5 border-t border-gray-400 win95-sunken bg-[#dfdfdf] px-2 py-1 text-[9.5px] sm:text-[10px] text-gray-700 flex justify-between items-center font-mono">
+                <span>STATUS: READY</span>
+                <span className="text-green-700 font-bold">● ACTIVE</span>
               </div>
 
             </div>

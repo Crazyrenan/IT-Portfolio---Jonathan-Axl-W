@@ -88,6 +88,18 @@ body {
     background: linear-gradient(to right, #808080, #a0a0a0);
     color: #dfdfdf;
   }
+  .animate-slide-in-right {
+    animation: win95-slide-in-right 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
+
+@keyframes win95-slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 /* ── Cinematic Hero Design Tokens ── */

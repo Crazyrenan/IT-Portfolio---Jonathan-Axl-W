@@ -18,7 +18,7 @@ export function RetroTerminal(props?: Partial<RetroWindowProps>) {
   };
 
   return (
-    <section className="w-full max-w-4xl mx-auto p-2 sm:p-4 mb-16">
+    <section className="w-full max-w-4xl mx-auto p-2 sm:p-4 mb-20">
       <RetroWindow
         id="contact"
         title="C:\COMM\Contact.exe"
@@ -26,33 +26,33 @@ export function RetroTerminal(props?: Partial<RetroWindowProps>) {
         hasMenu={true}
         {...props}
       >
-        <div className="flex flex-col md:flex-row gap-4 p-2 bg-[#c0c0c0] font-[Tahoma,sans-serif] text-black text-xs">
+        <div className="flex flex-col md:flex-row gap-3 sm:gap-4 p-2 sm:p-2.5 bg-[#c0c0c0] font-[Tahoma,sans-serif] text-black text-xs">
 
           {/* Left: Input Form */}
-          <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-3">
+          <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-2.5">
             <div className="flex flex-col gap-1">
-              <label className="font-bold text-black text-xs">Nama Lengkap (Sender):</label>
+              <label className="font-bold text-black text-xs">Nama Kamu:</label>
               <input
                 type="text"
                 name="name"
                 required
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="Nama Anda"
-                className="win95-sunken px-2 py-1 text-black outline-none text-xs bg-white"
+                placeholder="Misal: Alex / Recruiter Team"
+                className="win95-sunken px-2 py-1.5 text-black outline-none text-xs bg-white"
               />
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="font-bold text-black text-xs">Alamat Email (Reply-To):</label>
+              <label className="font-bold text-black text-xs">Email Kontak:</label>
               <input
                 type="email"
                 name="email"
                 required
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="email@domain.com"
-                className="win95-sunken px-2 py-1 text-black outline-none text-xs bg-white"
+                placeholder="nama@perusahaan.com"
+                className="win95-sunken px-2 py-1.5 text-black outline-none text-xs bg-white"
               />
             </div>
 
@@ -63,8 +63,8 @@ export function RetroTerminal(props?: Partial<RetroWindowProps>) {
                 name="subject"
                 value={formData.subject}
                 onChange={handleChange}
-                placeholder="Peluang Kerja / Kolaborasi Riset"
-                className="win95-sunken px-2 py-1 text-black outline-none text-xs bg-white"
+                placeholder="Peluang Kerja / Kolaborasi Riset AI / Proyek Web"
+                className="win95-sunken px-2 py-1.5 text-black outline-none text-xs bg-white"
               />
             </div>
 
@@ -76,14 +76,15 @@ export function RetroTerminal(props?: Partial<RetroWindowProps>) {
                 rows={5}
                 value={formData.message}
                 onChange={handleChange}
-                placeholder="Tuliskan pesan atau detail penawaran kerja Anda di sini..."
+                placeholder="Tuliskan pesan kamu di sini, entah tawaran pekerjaan, proyek freelance, atau sekadar ajak diskusi tech..."
                 className="win95-sunken p-2 text-black outline-none resize-y text-xs bg-white min-h-[90px]"
               ></textarea>
             </div>
 
-            <div className="flex gap-2 pt-1">
-              <button type="submit" className="win95-btn font-bold text-xs px-4 py-1.5 active:bg-[#a0a0a0]">
-                ✉️ Kirim Pesan (SEND_MAIL)
+            <div className="flex flex-wrap gap-2 pt-1">
+              <button type="submit" className="win95-btn font-bold text-xs px-4 py-1.5 active:bg-[#a0a0a0] flex items-center gap-1.5">
+                <span>✉️</span>
+                <span>Kirim Email Langsung</span>
               </button>
               <button
                 type="button"
@@ -96,10 +97,10 @@ export function RetroTerminal(props?: Partial<RetroWindowProps>) {
           </form>
 
           {/* Right: Official Channels Sidebar */}
-          <div className="w-full md:w-[280px] flex flex-col gap-3">
-            <fieldset className="win95-raised p-3 flex flex-col gap-2.5 bg-[#dfdfdf] border border-gray-400">
+          <div className="w-full md:w-[280px] flex flex-col gap-2.5">
+            <fieldset className="win95-raised p-2.5 sm:p-3 flex flex-col gap-2 bg-[#dfdfdf] border border-gray-400">
               <legend className="text-xs font-bold text-black px-1">
-                Official Channels &amp; Links
+                Kontak &amp; Profil Resmi
               </legend>
 
               {/* Gmail Channel */}
@@ -115,8 +116,8 @@ export function RetroTerminal(props?: Partial<RetroWindowProps>) {
                   />
                 </div>
                 <div className="overflow-hidden">
-                  <div className="font-bold text-[11px] text-[#EA4335]">Gmail Official</div>
-                  <div className="text-[10px] text-gray-700 truncate">jonathan.axl@gmail.com</div>
+                  <div className="font-bold text-[11px] text-[#EA4335]">Email (Gmail)</div>
+                  <div className="text-[10px] text-gray-700 truncate">vinny.jonathan.axl@gmail.com</div>
                 </div>
               </a>
 
@@ -162,8 +163,8 @@ export function RetroTerminal(props?: Partial<RetroWindowProps>) {
             </fieldset>
 
             <div className="win95-sunken bg-white p-2.5 text-[11px] text-gray-800 leading-snug flex-1">
-              <span className="font-bold text-[#000080] block mb-1">Direct Communication Port:</span>
-              Terbuka untuk peluang kerja full-time, kontrak rekayasa perangkat lunak, maupun kolaborasi penelitian kecerdasan buatan terapan.
+              <span className="font-bold text-[#000080] block mb-1">Open for Opportunities:</span>
+              Gue selalu terbuka buat peluang kerja full-time, proyek software engineering, atau kolaborasi riset applied deep learning. Yuk ngobrol santai!
             </div>
           </div>
 

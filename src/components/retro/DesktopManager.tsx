@@ -5,6 +5,7 @@ import { RetroSkillsGrid } from './RetroSkillsGrid';
 import { RetroProjectsDossier } from './RetroProjectsDossier';
 import { RetroTimeline } from './RetroTimeline';
 import { RetroTerminal } from './RetroTerminal';
+import { RetroCertificateGallery } from './RetroCertificateGallery';
 import { RetroTaskbar, type TaskbarWindowItem } from './RetroTaskbar';
 
 export interface WindowConfig {
@@ -22,7 +23,7 @@ export interface WindowConfig {
 const INITIAL_WINDOWS: Record<string, WindowConfig> = {
   hero: {
     id: 'hero',
-    title: 'Hero.exe - Profile',
+    title: 'Hero.exe - Profil & Bio',
     exeName: 'Hero.exe',
     icon: 'https://win98icons.alexmeub.com/icons/png/paint_file-1.png',
     isOpen: false,
@@ -33,7 +34,7 @@ const INITIAL_WINDOWS: Record<string, WindowConfig> = {
   },
   skills: {
     id: 'skills',
-    title: 'Skills.sys - Driver Stack',
+    title: 'Skills.sys - Tech Stack',
     exeName: 'Skills.sys',
     icon: 'https://win98icons.alexmeub.com/icons/png/hardware_wiz-1.png',
     isOpen: false,
@@ -44,7 +45,7 @@ const INITIAL_WINDOWS: Record<string, WindowConfig> = {
   },
   projects: {
     id: 'projects',
-    title: 'Projects.exe - Explorer',
+    title: 'Projects.exe - Portfolio Proyek',
     exeName: 'Projects.exe',
     icon: 'https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png',
     isOpen: false,
@@ -55,7 +56,7 @@ const INITIAL_WINDOWS: Record<string, WindowConfig> = {
   },
   experience: {
     id: 'experience',
-    title: 'Quest_Log.bat - Career Log',
+    title: 'Quest_Log.bat - Pengalaman Kerja',
     exeName: 'Quest_Log.bat',
     icon: 'https://win98icons.alexmeub.com/icons/png/notepad_file-2.png',
     isOpen: false,
@@ -66,7 +67,7 @@ const INITIAL_WINDOWS: Record<string, WindowConfig> = {
   },
   contact: {
     id: 'contact',
-    title: 'Contact.exe - Communication',
+    title: 'Contact.exe - Kontak & Diskusi',
     exeName: 'Contact.exe',
     icon: 'https://win98icons.alexmeub.com/icons/png/envelope_closed-0.png',
     isOpen: false,
@@ -338,33 +339,33 @@ export function DesktopManager() {
             <span className="text-xl">⚡</span>
           </div>
           <span className="text-[10px] font-bold font-mono tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/60 rounded truncate max-w-full">
-            Launch_All.bat
+            Buka_Semua.bat
           </span>
         </button>
       </div>
 
       {/* Pristine Desktop Initial Prompt Banner (When All Closed on Desktop) */}
       {!anyWindowOpen && !isMobile && (
-        <div className="min-h-[75vh] flex flex-col items-center justify-center p-4 text-center z-20 relative pointer-events-auto">
-          <div className="win95-raised p-6 max-w-lg mx-auto shadow-2xl border-2 border-white">
+        <div className="min-h-[75vh] flex flex-col items-center justify-center p-4 text-center z-20 relative pointer-events-auto lg:pr-[280px]">
+          <div className="win95-raised p-5 sm:p-6 max-w-lg mx-auto shadow-2xl border-2 border-white">
             <div className="win95-titlebar-active p-1.5 flex items-center gap-2 mb-4 font-bold text-xs text-white">
               <img
                 src="https://win98icons.alexmeub.com/icons/png/computer_explorer-4.png"
                 alt="System"
                 className="w-4 h-4"
               />
-              <span>AXL_OS v98.4 // SYSTEM READY</span>
+              <span>AXL_OS v98.4 // READY</span>
             </div>
 
-            <h1 className="text-xl font-bold font-[Tahoma] text-black mb-2">
+            <h1 className="text-xl sm:text-2xl font-bold font-[Tahoma] text-black mb-1">
               Jonathan Axl Wibowo
             </h1>
-            <h2 className="text-xs text-blue-900 font-bold mb-4 font-[Tahoma]">
-              Full-Stack Software Engineer &times; Deep Learning Researcher
+            <h2 className="text-xs sm:text-sm text-blue-900 font-bold mb-3 font-[Tahoma]">
+              Full-Stack Engineer &amp; Applied Deep Learning Researcher
             </h2>
 
             <p className="text-xs text-gray-800 leading-relaxed mb-5 font-[Tahoma]">
-              Welcome to the Interactive Retro OS Portfolio. Click any icon on the desktop or taskbar to launch individual applications, or press the button below to tile all windows for immediate recruiter review.
+              Halo! Selamat datang di portfolio retro gue. Klik shortcut di desktop atau taskbar buat buka aplikasi, atau langsung pencet tombol di bawah buat intip semua rangkuman portofolio sekaligus.
             </p>
 
             <div className="flex flex-wrap gap-3 justify-center">
@@ -374,15 +375,15 @@ export function DesktopManager() {
                 className="win95-btn font-bold text-xs px-4 py-2 bg-[#dfdfdf] flex items-center gap-2 text-black hover:bg-white shadow"
               >
                 <span className="text-sm">⚡</span>
-                <span>Launch All Applications (Recruiter View)</span>
+                <span>Buka Semua Jendela (Recruiter Mode)</span>
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Active Windows Assembled Layout Area */}
-      <main className="w-full flex flex-col items-center justify-center relative z-20 pt-4">
+      {/* Active Windows Assembled Layout Area (Offset on desktop for sidebar) */}
+      <main className="w-full flex flex-col items-center justify-center relative z-20 pt-4 px-2 sm:px-4 lg:pr-[280px]">
         {/* 1. Hero Window */}
         <AnimatePresence>
           {windows.hero.isOpen && !windows.hero.isMinimized && (
@@ -463,6 +464,9 @@ export function DesktopManager() {
           )}
         </AnimatePresence>
       </main>
+
+      {/* Retro Certificate Gallery (Desktop Sidebar & Mobile Toggle Drawer) */}
+      <RetroCertificateGallery />
 
       {/* Interactive Bottom Taskbar */}
       <RetroTaskbar

@@ -100,7 +100,7 @@ export function RetroTaskbar({
               className="flex items-center gap-2 px-2 py-1.5 hover:bg-[#000080] hover:text-white text-left font-bold"
             >
               <span className="text-base">⚡</span>
-              <span>Buka Semua Jendela</span>
+              <span>Launch All Windows</span>
             </button>
 
             <div className="h-[2px] bg-[#808080] border-b border-white my-0.5" />
@@ -123,7 +123,7 @@ export function RetroTaskbar({
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.onerror = null;
-                    target.src = 'https://win98icons.alexmeub.com/icons/png/windows-0.png';
+                    target.src = '/icons/retro/windows.svg';
                   }}
                 />
                 <span className="truncate">{win.exeName}</span>
@@ -144,11 +144,11 @@ export function RetroTaskbar({
               className="flex items-center gap-2 px-2 py-1 hover:bg-[#000080] hover:text-white text-left no-underline text-black"
             >
               <img
-                src="https://win98icons.alexmeub.com/icons/png/notepad_file-2.png"
+                src="/icons/retro/quest.svg"
                 alt="Resume"
                 className="w-4 h-4 object-contain"
               />
-              <span>Unduh CV / Resume (PDF)</span>
+              <span>Download CV / Resume (PDF)</span>
             </a>
 
             {/* GitHub */}
@@ -160,11 +160,11 @@ export function RetroTaskbar({
               className="flex items-center gap-2 px-2 py-1 hover:bg-[#000080] hover:text-white text-left no-underline text-black"
             >
               <img
-                src="https://cdn.simpleicons.org/github/181717"
+                src="/icons/github.svg"
                 alt="GitHub"
                 className="w-4 h-4 object-contain"
               />
-              <span>Profil GitHub ↗</span>
+              <span>GitHub Profile ↗</span>
             </a>
 
             <div className="h-[2px] bg-[#808080] border-b border-white my-0.5" />
@@ -179,7 +179,7 @@ export function RetroTaskbar({
               className="flex items-center gap-2 px-2 py-1 hover:bg-[#000080] hover:text-white text-left"
             >
               <span>🗕</span>
-              <span>Minimalkan Semua Jendela</span>
+              <span>Minimize All Windows</span>
             </button>
             <button
               type="button"
@@ -190,7 +190,7 @@ export function RetroTaskbar({
               className="flex items-center gap-2 px-2 py-1 hover:bg-[#000080] hover:text-white text-left"
             >
               <span>✕</span>
-              <span>Tutup Semua Jendela</span>
+              <span>Close All Windows</span>
             </button>
           </div>
         </div>
@@ -214,7 +214,7 @@ export function RetroTaskbar({
             aria-expanded={startMenuOpen}
           >
             <img
-              src="https://win98icons.alexmeub.com/icons/png/windows-0.png"
+              src="/icons/retro/windows.svg"
               alt="Start"
               className="w-4 h-4"
             />
@@ -225,14 +225,14 @@ export function RetroTaskbar({
           <button
             type="button"
             onClick={allOpen ? onMinimizeAll : onLaunchAll}
-            title="Recruiter Quick View: Buka semua ringkasan portofolio"
+            title="Recruiter Quick View: Launch all portfolio windows"
             className={`win95-raised px-1.5 sm:px-2 py-1 flex items-center gap-1 font-bold text-[11px] h-full text-black hover:bg-[#dfdfdf] transition-none select-none ${
               !hasInteracted ? 'animate-pulse ring-1 ring-blue-700 bg-[#e8e8e8]' : ''
             }`}
           >
             <span>{allOpen ? '🗕' : '⚡'}</span>
             <span className="hidden sm:inline">
-              {allOpen ? 'Minimalkan' : 'Buka Semua'}
+              {allOpen ? 'Minimize All' : 'Launch All'}
             </span>
           </button>
         </div>
@@ -271,7 +271,7 @@ export function RetroTaskbar({
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.onerror = null;
-                    target.src = 'https://win98icons.alexmeub.com/icons/png/windows-0.png';
+                    target.src = '/icons/retro/windows.svg';
                   }}
                 />
                 <span className="hidden sm:inline truncate text-[10.5px]">{win.exeName}</span>
@@ -293,11 +293,9 @@ export function RetroTaskbar({
             </div>
 
             {/* Sound Icon */}
-            <img
-              src="https://win98icons.alexmeub.com/icons/png/loudspeaker_rays-0.png"
-              alt="Volume"
-              className="w-3.5 h-3.5 hidden xs:block"
-            />
+            <svg className="w-3.5 h-3.5 hidden xs:block" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M2 5h3l4-3v12l-4-3H2V5zm10 0a4 4 0 0 1 0 6v-1.5a2.5 2.5 0 0 0 0-3V5zm2-2a6.5 6.5 0 0 1 0 10v-1.5a5 5 0 0 0 0-7V3z"/>
+            </svg>
 
             {/* Live Clock */}
             <span className="text-xs font-mono font-bold whitespace-nowrap">

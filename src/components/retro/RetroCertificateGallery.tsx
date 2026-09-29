@@ -24,7 +24,7 @@ export function RetroCertificateGallery() {
               handleOpenCertificate(cert.credentialUrl);
             }
           }}
-          title="Klik untuk buka sertifikat resolusi penuh di tab baru ↗"
+          title="Click to view full-resolution certificate in a new tab ↗"
         >
           {/* Certificate Thumbnail Preview (Compact) */}
           <div className="w-full h-16 win95-sunken bg-white overflow-hidden relative border border-gray-400 group-hover:border-blue-900">
@@ -39,7 +39,7 @@ export function RetroCertificateGallery() {
             </div>
             <div className="absolute inset-0 bg-blue-950/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
               <span className="win95-btn text-[9px] font-bold px-1.5 py-0.5 shadow bg-white text-black">
-                Buka Dokumen ↗
+                View Document ↗
               </span>
             </div>
           </div>
@@ -81,7 +81,7 @@ export function RetroCertificateGallery() {
           {/* Titlebar */}
           <div className="win95-titlebar-active px-2 py-1 flex items-center justify-between select-none">
             <div className="flex items-center gap-1.5 font-bold text-xs text-white truncate">
-              <span className="text-sm">📜</span>
+              <img src="/icons/retro/certs.svg" alt="Certs" className="w-4 h-4 object-contain" />
               <span className="truncate">Certs.vault ({CERTIFICATES_DATA.length})</span>
             </div>
             <div className="flex items-center gap-1">
@@ -89,7 +89,7 @@ export function RetroCertificateGallery() {
                 type="button"
                 onClick={() => setIsDesktopMinimized(!isDesktopMinimized)}
                 className="win95-btn w-4 h-4 text-[10px] font-bold p-0 flex items-center justify-center leading-none text-black"
-                title={isDesktopMinimized ? 'Buka Tab' : 'Minimalkan'}
+                title={isDesktopMinimized ? 'Restore Tab' : 'Minimize'}
                 aria-label="Minimize or Restore Certificate Vault"
               >
                 {isDesktopMinimized ? '□' : '_'}
@@ -98,7 +98,7 @@ export function RetroCertificateGallery() {
                 type="button"
                 onClick={() => setIsDesktopClosed(true)}
                 className="win95-btn w-4 h-4 text-[10px] font-bold p-0 flex items-center justify-center leading-none text-black hover:text-red-700"
-                title="Tutup"
+                title="Close"
                 aria-label="Close Certificate Vault"
               >
                 ✕
@@ -122,7 +122,7 @@ export function RetroCertificateGallery() {
 
               {/* Footer Summary */}
               <div className="pt-1 text-[8.5px] font-mono text-gray-700 flex justify-between px-0.5">
-                <span>Total: {CERTIFICATES_DATA.length} File JPG</span>
+                <span>Total: {CERTIFICATES_DATA.length} Credentials</span>
                 <span className="text-green-800 font-bold">● READY</span>
               </div>
             </div>
@@ -140,9 +140,9 @@ export function RetroCertificateGallery() {
               setIsDesktopMinimized(false);
             }}
             className="win95-btn px-2.5 py-1 text-xs font-bold flex items-center gap-1.5 shadow-lg text-black bg-[#dfdfdf]"
-            title="Buka kembali Certs Vault"
+            title="Restore Certificate Vault"
           >
-            <span>📜</span>
+            <img src="/icons/retro/certs.svg" alt="Certs" className="w-4 h-4 object-contain" />
             <span>Certs ({CERTIFICATES_DATA.length})</span>
           </button>
         </div>
@@ -154,10 +154,10 @@ export function RetroCertificateGallery() {
           type="button"
           onClick={() => setMobileModalOpen(true)}
           className="win95-btn px-2.5 py-1.5 flex items-center gap-1.5 font-bold text-xs shadow-xl border-2 border-black/40 bg-[#e8e8e8] active:bg-[#dfdfdf] text-black"
-          aria-label="Buka Galeri Sertifikat"
+          aria-label="Open Certificate Vault"
         >
-          <span className="text-sm">📜</span>
-          <span>Sertifikat</span>
+          <img src="/icons/retro/certs.svg" alt="Certs" className="w-4 h-4 object-contain" />
+          <span>Certificates</span>
           <span className="w-4 h-4 rounded-full bg-[#000080] text-white text-[9.5px] flex items-center justify-center font-mono font-bold">
             {CERTIFICATES_DATA.length}
           </span>
@@ -177,14 +177,14 @@ export function RetroCertificateGallery() {
             {/* Modal Titlebar */}
             <div className="win95-titlebar-active px-2 py-1 flex items-center justify-between select-none mb-1">
               <div className="flex items-center gap-1.5 font-bold text-xs text-white truncate">
-                <span className="text-sm">📜</span>
+                <img src="/icons/retro/certs.svg" alt="Certs" className="w-4 h-4 object-contain" />
                 <span className="truncate">Certs.vault ({CERTIFICATES_DATA.length})</span>
               </div>
               <button
                 type="button"
                 onClick={() => setMobileModalOpen(false)}
                 className="win95-btn w-5 h-5 text-xs font-bold p-0 flex items-center justify-center leading-none text-black hover:text-red-700"
-                aria-label="Tutup Dialog Sertifikat"
+                aria-label="Close Certificate Dialog"
               >
                 ✕
               </button>
@@ -192,9 +192,9 @@ export function RetroCertificateGallery() {
 
             {/* Subheader */}
             <div className="bg-[#dfdfdf] win95-sunken px-1.5 py-1 mb-1.5 text-[10px] text-gray-800 font-[Tahoma] flex items-center justify-between">
-              <span>Klik untuk buka file resolusi penuh</span>
+              <span>Click any item to view credential</span>
               <span className="text-blue-900 font-bold font-mono">
-                {CERTIFICATES_DATA.length} ITEM
+                {CERTIFICATES_DATA.length} ITEMS
               </span>
             </div>
 
@@ -210,7 +210,7 @@ export function RetroCertificateGallery() {
                 onClick={() => setMobileModalOpen(false)}
                 className="win95-btn font-bold text-xs px-3 py-1 w-full text-black"
               >
-                Tutup Jendela
+                Close Window
               </button>
             </div>
           </div>

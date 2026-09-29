@@ -23,9 +23,9 @@ export interface WindowConfig {
 const INITIAL_WINDOWS: Record<string, WindowConfig> = {
   hero: {
     id: 'hero',
-    title: 'Hero.exe - Profil & Bio',
+    title: 'Hero.exe - Profile & Bio',
     exeName: 'Hero.exe',
-    icon: 'https://win98icons.alexmeub.com/icons/png/paint_file-1.png',
+    icon: '/icons/retro/hero.svg',
     isOpen: false,
     isMinimized: false,
     isMaximized: false,
@@ -34,9 +34,9 @@ const INITIAL_WINDOWS: Record<string, WindowConfig> = {
   },
   skills: {
     id: 'skills',
-    title: 'Skills.sys - Tech Stack',
+    title: 'Skills.sys - Tech Stack & Specs',
     exeName: 'Skills.sys',
-    icon: 'https://win98icons.alexmeub.com/icons/png/hardware_wiz-1.png',
+    icon: '/icons/retro/skills.svg',
     isOpen: false,
     isMinimized: false,
     isMaximized: false,
@@ -45,9 +45,9 @@ const INITIAL_WINDOWS: Record<string, WindowConfig> = {
   },
   projects: {
     id: 'projects',
-    title: 'Projects.exe - Portfolio Proyek',
+    title: 'Projects.exe - Portfolio Dossier',
     exeName: 'Projects.exe',
-    icon: 'https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png',
+    icon: '/icons/retro/projects.svg',
     isOpen: false,
     isMinimized: false,
     isMaximized: false,
@@ -56,9 +56,9 @@ const INITIAL_WINDOWS: Record<string, WindowConfig> = {
   },
   experience: {
     id: 'experience',
-    title: 'Quest_Log.bat - Pengalaman Kerja',
+    title: 'Quest_Log.bat - Career Experience',
     exeName: 'Quest_Log.bat',
-    icon: 'https://win98icons.alexmeub.com/icons/png/notepad_file-2.png',
+    icon: '/icons/retro/quest.svg',
     isOpen: false,
     isMinimized: false,
     isMaximized: false,
@@ -67,9 +67,9 @@ const INITIAL_WINDOWS: Record<string, WindowConfig> = {
   },
   contact: {
     id: 'contact',
-    title: 'Contact.exe - Kontak & Diskusi',
+    title: 'Contact.exe - Contact & Transmission',
     exeName: 'Contact.exe',
-    icon: 'https://win98icons.alexmeub.com/icons/png/envelope_closed-0.png',
+    icon: '/icons/retro/contact.svg',
     isOpen: false,
     isMinimized: false,
     isMaximized: false,
@@ -318,7 +318,7 @@ export function DesktopManager() {
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.onerror = null;
-                      target.src = 'https://win98icons.alexmeub.com/icons/png/windows-0.png';
+                      target.src = '/icons/retro/windows.svg';
                     }}
                   />
                 </div>
@@ -339,7 +339,7 @@ export function DesktopManager() {
             <span className="text-xl">⚡</span>
           </div>
           <span className="text-[10px] font-bold font-mono tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/60 rounded truncate max-w-full">
-            Buka_Semua.bat
+            Launch_All.bat
           </span>
         </button>
       </div>
@@ -350,7 +350,7 @@ export function DesktopManager() {
           <div className="win95-raised p-5 sm:p-6 max-w-lg mx-auto shadow-2xl border-2 border-white">
             <div className="win95-titlebar-active p-1.5 flex items-center gap-2 mb-4 font-bold text-xs text-white">
               <img
-                src="https://win98icons.alexmeub.com/icons/png/computer_explorer-4.png"
+                src="/icons/retro/computer.svg"
                 alt="System"
                 className="w-4 h-4"
               />
@@ -365,7 +365,7 @@ export function DesktopManager() {
             </h2>
 
             <p className="text-xs text-gray-800 leading-relaxed mb-5 font-[Tahoma]">
-              Halo! Selamat datang di portfolio retro gue. Klik shortcut di desktop atau taskbar buat buka aplikasi, atau langsung pencet tombol di bawah buat intip semua rangkuman portofolio sekaligus.
+              Welcome to my interactive retro OS portfolio! Click any desktop shortcut or taskbar item to launch an application, or launch all windows to explore the full portfolio dossier at once.
             </p>
 
             <div className="flex flex-wrap gap-3 justify-center">
@@ -375,7 +375,7 @@ export function DesktopManager() {
                 className="win95-btn font-bold text-xs px-4 py-2 bg-[#dfdfdf] flex items-center gap-2 text-black hover:bg-white shadow"
               >
                 <span className="text-sm">⚡</span>
-                <span>Buka Semua Jendela (Recruiter Mode)</span>
+                <span>Launch All Windows (Recruiter Mode)</span>
               </button>
             </div>
           </div>

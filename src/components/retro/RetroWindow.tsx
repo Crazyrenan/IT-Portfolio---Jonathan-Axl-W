@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useDragControls } from 'framer-motion';
 
 export interface RetroWindowProps {
   id?: string;
@@ -22,7 +22,7 @@ export interface RetroWindowProps {
 export function RetroWindow({
   id,
   title = "Program",
-  icon = "https://win98icons.alexmeub.com/icons/png/windows-0.png",
+  icon = "/icons/retro/windows.svg",
   isMinimized = false,
   isMaximized = false,
   isActive = true,
@@ -35,32 +35,49 @@ export function RetroWindow({
   onMaximize,
   children
 }: RetroWindowProps) {
+  const dragControls = useDragControls();
+
+  const handleTitlePointerDown = (e: React.PointerEvent) => {
+    onFocus?.();
+    if (!isMaximized) {
+      dragControls.start(e);
+    }
+  };
+
   return (
     <motion.div
       id={id}
-      layout
-      initial={{ scale: 0.1, y: 180, opacity: 0 }}
-      animate={{ scale: 1, y: 0, opacity: 1 }}
-      exit={{ scale: 0.1, y: 180, opacity: 0, transition: { duration: 0.2, ease: "easeOut" } }}
+      drag={!isMaximized}
+      dragControls={dragControls}
+      dragListener={false}
+      dragMomentum={false}
+      dragElastic={0.05}
+      initial={{ scale: 0.9, opacity: 0 }}
+      animate={isMaximized ? { x: 0, y: 0, scale: 1, opacity: 1 } : { scale: 1, opacity: 1 }}
+      exit={{ scale: 0.9, opacity: 0, transition: { duration: 0.15, ease: "easeOut" } }}
       transition={{
         type: "spring",
-        stiffness: 240,
-        damping: 22,
-        mass: 0.8
+        stiffness: 300,
+        damping: 26,
+        mass: 0.7
       }}
       style={{ zIndex }}
-      onClick={onFocus}
-      className={`win95-raised flex flex-col p-1 mb-8 transition-shadow duration-150 ${
+      onPointerDown={onFocus}
+      className={`win95-raised flex flex-col p-1 mb-6 transition-shadow duration-150 ${
         isActive ? 'shadow-2xl ring-1 ring-black/40' : 'shadow-md opacity-95'
-      } ${isMaximized ? 'w-full max-w-6xl' : 'w-full max-w-4xl'} ${className}`}
+      } ${isMaximized ? 'w-full max-w-6xl' : 'w-full max-w-3xl sm:max-w-4xl'} ${className}`}
     >
       {/* Titlebar */}
       <div 
+        onPointerDown={handleTitlePointerDown}
+        onDoubleClick={onMaximize}
         className={`${
           isActive ? 'win95-titlebar-active' : 'win95-titlebar-inactive'
-        } flex justify-between items-center px-1.5 py-1 select-none cursor-default`}
+        } flex justify-between items-center px-1.5 py-1 select-none ${
+          isMaximized ? 'cursor-default' : 'cursor-move'
+        } touch-none`}
       >
-        <div className="flex items-center gap-2 font-bold text-xs sm:text-sm tracking-wide ml-1 truncate">
+        <div className="flex items-center gap-2 font-bold text-xs sm:text-sm tracking-wide ml-1 truncate pointer-events-none">
           <img 
             src={icon} 
             alt="icon" 
@@ -68,7 +85,7 @@ export function RetroWindow({
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.onerror = null;
-              target.src = 'https://win98icons.alexmeub.com/icons/png/windows-0.png';
+              target.src = '/icons/retro/windows.svg';
             }}
           />
           <span className="truncate">{title}</span>
@@ -78,11 +95,12 @@ export function RetroWindow({
             type="button"
             title="Minimize"
             aria-label="Minimize Window"
+            onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => {
               e.stopPropagation();
               onMinimize?.();
             }}
-            className="win95-btn font-bold text-xs flex items-center justify-center w-5 h-5 p-0 focus:outline-none select-none leading-none"
+            className="win95-btn font-bold text-xs flex items-center justify-center w-5 h-5 p-0 focus:outline-none select-none leading-none text-black"
           >
             _
           </button>
@@ -90,11 +108,12 @@ export function RetroWindow({
             type="button"
             title={isMaximized ? "Restore" : "Maximize"}
             aria-label={isMaximized ? "Restore Window" : "Maximize Window"}
+            onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => {
               e.stopPropagation();
               onMaximize?.();
             }}
-            className="win95-btn font-bold text-xs flex items-center justify-center w-5 h-5 p-0 focus:outline-none select-none leading-none"
+            className="win95-btn font-bold text-xs flex items-center justify-center w-5 h-5 p-0 focus:outline-none select-none leading-none text-black"
           >
             {isMaximized ? '❐' : '□'}
           </button>
@@ -102,6 +121,7 @@ export function RetroWindow({
             type="button"
             title="Close"
             aria-label="Close Window"
+            onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => {
               e.stopPropagation();
               onClose?.();

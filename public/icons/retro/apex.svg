@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" shape-rendering="crispEdges">
+  <!-- Apex Legends Retro Arrowhead / Chevron Icon -->
+  <rect x="2" y="2" width="28" height="28" fill="#1A1A1A" stroke="#000000" stroke-width="2"/>
+  <!-- Red Border Frame -->
+  <rect x="4" y="4" width="24" height="24" fill="none" stroke="#DA291C" stroke-width="1"/>
+  <!-- The Iconic Apex Arrowhead Symbol -->
+  <polygon points="16,5 25,23 20,23 16,13 12,23 7,23" fill="#DA291C" stroke="#000000" stroke-width="1"/>
+  <!-- Inner White Accent Blade -->
+  <polygon points="16,9 20,20 18,20 16,15 14,20 12,20" fill="#FFFFFF"/>
+  <!-- Base cross line -->
+  <rect x="10" y="25" width="12" height="2" fill="#DA291C"/>
+</svg>

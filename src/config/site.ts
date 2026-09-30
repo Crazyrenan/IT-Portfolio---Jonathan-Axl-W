@@ -10,6 +10,6 @@ export const navLinks = [
 
 export const socialLinks = {
   github: "https://github.com/Crazyrenan",
-  linkedin: "https://www.linkedin.com/in/jonathan-axl-b10567253/",
+  linkedin: "https://www.linkedin.com/in/jonathan-axl",
   email: "jonathan.axlw@gmail.com"
 };

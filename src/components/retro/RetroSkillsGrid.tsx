@@ -257,15 +257,15 @@ export function RetroSkillsGrid(props?: Partial<RetroWindowProps>) {
   return (
     <RetroWindow 
       id="skills"
-      title="C:\SYSTEM\Skills.sys" 
+      title="Skills & Tech Stack" 
       icon="/icons/retro/skills.svg"
       hasMenu={true}
       {...props}
     >
-      <div className="bg-[#c0c0c0] p-2 flex flex-col gap-3 font-[Tahoma,sans-serif] text-black">
+      <div className="bg-[#c0c0c0] p-1.5 sm:p-2 flex flex-col gap-2 font-[Tahoma,sans-serif] text-black h-full flex-1 min-h-0">
         
         {/* Top Category Filter Toolbar */}
-        <div className="flex flex-wrap gap-1 p-1 win95-sunken bg-[#dfdfdf]">
+        <div className="flex flex-wrap gap-1 p-1 win95-sunken bg-[#dfdfdf] flex-shrink-0">
           {CATEGORIES.map(cat => (
             <button
               key={cat}
@@ -281,11 +281,11 @@ export function RetroSkillsGrid(props?: Partial<RetroWindowProps>) {
           ))}
         </div>
 
-        {/* Main Content Area */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-3 min-h-0 md:min-h-[360px]">
+        {/* Main Content Area - Expands responsively to fill vertical height */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-2.5 flex-1 min-h-0 h-full">
           
-          {/* Left: Skill Grid (7 cols on desktop) */}
-          <div className="md:col-span-7 win95-sunken bg-white p-1.5 sm:p-2 overflow-y-auto max-h-[260px] sm:max-h-[320px] md:max-h-[400px]">
+          {/* Left: Skill Grid (7 cols on desktop, responsive full height) */}
+          <div className="md:col-span-7 win95-sunken bg-white p-1.5 sm:p-2 overflow-y-auto flex-1 h-full min-h-[220px]">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 sm:gap-2">
               {filteredSkills.map(skill => {
                 const isSelected = activeSkill.name === skill.name;
@@ -293,7 +293,7 @@ export function RetroSkillsGrid(props?: Partial<RetroWindowProps>) {
                   <button
                     key={skill.name}
                     onClick={() => setActiveSkill(skill)}
-                    className={`flex flex-col items-center justify-center p-1.5 sm:p-2 text-center rounded-none border transition-none select-none ${
+                    className={`flex flex-col items-center justify-center p-1.5 sm:p-2 text-center rounded-none border transition-none select-none min-h-[64px] ${
                       isSelected
                         ? 'bg-[#000080] text-white border-dotted border-white'
                         : 'bg-[#f0f0f0] text-black border-gray-300 hover:bg-[#dfdfdf]'
@@ -324,11 +324,11 @@ export function RetroSkillsGrid(props?: Partial<RetroWindowProps>) {
             </div>
           </div>
 
-          {/* Right: Interactive Properties Pane (5 cols on desktop) */}
-          <div className="md:col-span-5 win95-raised p-2.5 sm:p-3 flex flex-col justify-between bg-[#c0c0c0]">
-            <div>
+          {/* Right: Interactive Properties Pane (5 cols on desktop, responsive full height) */}
+          <div className="md:col-span-5 win95-raised p-2.5 sm:p-3 flex flex-col justify-between bg-[#c0c0c0] flex-1 h-full min-h-[220px]">
+            <div className="flex-1 flex flex-col min-h-0">
               {/* Header in Properties */}
-              <div className="flex items-center gap-2 pb-2 border-b border-gray-400 mb-2.5">
+              <div className="flex items-center gap-2 pb-2 border-b border-gray-400 mb-2 flex-shrink-0">
                 <div className="w-8 h-8 sm:w-9 sm:h-9 win95-sunken bg-white p-1 flex items-center justify-center flex-shrink-0">
                   <img
                     src={`https://cdn.simpleicons.org/${activeSkill.slug}/${activeSkill.color}`}
@@ -352,8 +352,8 @@ export function RetroSkillsGrid(props?: Partial<RetroWindowProps>) {
               </div>
 
               {/* Properties fields */}
-              <div className="space-y-2 text-xs">
-                <div>
+              <div className="flex-1 flex flex-col gap-2 min-h-0 text-xs">
+                <div className="flex-shrink-0">
                   <span className="text-[9.5px] sm:text-[10px] uppercase font-bold text-gray-700 block mb-0.5">
                     Production Context &amp; Projects:
                   </span>
@@ -362,11 +362,11 @@ export function RetroSkillsGrid(props?: Partial<RetroWindowProps>) {
                   </div>
                 </div>
 
-                <div>
-                  <span className="text-[9.5px] sm:text-[10px] uppercase font-bold text-gray-700 block mb-0.5">
+                <div className="flex-1 flex flex-col min-h-0">
+                  <span className="text-[9.5px] sm:text-[10px] uppercase font-bold text-gray-700 block mb-0.5 flex-shrink-0">
                     Technical Application &amp; Architecture:
                   </span>
-                  <div className="win95-sunken bg-white p-1.5 sm:p-2 text-[10.5px] sm:text-[11px] text-gray-800 leading-relaxed min-h-[55px] sm:min-h-[70px]">
+                  <div className="win95-sunken bg-white p-1.5 sm:p-2 text-[10.5px] sm:text-[11px] text-gray-800 leading-relaxed flex-1 min-h-[70px] overflow-y-auto">
                     {activeSkill.description}
                   </div>
                 </div>
@@ -374,7 +374,7 @@ export function RetroSkillsGrid(props?: Partial<RetroWindowProps>) {
             </div>
 
             {/* Status bar footer */}
-            <div className="mt-2.5 pt-1.5 border-t border-gray-400 win95-sunken bg-[#dfdfdf] px-2 py-1 text-[9.5px] sm:text-[10px] text-gray-700 flex justify-between items-center font-mono">
+            <div className="mt-2 pt-1.5 border-t border-gray-400 win95-sunken bg-[#dfdfdf] px-2 py-1 text-[9.5px] sm:text-[10px] text-gray-700 flex justify-between items-center font-mono flex-shrink-0">
               <span>STATUS: READY</span>
               <span className="text-green-700 font-bold">● ACTIVE</span>
             </div>

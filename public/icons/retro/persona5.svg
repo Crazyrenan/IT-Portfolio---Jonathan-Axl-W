@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" shape-rendering="crispEdges">
+  <!-- Persona 5 Royal Retro Icon: Joker's Mask & Flame Star -->
+  <rect x="2" y="2" width="28" height="28" fill="#D80027" stroke="#000000" stroke-width="2"/>
+  <!-- Black contrast slash -->
+  <polygon points="2,2 30,2 18,30 2,30" fill="#111111"/>
+  <!-- White Joker Mask -->
+  <path d="M5 14 Q10 10 16 13 Q22 10 27 14 Q25 21 16 23 Q7 21 5 14 Z" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+  <!-- Eye Cutouts -->
+  <path d="M8 15 Q11 13 13 16 Q10 17 8 15 Z" fill="#111111"/>
+  <path d="M24 15 Q21 13 19 16 Q22 17 24 15 Z" fill="#111111"/>
+  <!-- Gold Star / Flame Accent -->
+  <polygon points="16,6 18,10 22,11 19,14 20,18 16,16 12,18 13,14 10,11 14,10" fill="#FFEA00" stroke="#000000" stroke-width="0.5"/>
+</svg>

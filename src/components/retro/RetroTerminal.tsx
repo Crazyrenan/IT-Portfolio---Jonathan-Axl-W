@@ -20,15 +20,15 @@ export function RetroTerminal(props?: Partial<RetroWindowProps>) {
   return (
     <RetroWindow
       id="contact"
-      title="C:\COMM\Contact.exe"
+      title="Contact Transmission"
       icon="/icons/retro/contact.svg"
       hasMenu={true}
       {...props}
     >
-      <div className="flex flex-col md:flex-row gap-3 sm:gap-4 p-2 sm:p-2.5 bg-[#c0c0c0] font-[Tahoma,sans-serif] text-black text-xs">
+      <div className="flex flex-col md:flex-row gap-3 sm:gap-4 p-2 sm:p-2.5 bg-[#c0c0c0] font-[Tahoma,sans-serif] text-black text-xs h-full flex-1 min-h-0">
 
-        {/* Left: Input Form */}
-        <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-2.5">
+        {/* Left: Input Form (Full-height responsive) */}
+        <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-2.5 h-full min-h-0">
           <div className="flex flex-col gap-1">
             <label className="font-bold text-black text-xs">Your Name:</label>
             <input
@@ -67,16 +67,15 @@ export function RetroTerminal(props?: Partial<RetroWindowProps>) {
             />
           </div>
 
-          <div className="flex flex-col gap-1 flex-1">
+          <div className="flex flex-col gap-1 flex-1 min-h-0">
             <label className="font-bold text-black text-xs">Message:</label>
             <textarea
               name="message"
               required
-              rows={5}
               value={formData.message}
               onChange={handleChange}
               placeholder="Type your message here — whether it is an engineering opportunity, consulting project, or tech chat..."
-              className="win95-sunken p-2 text-black outline-none resize-y text-xs bg-white min-h-[90px]"
+              className="win95-sunken p-2 text-black outline-none resize-y text-xs bg-white min-h-[90px] flex-1"
             ></textarea>
           </div>
 
@@ -122,7 +121,7 @@ export function RetroTerminal(props?: Partial<RetroWindowProps>) {
 
             {/* LinkedIn Channel */}
             <a
-              href="https://linkedin.com/in/jonathan-axl-wibowo"
+              href="https://www.linkedin.com/in/jonathan-axl"
               target="_blank"
               rel="noopener noreferrer"
               className="win95-btn flex items-center gap-2.5 p-1.5 text-xs text-black no-underline hover:bg-white"
@@ -136,7 +135,7 @@ export function RetroTerminal(props?: Partial<RetroWindowProps>) {
               </div>
               <div className="overflow-hidden">
                 <div className="font-bold text-[11px] text-[#0A66C2]">LinkedIn Profile</div>
-                <div className="text-[10px] text-gray-700 truncate">in/jonathan-axl-wibowo</div>
+                <div className="text-[10px] text-gray-700 truncate">in/jonathan-axl</div>
               </div>
             </a>
 

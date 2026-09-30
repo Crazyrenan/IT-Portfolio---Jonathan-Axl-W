@@ -8,6 +8,12 @@ import { RetroTimeline } from './RetroTimeline';
 import { RetroTerminal } from './RetroTerminal';
 import { RetroCertificateGallery } from './RetroCertificateGallery';
 import { RetroTaskbar, type TaskbarWindowItem } from './RetroTaskbar';
+import {
+  Persona5Window,
+  ApexLegendsWindow,
+  EldenRingWindow,
+  RetroBrowserWindow
+} from './RetroEasterEggs';
 
 export interface WindowConfig {
   id: string;
@@ -24,8 +30,8 @@ export interface WindowConfig {
 const INITIAL_WINDOWS: Record<string, WindowConfig> = {
   hero: {
     id: 'hero',
-    title: 'Hero.exe - Profile & Bio',
-    exeName: 'Hero.exe',
+    title: 'Hero Section',
+    exeName: 'Hero Section',
     icon: '/icons/retro/hero.svg',
     isOpen: false,
     isMinimized: false,
@@ -35,8 +41,8 @@ const INITIAL_WINDOWS: Record<string, WindowConfig> = {
   },
   skills: {
     id: 'skills',
-    title: 'Skills.sys - Tech Stack & Specs',
-    exeName: 'Skills.sys',
+    title: 'Skills & Tech Stack',
+    exeName: 'Skills & Tech Stack',
     icon: '/icons/retro/skills.svg',
     isOpen: false,
     isMinimized: false,
@@ -46,8 +52,8 @@ const INITIAL_WINDOWS: Record<string, WindowConfig> = {
   },
   projects: {
     id: 'projects',
-    title: 'Projects.exe - Portfolio Dossier',
-    exeName: 'Projects.exe',
+    title: 'Projects Dossier',
+    exeName: 'Projects Dossier',
     icon: '/icons/retro/projects.svg',
     isOpen: false,
     isMinimized: false,
@@ -57,8 +63,8 @@ const INITIAL_WINDOWS: Record<string, WindowConfig> = {
   },
   experience: {
     id: 'experience',
-    title: 'Quest_Log.bat - Career Experience',
-    exeName: 'Quest_Log.bat',
+    title: 'Experience & Career',
+    exeName: 'Experience & Career',
     icon: '/icons/retro/quest.svg',
     isOpen: false,
     isMinimized: false,
@@ -68,14 +74,58 @@ const INITIAL_WINDOWS: Record<string, WindowConfig> = {
   },
   contact: {
     id: 'contact',
-    title: 'Contact.exe - Contact & Transmission',
-    exeName: 'Contact.exe',
+    title: 'Contact Transmission',
+    exeName: 'Contact Transmission',
     icon: '/icons/retro/contact.svg',
     isOpen: false,
     isMinimized: false,
     isMaximized: false,
     zIndex: 10,
     order: 5
+  },
+  browser: {
+    id: 'browser',
+    title: 'Web Browser',
+    exeName: 'Web Browser',
+    icon: '/icons/retro/browser.svg',
+    isOpen: false,
+    isMinimized: false,
+    isMaximized: false,
+    zIndex: 10,
+    order: 6
+  },
+  p5r: {
+    id: 'p5r',
+    title: 'Persona 5 Royal',
+    exeName: 'Persona 5 Royal',
+    icon: '/icons/retro/persona5.png',
+    isOpen: false,
+    isMinimized: false,
+    isMaximized: false,
+    zIndex: 10,
+    order: 7
+  },
+  apex: {
+    id: 'apex',
+    title: 'Apex Legends',
+    exeName: 'Apex Legends',
+    icon: '/icons/retro/apex.png',
+    isOpen: false,
+    isMinimized: false,
+    isMaximized: false,
+    zIndex: 10,
+    order: 8
+  },
+  elden: {
+    id: 'elden',
+    title: 'Elden Ring',
+    exeName: 'Elden Ring',
+    icon: '/icons/retro/eldenring.png',
+    isOpen: false,
+    isMinimized: false,
+    isMaximized: false,
+    zIndex: 10,
+    order: 9
   }
 };
 
@@ -98,11 +148,14 @@ export function DesktopManager() {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
       if (mobile) {
-        // Mobile fallback: auto-open and tile all windows sequentially
+        // Mobile fallback: auto-open core portfolio windows sequentially
+        const corePortfolioIds = ['hero', 'skills', 'projects', 'experience', 'contact'];
         setWindows((prev) => {
           const next = { ...prev };
-          Object.keys(next).forEach((k) => {
-            next[k] = { ...next[k], isOpen: true, isMinimized: false };
+          corePortfolioIds.forEach((k) => {
+            if (next[k]) {
+              next[k] = { ...next[k], isOpen: true, isMinimized: false };
+            }
           });
           return next;
         });
@@ -237,16 +290,19 @@ export function DesktopManager() {
   const launchAll = useCallback(() => {
     setHasInteracted(true);
     let currentZ = highestZIndex;
+    const corePortfolioIds = ['hero', 'skills', 'projects', 'experience', 'contact'];
     setWindows((curr) => {
       const next = { ...curr };
-      Object.keys(next).forEach((key) => {
-        currentZ += 1;
-        next[key] = {
-          ...next[key],
-          isOpen: true,
-          isMinimized: false,
-          zIndex: currentZ
-        };
+      corePortfolioIds.forEach((key) => {
+        if (next[key]) {
+          currentZ += 1;
+          next[key] = {
+            ...next[key],
+            isOpen: true,
+            isMinimized: false,
+            zIndex: currentZ
+          };
+        }
       });
       return next;
     });
@@ -300,24 +356,26 @@ export function DesktopManager() {
 
   return (
     <div className="relative w-full min-h-screen pb-20 select-none">
-      {/* Desktop Shortcuts (Visible on Wallpaper) */}
-      <div className="fixed top-6 left-6 z-10 hidden sm:flex flex-col gap-4">
-        {Object.values(windows)
-          .sort((a, b) => a.order - b.order)
-          .map((win) => {
+      {/* Desktop Shortcuts (Visible on Wallpaper in 2 Authentic Retro Columns) */}
+      <div className="fixed top-5 left-5 z-10 hidden sm:flex flex-row gap-3">
+        {/* Column 1: Core System & Portfolio Dossier */}
+        <div className="flex flex-col gap-2.5">
+          {['hero', 'skills', 'projects', 'experience', 'contact'].map((winId) => {
+            const win = windows[winId];
+            if (!win) return null;
             const isCurrentlyOpen = win.isOpen && !win.isMinimized;
             return (
               <button
                 key={win.id}
                 type="button"
                 onClick={() => toggleWindow(win.id)}
-                className={`group flex flex-col items-center justify-center w-20 p-1.5 rounded text-center transition-all duration-150 focus:outline-none ${
+                className={`group flex flex-col items-center justify-center w-20 p-1 rounded text-center transition-all duration-150 focus:outline-none ${
                   isCurrentlyOpen
-                    ? 'bg-blue-900/40 text-[#FFEA00] border border-blue-400/40'
+                    ? 'bg-blue-900/50 text-[#FFEA00] border border-blue-400/60'
                     : 'hover:bg-white/10 text-white border border-transparent'
                 }`}
               >
-                <div className="w-10 h-10 flex items-center justify-center p-1 bg-black/20 rounded group-hover:scale-105 transition-transform">
+                <div className="w-10 h-10 flex items-center justify-center p-1 bg-black/25 rounded group-hover:scale-105 transition-transform">
                   <img
                     src={win.icon}
                     alt={win.title}
@@ -329,41 +387,80 @@ export function DesktopManager() {
                     }}
                   />
                 </div>
-                <span className="text-[11px] font-bold font-mono tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/40 rounded truncate max-w-full">
+                <span className="text-[10.5px] font-sans font-semibold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/50 rounded leading-tight text-center line-clamp-2 max-w-full">
                   {win.exeName}
                 </span>
               </button>
             );
           })}
 
-        {/* Quick Launch All Shortcut */}
-        <button
-          type="button"
-          onClick={launchAll}
-          className="group flex flex-col items-center justify-center w-20 p-1.5 rounded text-center hover:bg-white/10 text-[#FFEA00] border border-transparent focus:outline-none"
-        >
-          <div className="w-10 h-10 flex items-center justify-center p-1 bg-blue-900/60 rounded border border-[#FFEA00]/60 group-hover:scale-105 transition-transform shadow-lg">
-            <span className="text-xl">⚡</span>
-          </div>
-          <span className="text-[10px] font-bold font-mono tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/60 rounded truncate max-w-full">
-            Launch_All.bat
-          </span>
-        </button>
+          {/* Quick Launch All Shortcut */}
+          <button
+            type="button"
+            onClick={launchAll}
+            className="group flex flex-col items-center justify-center w-20 p-1 rounded text-center hover:bg-white/10 text-[#FFEA00] border border-transparent focus:outline-none"
+            title="Launch All Portfolio Windows"
+          >
+            <div className="w-10 h-10 flex items-center justify-center p-1 bg-blue-900/60 rounded border border-[#FFEA00]/60 group-hover:scale-105 transition-transform shadow-lg">
+              <span className="text-xl">⚡</span>
+            </div>
+            <span className="text-[10.5px] font-sans font-semibold tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/60 rounded leading-tight text-center max-w-full">
+              Launch All
+            </span>
+          </button>
+        </div>
 
-        {/* Reboot OS Shortcut */}
-        <button
-          type="button"
-          onClick={rebootOS}
-          className="group flex flex-col items-center justify-center w-20 p-1.5 rounded text-center hover:bg-white/10 text-white border border-transparent focus:outline-none"
-          title="Reboot System & Replay Boot Animation"
-        >
-          <div className="w-10 h-10 flex items-center justify-center p-1 bg-black/40 rounded border border-gray-500/50 group-hover:scale-105 transition-transform shadow-lg">
-            <span className="text-xl">🔄</span>
-          </div>
-          <span className="text-[10px] font-bold font-mono tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/60 rounded truncate max-w-full">
-            Reboot_OS.bat
-          </span>
-        </button>
+        {/* Column 2: Web Browser, Games & Utilities */}
+        <div className="flex flex-col gap-2.5">
+          {['browser', 'p5r', 'apex', 'elden'].map((winId) => {
+            const win = windows[winId];
+            if (!win) return null;
+            const isCurrentlyOpen = win.isOpen && !win.isMinimized;
+            return (
+              <button
+                key={win.id}
+                type="button"
+                onClick={() => toggleWindow(win.id)}
+                className={`group flex flex-col items-center justify-center w-20 p-1 rounded text-center transition-all duration-150 focus:outline-none ${
+                  isCurrentlyOpen
+                    ? 'bg-blue-900/50 text-[#FFEA00] border border-blue-400/60'
+                    : 'hover:bg-white/10 text-white border border-transparent'
+                }`}
+              >
+                <div className="w-10 h-10 flex items-center justify-center p-1 bg-black/25 rounded group-hover:scale-105 transition-transform">
+                  <img
+                    src={win.icon}
+                    alt={win.title}
+                    className="w-8 h-8 object-contain [image-rendering:pixelated]"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.onerror = null;
+                      target.src = '/icons/retro/windows.svg';
+                    }}
+                  />
+                </div>
+                <span className="text-[10.5px] font-sans font-semibold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/50 rounded leading-tight text-center line-clamp-2 max-w-full">
+                  {win.exeName}
+                </span>
+              </button>
+            );
+          })}
+
+          {/* Reboot OS Shortcut */}
+          <button
+            type="button"
+            onClick={rebootOS}
+            className="group flex flex-col items-center justify-center w-20 p-1 rounded text-center hover:bg-white/10 text-white border border-transparent focus:outline-none"
+            title="Reboot System & Replay Boot Animation"
+          >
+            <div className="w-10 h-10 flex items-center justify-center p-1 bg-black/40 rounded border border-gray-500/50 group-hover:scale-105 transition-transform shadow-lg">
+              <span className="text-xl">🔄</span>
+            </div>
+            <span className="text-[10.5px] font-sans font-semibold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/60 rounded leading-tight text-center max-w-full">
+              Restart System
+            </span>
+          </button>
+        </div>
       </div>
 
       {/* Pristine Desktop Initial Prompt Banner (When All Closed on Desktop) */}
@@ -405,7 +502,7 @@ export function DesktopManager() {
       )}
 
       {/* Active Windows Assembled Layout Area (Offset on desktop for sidebar) */}
-      <main className="w-full flex flex-col items-center justify-center relative z-20 pt-4 px-2 sm:px-4 lg:pr-[280px]">
+      <main className="w-full flex-1 flex flex-col items-center justify-center relative z-20 pt-3 pb-12 px-2 sm:px-4 lg:pr-[280px] min-h-0">
         {/* 1. Hero Window */}
         <AnimatePresence>
           {windows.hero.isOpen && !windows.hero.isMinimized && (
@@ -482,6 +579,70 @@ export function DesktopManager() {
               onClose={() => closeWindow('contact')}
               onMinimize={() => minimizeWindow('contact')}
               onMaximize={() => maximizeWindow('contact')}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* 6. Retro Internet Explorer 5.0 Window (Easter Egg) */}
+        <AnimatePresence>
+          {windows.browser.isOpen && !windows.browser.isMinimized && (
+            <RetroBrowserWindow
+              id="browser"
+              isMaximized={windows.browser.isMaximized}
+              isActive={activeWindowId === 'browser'}
+              zIndex={windows.browser.zIndex}
+              onFocus={() => bringToFront('browser')}
+              onClose={() => closeWindow('browser')}
+              onMinimize={() => minimizeWindow('browser')}
+              onMaximize={() => maximizeWindow('browser')}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* 7. Persona 5 Royal Window (Easter Egg) */}
+        <AnimatePresence>
+          {windows.p5r.isOpen && !windows.p5r.isMinimized && (
+            <Persona5Window
+              id="p5r"
+              isMaximized={windows.p5r.isMaximized}
+              isActive={activeWindowId === 'p5r'}
+              zIndex={windows.p5r.zIndex}
+              onFocus={() => bringToFront('p5r')}
+              onClose={() => closeWindow('p5r')}
+              onMinimize={() => minimizeWindow('p5r')}
+              onMaximize={() => maximizeWindow('p5r')}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* 8. Apex Legends Window (Easter Egg) */}
+        <AnimatePresence>
+          {windows.apex.isOpen && !windows.apex.isMinimized && (
+            <ApexLegendsWindow
+              id="apex"
+              isMaximized={windows.apex.isMaximized}
+              isActive={activeWindowId === 'apex'}
+              zIndex={windows.apex.zIndex}
+              onFocus={() => bringToFront('apex')}
+              onClose={() => closeWindow('apex')}
+              onMinimize={() => minimizeWindow('apex')}
+              onMaximize={() => maximizeWindow('apex')}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* 9. Elden Ring Window (Easter Egg) */}
+        <AnimatePresence>
+          {windows.elden.isOpen && !windows.elden.isMinimized && (
+            <EldenRingWindow
+              id="elden"
+              isMaximized={windows.elden.isMaximized}
+              isActive={activeWindowId === 'elden'}
+              zIndex={windows.elden.zIndex}
+              onFocus={() => bringToFront('elden')}
+              onClose={() => closeWindow('elden')}
+              onMinimize={() => minimizeWindow('elden')}
+              onMaximize={() => maximizeWindow('elden')}
             />
           )}
         </AnimatePresence>

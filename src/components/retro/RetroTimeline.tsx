@@ -40,14 +40,14 @@ export function RetroTimeline(props?: Partial<RetroWindowProps>) {
   return (
     <RetroWindow 
       id="experience"
-      title="C:\LOGS\Quest_Log.bat" 
+      title="Experience & Career" 
       icon="/icons/retro/quest.svg"
       hasMenu={true}
       {...props}
     >
-      <div className="bg-white win95-sunken p-2.5 sm:p-4 max-h-[380px] sm:max-h-[440px] overflow-y-auto text-black text-xs font-mono leading-relaxed">
+      <div className="bg-white win95-sunken p-2.5 sm:p-4 h-full flex-1 min-h-0 overflow-y-auto text-black text-xs font-mono leading-relaxed">
         <div className="text-gray-600 mb-3 pb-2 border-b border-gray-300 flex items-center justify-between text-[11px]">
-          <span>[LOG RECORD] CAREER_QUEST_LOG.TXT</span>
+          <span>[LOG RECORD] CAREER_EXPERIENCE.LOG</span>
           <span className="text-blue-900 font-bold">4 RECORDS FOUND</span>
         </div>
 

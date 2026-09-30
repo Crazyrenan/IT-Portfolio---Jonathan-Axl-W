@@ -88,18 +88,18 @@ export function RetroProjectsDossier(props?: Partial<RetroWindowProps>) {
   return (
     <RetroWindow
       id="projects"
-      title="C:\PROJECTS\Projects.exe"
+      title="Projects Dossier"
       icon="/icons/retro/projects.svg"
       hasMenu={true}
       {...props}
     >
-      <div className="bg-[#c0c0c0] p-1.5 sm:p-2 flex flex-col font-[Tahoma,sans-serif]">
+      <div className="bg-[#c0c0c0] p-1.5 sm:p-2 flex flex-col font-[Tahoma,sans-serif] h-full flex-1 min-h-0">
         {/* Main 2-Column or Stack Area */}
-        <div className="flex flex-col md:flex-row min-h-0 md:min-h-[410px] gap-2.5">
+        <div className="flex flex-col md:flex-row flex-1 min-h-0 h-full gap-2.5">
           
-          {/* Left / Top: Folder & Project File List */}
-          <div className="w-full md:w-5/12 flex flex-col bg-white win95-sunken p-1 overflow-y-auto max-h-[170px] sm:max-h-[220px] md:max-h-[410px]">
-            <div className="flex border-b border-gray-400 pb-1 mb-1 text-[11px] text-gray-600 px-1 font-mono font-bold">
+          {/* Left / Top: Folder & Project File List (Responsive full height) */}
+          <div className="w-full md:w-5/12 flex flex-col bg-white win95-sunken p-1 overflow-y-auto flex-1 h-full min-h-[180px]">
+            <div className="flex border-b border-gray-400 pb-1 mb-1 text-[11px] text-gray-600 px-1 font-mono font-bold flex-shrink-0">
               <div className="w-7/12 truncate">Project Name</div>
               <div className="w-5/12 text-right truncate">Status / Highlight</div>
             </div>
@@ -133,9 +133,9 @@ export function RetroProjectsDossier(props?: Partial<RetroWindowProps>) {
             </div>
           </div>
 
-          {/* Right / Bottom: File Details Pane */}
-          <div className="w-full md:w-7/12 win95-raised p-2.5 sm:p-3 flex flex-col bg-[#c0c0c0] justify-between">
-            <div>
+          {/* Right / Bottom: File Details Pane (Responsive full height) */}
+          <div className="w-full md:w-7/12 win95-raised p-2.5 sm:p-3 flex flex-col bg-[#c0c0c0] justify-between flex-1 h-full min-h-[220px]">
+            <div className="flex-1 flex flex-col min-h-0 overflow-y-auto">
               {/* Title */}
               <div className="flex items-center gap-2 border-b border-gray-400 pb-2 mb-2.5">
                 <span className="text-2xl">📂</span>

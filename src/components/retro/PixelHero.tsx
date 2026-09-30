@@ -5,15 +5,15 @@ export function PixelHero(props?: Partial<RetroWindowProps>) {
   return (
     <RetroWindow 
       id="hero"
-      title="C:\SYSTEM\Hero.exe" 
+      title="Hero Section" 
       icon="/icons/retro/hero.svg"
       hasMenu={true}
       {...props}
     >
-      <div className="flex flex-col md:flex-row gap-4 items-stretch p-2 bg-[#808080]">
+      <div className="flex flex-col md:flex-row gap-3.5 items-stretch p-2 bg-[#808080] h-full flex-1 min-h-0">
         
         {/* Left: Retro Paint Tools */}
-        <div className="hidden md:flex flex-col gap-1 w-12 win95-raised p-1 select-none">
+        <div className="hidden md:flex flex-col gap-1 w-12 win95-raised p-1 select-none flex-shrink-0">
           <div className="grid grid-cols-2 gap-[2px]">
             <div className="win95-btn w-5 h-5 flex items-center justify-center p-0 font-bold text-xs text-black">▧</div>
             <div className="win95-btn w-5 h-5 flex items-center justify-center p-0 font-bold text-xs text-black">▤</div>
@@ -27,7 +27,7 @@ export function PixelHero(props?: Partial<RetroWindowProps>) {
         </div>
 
         {/* Right: Canvas */}
-        <div className="flex-1 win95-sunken bg-white p-3 sm:p-4 md:p-6 flex flex-col md:flex-row gap-5 md:gap-6 relative overflow-hidden min-h-0 md:min-h-[360px]">
+        <div className="flex-1 win95-sunken bg-white p-3 sm:p-4 md:p-6 flex flex-col md:flex-row gap-5 md:gap-6 relative overflow-y-auto h-full min-h-0">
           
           {/* Avatar Canvas */}
           <div className="w-full md:w-1/3 flex flex-col gap-2 items-center justify-center">

@@ -253,47 +253,46 @@ export function RetroTaskbar({
         {/* Divider */}
         <div className="w-[2px] h-6 bg-[#808080] border-r border-white mx-1 flex-shrink-0" />
 
-        {/* Center: Application Window Tabs */}
+        {/* Center: Application Window Tabs (Only visible when window is OPEN, disappears when closed) */}
         <div className="flex items-center gap-1 h-full py-0.5 flex-1 overflow-x-auto scrollbar-none px-0.5">
-          {windows.map((win) => {
-            const isTabActive = win.isOpen && !win.isMinimized && win.isActive;
-            const isTabMinimized = win.isOpen && win.isMinimized;
-            const isClosed = !win.isOpen;
+          {windows
+            .filter((win) => win.isOpen)
+            .map((win) => {
+              const isTabActive = !win.isMinimized && win.isActive;
+              const isTabMinimized = win.isMinimized;
 
-            let tabStyle = 'win95-raised text-black';
-            if (isTabActive) {
-              tabStyle = 'win95-sunken bg-[#dfdfdf] font-bold text-black border-2 border-black/30';
-            } else if (isTabMinimized) {
-              tabStyle = 'win95-raised bg-[#d0d0d0] text-gray-700 italic';
-            } else if (isClosed) {
-              tabStyle = 'win95-raised bg-[#c0c0c0] text-gray-600 hover:text-black hover:bg-[#dfdfdf]';
-            }
+              let tabStyle = 'win95-raised text-black';
+              if (isTabActive) {
+                tabStyle = 'win95-sunken bg-[#dfdfdf] font-bold text-black border-2 border-black/30';
+              } else if (isTabMinimized) {
+                tabStyle = 'win95-raised bg-[#d0d0d0] text-gray-700 italic';
+              }
 
-            return (
-              <button
-                key={win.id}
-                type="button"
-                onClick={() => onToggleWindow(win.id)}
-                title={win.exeName}
-                className={`${tabStyle} px-1.5 sm:px-2 py-1 flex items-center gap-1 sm:gap-1.5 text-xs h-full min-w-[34px] sm:min-w-[85px] max-w-[130px] flex-shrink-0 truncate select-none transition-none justify-center sm:justify-start`}
-              >
-                <img
-                  src={win.icon}
-                  alt={win.title}
-                  className="w-3.5 h-3.5 flex-shrink-0 object-contain"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.onerror = null;
-                    target.src = '/icons/retro/windows.svg';
-                  }}
-                />
-                <span className="hidden sm:inline truncate text-[10.5px]">{win.exeName}</span>
-                {win.isOpen && !win.isMinimized && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600 ml-auto flex-shrink-0 hidden sm:block" />
-                )}
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={win.id}
+                  type="button"
+                  onClick={() => onToggleWindow(win.id)}
+                  title={win.exeName}
+                  className={`${tabStyle} px-1.5 sm:px-2 py-1 flex items-center gap-1 sm:gap-1.5 text-xs h-full min-w-[34px] sm:min-w-[85px] max-w-[140px] flex-shrink-0 truncate select-none transition-none justify-center sm:justify-start`}
+                >
+                  <img
+                    src={win.icon}
+                    alt={win.title}
+                    className="w-3.5 h-3.5 flex-shrink-0 object-contain"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.onerror = null;
+                      target.src = '/icons/retro/windows.svg';
+                    }}
+                  />
+                  <span className="hidden sm:inline truncate text-[10.5px]">{win.exeName}</span>
+                  {!win.isMinimized && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600 ml-auto flex-shrink-0 hidden sm:block" />
+                  )}
+                </button>
+              );
+            })}
         </div>
 
         {/* Right: System Tray */}

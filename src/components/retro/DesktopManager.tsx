@@ -194,7 +194,7 @@ export function DesktopManager() {
         const nextZ = highestZIndex + 1;
         setHighestZIndex(nextZ);
         setActiveWindowId(id);
-        
+
         // On desktop or mobile, smoothly scroll into view
         setTimeout(() => {
           const el = document.getElementById(id);
@@ -369,11 +369,10 @@ export function DesktopManager() {
                 key={win.id}
                 type="button"
                 onClick={() => toggleWindow(win.id)}
-                className={`group flex flex-col items-center justify-center w-20 p-1 rounded text-center transition-all duration-150 focus:outline-none ${
-                  isCurrentlyOpen
+                className={`group flex flex-col items-center justify-center w-20 p-1 rounded text-center transition-all duration-150 focus:outline-none ${isCurrentlyOpen
                     ? 'bg-blue-900/50 text-[#FFEA00] border border-blue-400/60'
                     : 'hover:bg-white/10 text-white border border-transparent'
-                }`}
+                  }`}
               >
                 <div className="w-10 h-10 flex items-center justify-center p-1 bg-black/25 rounded group-hover:scale-105 transition-transform">
                   <img
@@ -421,11 +420,10 @@ export function DesktopManager() {
                 key={win.id}
                 type="button"
                 onClick={() => toggleWindow(win.id)}
-                className={`group flex flex-col items-center justify-center w-20 p-1 rounded text-center transition-all duration-150 focus:outline-none ${
-                  isCurrentlyOpen
+                className={`group flex flex-col items-center justify-center w-20 p-1 rounded text-center transition-all duration-150 focus:outline-none ${isCurrentlyOpen
                     ? 'bg-blue-900/50 text-[#FFEA00] border border-blue-400/60'
                     : 'hover:bg-white/10 text-white border border-transparent'
-                }`}
+                  }`}
               >
                 <div className="w-10 h-10 flex items-center justify-center p-1 bg-black/25 rounded group-hover:scale-105 transition-transform">
                   <img
@@ -494,7 +492,7 @@ export function DesktopManager() {
                 className="win95-btn font-bold text-xs px-4 py-2 bg-[#dfdfdf] flex items-center gap-2 text-black hover:bg-white shadow"
               >
                 <span className="text-sm">⚡</span>
-                <span>Launch All Windows (Recruiter Mode)</span>
+                <span>Launch All Windows</span>
               </button>
             </div>
           </div>

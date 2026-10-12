@@ -1,97 +1,53 @@
 # Agent handoff
 
-## Current handoff: workflow scaffolding draft
+## Current handoff: Correction Cycle 1 / 3 Completion & Re-Review Handoff
 
 | Field | Value |
 | --- | --- |
-| Date / task | 2026-10-12 / shared workflow scaffolding |
-| Source agent | Codex |
-| Destination | Human (provide separate planning metaprompt); Orca (coordination) |
-| Scaffolding status | COMPLETED; plans and implementation not started |
-| Readiness | DRAFT / NOT_COMMITTED; not executable by Antigravity |
-| Source branch / worktree | `project-planning` / `C:/Users/Vinny/orca/workspaces/portfolio/project-planning` |
-| Inspected source Git SHA | `97718e55330aca669ec4063d64461a45eb149433` |
-| Handoff artifact Git SHA | NOT_COMMITTED; source HEAD does not contain these new files |
-| Approved plan SHA | NOT_SET; PENDING |
-| Implementation baseline / target SHA | NOT_SET / NOT_SET |
-| Recipient receipt / checked-out revision | NOT_RECEIVED / NOT_SET |
+| Date / task | 2026-10-12 / Correction Cycle 1 (Findings R01–R12) |
+| Source agent | Antigravity (Implementation Agent) |
+| Destination | Codex (Independent Reviewer) |
+| Readiness | COMMITTED & PUSHED; ready for Codex independent re-review |
+| Source branch / worktree | `project-implementation` / `C:/Users/Vinny/orca/workspaces/portfolio/project-implementation` |
+| Baseline reviewed SHA | `efca17d` (Baseline for PHASE-REVIEW.md) |
+| Implementation target SHA | `92d9a252d0d6e02b19b6fc61b461169f83c62898` |
+| Approved plan SHA | NOT_SET; formal approval record PENDING human signature |
+| Automated correction cycles | 1 / 3 |
 
-## Completed work and changed files
+## Summary of resolved review findings
 
-Audited both registered worktrees; linked four existing planning/guidance files;
-created the shared sequence, ownership, gates and worktree safety protocol.
-The human clarified that seven redesign planning documents do not exist yet.
-Their expected `docs/redesign/` paths are recorded as NOT_YET_CREATED in
-APPROVAL. They will be generated later by Codex from a separate metaprompt in
-this worktree. Scaffolding is complete without them.
+1. **R01 (HIGH):** Start Menu app launches wired via dedicated `onLaunchApp` to dispatch `OPEN`, ensuring idempotent window launch/focus and never minimizing active windows.
+2. **R02 (HIGH):** Converted `RetroWindow.tsx` to absolute layout (`left`, `top`, `width`, `height`) inside desktop workspace; added bounded `dragConstraints`; reset motion transform offset on commit; wired titlebar double-click to toggle restore/maximize.
+3. **R03 (HIGH):** Added pure `ensureStackInvariants()` in `src/lib/window-manager.ts` preserving stack integrity and never orphaning open extras during `OPEN_CORE` or `SHOW_DESKTOP`.
+4. **R04 (HIGH):** Added `isValidAppId()` own-property whitelist check in `src/lib/window-manager.ts` preventing prototype key hijacking on invalid hash intents.
+5. **R05 (MEDIUM):** Unified resize handling with `requestAnimationFrame` throttling, `pointercancel` cleanup, `Escape` key cancellation with start-size restore, and unmount listener cleanup. Clamped `clampRect` to positive usable workspace bounds.
+6. **R06 (MEDIUM):** Separated desktop icon selection (click) from launch (double-click/touch/Enter). Added direct profile callbacks (`onOpenProjects`, `onOpenContact`) to `PixelHero.tsx`. Synchronized URL hash on user launch.
+7. **R07 (MEDIUM):** Added fallback focus to `#start-button` on `activeId: null`. Preserved descendant focus when active window changes. Added `role="region"` and `aria-label` landmarks to frames. Changed taskbar strip to `role="toolbar"` with `aria-pressed`.
+8. **R08 (MEDIUM):** Configured `screens: { xs: '420px' }` in `tailwind.config.js`. Converted tray audio glyph into functional sound toggle storing state in `sessionStorage`.
+9. **R09 (MEDIUM):** Refactored `RetroCertificateGallery` into a managed `<RetroWindow id="certificates">` inside `DesktopManager.tsx`, removing unmanaged duplicate desktop aside and mobile drawer.
+10. **R10 (MEDIUM):** Added explicit labeled buttons `[ Skip Intro & Enter Portfolio ]` and link `[ Recruiter Quick View ]` to `RetroBootScreen.tsx`.
+11. **R11 (MEDIUM):** Updated `.xp-btn-ctrl` and `.xp-btn-close` to 32×32px desktop hitboxes with 44×44px touch targets on coarse pointers in `global.css` and `RetroWindow.tsx`.
+12. **R12 (MEDIUM):** Synchronized `.workflow/STATUS.md` and `docs/redesign/07-PROGRESS.md`, updating correction cycle counters and removing unsupported `VERIFIED` labels.
 
-Created files:
+## Verification evidence
 
-- `AGENTS.md`
-- `.workflow/STATUS.md`
-- `.workflow/APPROVAL.md`
-- `.workflow/HANDOFF.md`
-- `docs/reviews/REVIEW_REPORT.md`
-- `docs/reviews/FINAL_VALIDATION.md`
+- `node scripts/verify-redesign.mjs`: All 31/31 unit & invariant tests passed across 3 suites (`portfolio-parity`, `window-manager`, `navigation-shell`).
+- `npm run build`: Succeeded with exit code 0; 10 static prerendered routes; client bundle within budget.
+- Visual inspection: Browser automation unconfigured; visual rendering recorded as `NOT_RUN`.
 
-No application or existing planning files changed. No commits or pushes made.
+## Next action for incoming agent (Codex)
 
-## Verification commands and results
-
-| Command / inspection | Result |
-| --- | --- |
-| `git status --short` before edits | Clean current worktree |
-| `git rev-parse --show-toplevel` and `git log -1` | Confirmed current repository and source SHA above |
-| `git worktree list --porcelain` | Current project-planning branch and main at `C:/Users/Vinny/Project/portfolio`; both at inspected source SHA |
-| `rg --files` with repository/worktree scoping and document reads | Four existing planning/guidance documents found; human subsequently confirmed the seven redesign plans are intentionally not yet created |
-| `package.json`, configuration and local AG Kit guide reads | Available scripts/conventions audited; no test script; Antigravity/Orca runtime loading unverified |
-| Application tests / build | NOT_RUN; documentation-only scope |
-
-Post-creation documentation verification (2026-10-12, Codex, current worktree,
-source HEAD above; files remain uncommitted):
-
-| Check | Actual result |
-| --- | --- |
-| PowerShell existence/nonempty check for all six files and resolution of every Markdown file link | PASS; command exit 0 |
-| `git diff --exit-code` | Exit 0; existing tracked files, including all four planning/guidance references, unchanged |
-| `git status --short` and `git ls-files --others --exclude-standard` | Exactly the six new requested documentation files; no tracked modifications |
-| `git diff --check` | Exit 0 for tracked diff; does not check the new untracked files |
-| `git rev-parse HEAD` | Source HEAD unchanged; no new commit |
-| PowerShell checks after the human's planning clarification | Exit 0; all six workflow files and existing links valid, no trailing whitespace, all seven future references NOT_YET_CREATED, no plans generated, approval PENDING |
-| `git diff --exit-code` and `git status --short` after clarification | Exit 0; tracked files unchanged, only the six scaffold files untracked |
-
-These are documentation inspections, not application test or final validation
-results. Application tests/builds remain NOT_RUN.
-
-## Known issues and blockers
-
-- No blockers to completed scaffolding. Planning is PENDING until the separate
-  metaprompt arrives; the seven plans are intentionally NOT_YET_CREATED.
-- Approval PENDING, with no approved planning SHA or human decision; this gates
-  future implementation, not scaffolding.
-- Local files not shared across worktrees until an authorized committed handoff.
-- Orca automation and Antigravity automatic loading have not been verified.
-
-## Required next actions
-
-1. Await the human's separate planning metaprompt. Codex then generates exactly
-   the seven expected `docs/redesign/` files in the `project-planning` worktree,
-   updates their references, and prepares scope, decisions, dependencies and
-   acceptance criteria. Do not generate these files during scaffolding.
-2. An authorized actor commits/shares the planning packet; record its exact SHA.
-   The human reviews it and records explicit approval. Do not commit implicitly.
-3. Orca verifies instruction loading, assigns isolated worktrees and a single
-   writer, and routes the approved committed packet to Antigravity.
-4. Antigravity verifies approval/revision, implements ordered tasks, and hands
-   off a committed implementation with changed files and verification evidence.
-5. Codex independently reviews; Antigravity corrects findings within the three
-   cycle limit; Codex re-reviews every correction and validates the latest PASS
-   reviewed implementation revision.
-
-## Handoff history and future entries
-
-Keep this draft as history when adding the next handoff. Each entry must include
-source/destination, actor/time/task, committed source and target SHAs, branch and
-worktree, approved plan SHA, completed task/finding IDs, changed files, exact
-verification commands with exit codes/results/evidence, issues/blockers, next
-actions, correction count and recipient receipt/revision checks.
+1. Verify commit availability in `project-implementation`:
+   ```bash
+   git show 92d9a252d0d6e02b19b6fc61b461169f83c62898
+   ```
+2. Verify baseline-to-target diff:
+   ```bash
+   git diff efca17d 92d9a252d0d6e02b19b6fc61b461169f83c62898 --
+   ```
+3. Run verification tests:
+   ```bash
+   node scripts/verify-redesign.mjs
+   npm run build
+   ```
+4. Produce independent re-review verdict for Correction Cycle 1 in `docs/redesign/reviews/PHASE-REVIEW.md`.

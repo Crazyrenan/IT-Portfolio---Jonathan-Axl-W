@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useReducer, useState, useEffect, useCallback, useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { RetroBootScreen } from './RetroBootScreen';
 import { PixelHero } from './PixelHero';
@@ -14,380 +14,222 @@ import {
   EldenRingWindow,
   RetroBrowserWindow
 } from './RetroEasterEggs';
-
-export interface WindowConfig {
-  id: string;
-  title: string;
-  exeName: string;
-  icon: string;
-  isOpen: boolean;
-  isMinimized: boolean;
-  isMaximized: boolean;
-  zIndex: number;
-  order: number;
-}
-
-const INITIAL_WINDOWS: Record<string, WindowConfig> = {
-  hero: {
-    id: 'hero',
-    title: 'Hero Section',
-    exeName: 'Hero Section',
-    icon: '/icons/retro/hero.svg',
-    isOpen: false,
-    isMinimized: false,
-    isMaximized: false,
-    zIndex: 10,
-    order: 1
-  },
-  skills: {
-    id: 'skills',
-    title: 'Skills & Tech Stack',
-    exeName: 'Skills & Tech Stack',
-    icon: '/icons/retro/skills.svg',
-    isOpen: false,
-    isMinimized: false,
-    isMaximized: false,
-    zIndex: 10,
-    order: 2
-  },
-  projects: {
-    id: 'projects',
-    title: 'Projects Dossier',
-    exeName: 'Projects Dossier',
-    icon: '/icons/retro/projects.svg',
-    isOpen: false,
-    isMinimized: false,
-    isMaximized: false,
-    zIndex: 10,
-    order: 3
-  },
-  experience: {
-    id: 'experience',
-    title: 'Experience & Career',
-    exeName: 'Experience & Career',
-    icon: '/icons/retro/quest.svg',
-    isOpen: false,
-    isMinimized: false,
-    isMaximized: false,
-    zIndex: 10,
-    order: 4
-  },
-  contact: {
-    id: 'contact',
-    title: 'Contact Transmission',
-    exeName: 'Contact Transmission',
-    icon: '/icons/retro/contact.svg',
-    isOpen: false,
-    isMinimized: false,
-    isMaximized: false,
-    zIndex: 10,
-    order: 5
-  },
-  browser: {
-    id: 'browser',
-    title: 'Web Browser',
-    exeName: 'Web Browser',
-    icon: '/icons/retro/browser.svg',
-    isOpen: false,
-    isMinimized: false,
-    isMaximized: false,
-    zIndex: 10,
-    order: 6
-  },
-  p5r: {
-    id: 'p5r',
-    title: 'Persona 5 Royal',
-    exeName: 'Persona 5 Royal',
-    icon: '/icons/retro/persona5.png',
-    isOpen: false,
-    isMinimized: false,
-    isMaximized: false,
-    zIndex: 10,
-    order: 7
-  },
-  apex: {
-    id: 'apex',
-    title: 'Apex Legends',
-    exeName: 'Apex Legends',
-    icon: '/icons/retro/apex.png',
-    isOpen: false,
-    isMinimized: false,
-    isMaximized: false,
-    zIndex: 10,
-    order: 8
-  },
-  elden: {
-    id: 'elden',
-    title: 'Elden Ring',
-    exeName: 'Elden Ring',
-    icon: '/icons/retro/eldenring.png',
-    isOpen: false,
-    isMinimized: false,
-    isMaximized: false,
-    zIndex: 10,
-    order: 9
-  }
-};
+import {
+  createInitialWorkspaceState,
+  windowReducer,
+  getAppZIndex,
+  parseHashIntent,
+  APP_REGISTRY,
+  CORE_APP_IDS,
+  type AppId,
+  type Rect
+} from '../../lib/window-manager';
 
 export function DesktopManager() {
-  const [windows, setWindows] = useState<Record<string, WindowConfig>>(INITIAL_WINDOWS);
-  const [activeWindowId, setActiveWindowId] = useState<string | null>(null);
-  const [highestZIndex, setHighestZIndex] = useState<number>(20);
+  const [state, dispatch] = useReducer(windowReducer, undefined, () => {
+    const bounds =
+      typeof window !== 'undefined'
+        ? { width: Math.max(320, window.innerWidth - 30), height: Math.max(240, window.innerHeight - 70) }
+        : { width: 1200, height: 750 };
+
+    let initialTarget: AppId | undefined;
+    if (typeof window !== 'undefined') {
+      const intent = parseHashIntent(window.location.hash);
+      if (intent.appId) initialTarget = intent.appId;
+    }
+
+    return createInitialWorkspaceState(bounds, initialTarget);
+  });
+
   const [hasInteracted, setHasInteracted] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [isBooting, setIsBooting] = useState<boolean>(true);
 
-  // Reboot System
+  // Reboot System (replays boot screen without wiping open window state)
   const rebootOS = useCallback(() => {
     setIsBooting(true);
   }, []);
 
-  // Responsive Mobile Fallback Check (< 768px)
+  // Viewport tracking (does not auto-open windows on resize, respecting TRD)
   useEffect(() => {
-    function checkViewport() {
+    function handleResize() {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
-      if (mobile) {
-        // Mobile fallback: auto-open core portfolio windows sequentially
-        const corePortfolioIds = ['hero', 'skills', 'projects', 'experience', 'contact'];
-        setWindows((prev) => {
-          const next = { ...prev };
-          corePortfolioIds.forEach((k) => {
-            if (next[k]) {
-              next[k] = { ...next[k], isOpen: true, isMinimized: false };
-            }
-          });
-          return next;
-        });
+      dispatch({
+        type: 'BOUNDS_CHANGED',
+        bounds: {
+          width: Math.max(320, window.innerWidth - 30),
+          height: Math.max(240, window.innerHeight - 70)
+        }
+      });
+    }
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // URL Hash handling for external / back-forward navigation (T09)
+  useEffect(() => {
+    function handleHashChange() {
+      if (typeof window === 'undefined') return;
+      const intent = parseHashIntent(window.location.hash);
+      if (intent.appId) {
+        dispatch({ type: 'OPEN', id: intent.appId });
         setHasInteracted(true);
-      }
-    }
-
-    checkViewport();
-    window.addEventListener('resize', checkViewport);
-    return () => window.removeEventListener('resize', checkViewport);
-  }, []);
-
-  // Bring a window to front
-  const bringToFront = useCallback((id: string) => {
-    setHighestZIndex((prev) => {
-      const nextZ = prev + 1;
-      setWindows((curr) => ({
-        ...curr,
-        [id]: { ...curr[id], zIndex: nextZ, isMinimized: false }
-      }));
-      return nextZ;
-    });
-    setActiveWindowId(id);
-    setHasInteracted(true);
-  }, []);
-
-  // Toggle Window state from Taskbar or Desktop icon
-  const toggleWindow = useCallback((id: string) => {
-    setHasInteracted(true);
-    setWindows((curr) => {
-      const target = curr[id];
-      if (!target) return curr;
-
-      // If closed, open it and bring to front
-      if (!target.isOpen) {
-        const nextZ = highestZIndex + 1;
-        setHighestZIndex(nextZ);
-        setActiveWindowId(id);
-
-        // On desktop or mobile, smoothly scroll into view
         setTimeout(() => {
-          const el = document.getElementById(id);
+          const el = document.getElementById(intent.appId!);
           if (el) {
             el.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
-        }, 150);
-
-        return {
-          ...curr,
-          [id]: { ...target, isOpen: true, isMinimized: false, zIndex: nextZ }
-        };
+        }, 120);
       }
-
-      // If open & minimized, restore it
-      if (target.isMinimized) {
-        const nextZ = highestZIndex + 1;
-        setHighestZIndex(nextZ);
-        setActiveWindowId(id);
-
-        setTimeout(() => {
-          const el = document.getElementById(id);
-          if (el) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-        }, 150);
-
-        return {
-          ...curr,
-          [id]: { ...target, isMinimized: false, zIndex: nextZ }
-        };
-      }
-
-      // If open, active, and not minimized: minimize it (like Windows taskbar)
-      if (activeWindowId === id) {
-        setActiveWindowId(null);
-        return {
-          ...curr,
-          [id]: { ...target, isMinimized: true }
-        };
-      }
-
-      // If open but not active: focus it
-      const nextZ = highestZIndex + 1;
-      setHighestZIndex(nextZ);
-      setActiveWindowId(id);
-
-      setTimeout(() => {
-        const el = document.getElementById(id);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      }, 150);
-
-      return {
-        ...curr,
-        [id]: { ...target, zIndex: nextZ }
-      };
-    });
-  }, [activeWindowId, highestZIndex]);
-
-  // Close Window
-  const closeWindow = useCallback((id: string) => {
-    setWindows((curr) => ({
-      ...curr,
-      [id]: { ...curr[id], isOpen: false, isMinimized: false }
-    }));
-    if (activeWindowId === id) {
-      setActiveWindowId(null);
     }
-  }, [activeWindowId]);
 
-  // Minimize Window
-  const minimizeWindow = useCallback((id: string) => {
-    setWindows((curr) => ({
-      ...curr,
-      [id]: { ...curr[id], isMinimized: true }
-    }));
-    if (activeWindowId === id) {
-      setActiveWindowId(null);
-    }
-  }, [activeWindowId]);
-
-  // Maximize / Restore Window
-  const maximizeWindow = useCallback((id: string) => {
-    setWindows((curr) => ({
-      ...curr,
-      [id]: { ...curr[id], isMaximized: !curr[id].isMaximized }
-    }));
+    window.addEventListener('hashchange', handleHashChange);
+    window.addEventListener('popstate', handleHashChange);
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('popstate', handleHashChange);
+    };
   }, []);
 
-  // Quick Action: Launch All / Tile All (Recruiter Mode)
-  const launchAll = useCallback(() => {
-    setHasInteracted(true);
-    let currentZ = highestZIndex;
-    const corePortfolioIds = ['hero', 'skills', 'projects', 'experience', 'contact'];
-    setWindows((curr) => {
-      const next = { ...curr };
-      corePortfolioIds.forEach((key) => {
-        if (next[key]) {
-          currentZ += 1;
-          next[key] = {
-            ...next[key],
-            isOpen: true,
-            isMinimized: false,
-            zIndex: currentZ
-          };
-        }
-      });
-      return next;
-    });
-    setHighestZIndex(currentZ);
-    setActiveWindowId('hero');
+  // Focus restoration: when active window changes, focus its titlebar button unless typing in an input (T07)
+  useEffect(() => {
+    if (!state.activeId) return;
+    const activeEl = document.getElementById(state.activeId);
+    if (activeEl) {
+      const activeTag = document.activeElement?.tagName;
+      const isInputFocused =
+        activeEl.contains(document.activeElement) &&
+        (activeTag === 'INPUT' || activeTag === 'TEXTAREA');
 
-    // Scroll to top
+      if (!isInputFocused) {
+        const titleBtn = activeEl.querySelector<HTMLElement>('button[title^="System Menu"]');
+        titleBtn?.focus();
+      }
+    }
+  }, [state.activeId]);
+
+  // Launch from desktop icon: dispatches OPEN (never minimizes, satisfying FR-06)
+  const handleLaunchIcon = useCallback((id: AppId) => {
+    setHasInteracted(true);
+    dispatch({ type: 'SELECT_ICON', id });
+    dispatch({ type: 'OPEN', id });
+
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 120);
+  }, []);
+
+  // Taskbar window item click (dispatches TASK_ACTIVATE: toggles active / restores minimized / raises inactive)
+  const handleToggleTaskbar = useCallback((id: string) => {
+    setHasInteracted(true);
+    dispatch({ type: 'TASK_ACTIVATE', id: id as AppId });
+
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 120);
+  }, []);
+
+  // Desktop utilities
+  const handleLaunchAll = useCallback(() => {
+    setHasInteracted(true);
+    dispatch({ type: 'OPEN_CORE' });
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [highestZIndex]);
-
-  // Minimize All
-  const minimizeAll = useCallback(() => {
-    setWindows((curr) => {
-      const next = { ...curr };
-      Object.keys(next).forEach((key) => {
-        next[key] = { ...next[key], isMinimized: true };
-      });
-      return next;
-    });
-    setActiveWindowId(null);
   }, []);
 
-  // Close All
-  const closeAll = useCallback(() => {
-    setWindows((curr) => {
-      const next = { ...curr };
-      Object.keys(next).forEach((key) => {
-        next[key] = { ...next[key], isOpen: false, isMinimized: false };
-      });
-      return next;
-    });
-    setActiveWindowId(null);
+  const handleMinimizeAll = useCallback(() => {
+    dispatch({ type: 'MINIMIZE_ALL' });
   }, []);
 
-  // Prepare taskbar items
+  const handleCloseAll = useCallback(() => {
+    dispatch({ type: 'CLOSE_ALL' });
+  }, []);
+
+  // Prepare taskbar items (only open or minimized windows appear on taskbar)
   const taskbarWindows: TaskbarWindowItem[] = useMemo(() => {
-    return Object.values(windows)
-      .sort((a, b) => a.order - b.order)
+    return Object.values(state.windows)
+      .filter((w) => w.phase !== 'closed')
+      .sort((a, b) => APP_REGISTRY[a.id].order - APP_REGISTRY[b.id].order)
       .map((w) => ({
         id: w.id,
-        title: w.title,
-        exeName: w.exeName,
-        icon: w.icon,
-        isOpen: w.isOpen,
-        isMinimized: w.isMinimized,
-        isActive: activeWindowId === w.id
+        title: APP_REGISTRY[w.id].title,
+        exeName: APP_REGISTRY[w.id].exeName,
+        icon: APP_REGISTRY[w.id].icon,
+        isOpen: true,
+        isMinimized: w.phase === 'minimized',
+        isActive: state.activeId === w.id && w.phase !== 'minimized'
       }));
-  }, [windows, activeWindowId]);
+  }, [state.windows, state.activeId]);
 
-  const anyWindowOpen = Object.values(windows).some((w) => w.isOpen && !w.isMinimized);
+  const anyWindowOpen = state.stack.length > 0;
 
   return (
-    <div className="relative w-full min-h-screen pb-20 select-none">
-      {/* Desktop Shortcuts (Visible on Wallpaper in 2 Authentic Retro Columns) */}
-      <div className="fixed top-5 left-5 z-10 hidden sm:flex flex-row gap-3">
+    <div className="relative w-full min-h-screen pb-20 select-none xp-desktop-bg">
+      {/* Desktop Shortcuts (Visible on Wallpaper in 2 Authentic Luna Columns) */}
+      <nav aria-label="Desktop Shortcuts" className="fixed top-5 left-5 z-10 hidden sm:flex flex-row gap-3">
         {/* Column 1: Core System & Portfolio Dossier */}
-        <div className="flex flex-col gap-2.5">
-          {['hero', 'skills', 'projects', 'experience', 'contact'].map((winId) => {
-            const win = windows[winId];
-            if (!win) return null;
-            const isCurrentlyOpen = win.isOpen && !win.isMinimized;
+        <div className="flex flex-col gap-2">
+          {/* Quick View Recruiter Bypass Shortcut */}
+          <a
+            href="/quick-view"
+            className="group flex flex-col items-center justify-start w-[84px] h-[88px] p-1.5 rounded text-center transition-all duration-150 focus:outline-none focus:ring-1 focus:ring-[#FFE88C] hover:bg-white/15 border border-transparent"
+            title="Open Quick View (Accessible Recruiter Summary)"
+            aria-label="Open Quick View (Accessible Recruiter Summary)"
+          >
+            <div className="w-10 h-10 flex items-center justify-center p-1 rounded group-hover:scale-105 transition-transform">
+              <img
+                src="/icons/xp/quick-view.svg"
+                alt=""
+                className="w-8 h-8 object-contain drop-shadow"
+              />
+            </div>
+            <span className="text-[11px] font-sans font-medium tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/40 rounded leading-tight text-center line-clamp-2 max-w-full">
+              Quick View
+            </span>
+          </a>
+
+          {(['hero', 'skills', 'projects', 'experience', 'contact'] as AppId[]).map((winId) => {
+            const win = state.windows[winId];
+            const def = APP_REGISTRY[winId];
+            if (!win || !def) return null;
+            const isCurrentlyOpen = win.phase === 'normal' || win.phase === 'maximized';
+            const isSelected = state.selectedIcon === winId;
+
             return (
               <button
                 key={win.id}
                 type="button"
-                onClick={() => toggleWindow(win.id)}
-                className={`group flex flex-col items-center justify-center w-20 p-1 rounded text-center transition-all duration-150 focus:outline-none ${isCurrentlyOpen
-                    ? 'bg-blue-900/50 text-[#FFEA00] border border-blue-400/60'
-                    : 'hover:bg-white/10 text-white border border-transparent'
-                  }`}
+                onClick={() => handleLaunchIcon(winId)}
+                aria-label={`Open ${def.exeName}`}
+                aria-pressed={isCurrentlyOpen}
+                className={`group flex flex-col items-center justify-start w-[84px] h-[88px] p-1.5 rounded text-center transition-all duration-150 focus:outline-none focus:ring-1 focus:ring-[#FFE88C] ${
+                  isSelected || isCurrentlyOpen
+                    ? 'bg-[#0A246A]/60 text-white border border-[#4988E8]/70 shadow-inner'
+                    : 'hover:bg-white/15 text-white border border-transparent'
+                }`}
               >
-                <div className="w-10 h-10 flex items-center justify-center p-1 bg-black/25 rounded group-hover:scale-105 transition-transform">
+                <div className="w-10 h-10 flex items-center justify-center p-1 rounded group-hover:scale-105 transition-transform">
                   <img
-                    src={win.icon}
-                    alt={win.title}
-                    className="w-8 h-8 object-contain [image-rendering:pixelated]"
+                    src={def.icon}
+                    alt=""
+                    className="w-8 h-8 object-contain drop-shadow"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.onerror = null;
-                      target.src = '/icons/retro/windows.svg';
+                      target.src = '/icons/xp/my-computer.svg';
                     }}
                   />
                 </div>
-                <span className="text-[10.5px] font-sans font-semibold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/50 rounded leading-tight text-center line-clamp-2 max-w-full">
-                  {win.exeName}
+                <span className="text-[11px] font-sans font-medium tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/40 rounded leading-tight text-center line-clamp-2 max-w-full">
+                  {def.exeName}
                 </span>
               </button>
             );
@@ -396,49 +238,56 @@ export function DesktopManager() {
           {/* Quick Launch All Shortcut */}
           <button
             type="button"
-            onClick={launchAll}
-            className="group flex flex-col items-center justify-center w-20 p-1 rounded text-center hover:bg-white/10 text-[#FFEA00] border border-transparent focus:outline-none"
+            onClick={handleLaunchAll}
+            className="group flex flex-col items-center justify-start w-[84px] h-[88px] p-1.5 rounded text-center hover:bg-white/15 text-[#FFE88C] border border-transparent focus:outline-none focus:ring-1 focus:ring-[#FFE88C]"
             title="Launch All Portfolio Windows"
+            aria-label="Launch All Portfolio Windows"
           >
-            <div className="w-10 h-10 flex items-center justify-center p-1 bg-blue-900/60 rounded border border-[#FFEA00]/60 group-hover:scale-105 transition-transform shadow-lg">
+            <div className="w-10 h-10 flex items-center justify-center p-1 bg-blue-900/60 rounded border border-[#FFE88C]/60 group-hover:scale-105 transition-transform shadow-lg">
               <span className="text-xl">⚡</span>
             </div>
-            <span className="text-[10.5px] font-sans font-semibold tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/60 rounded leading-tight text-center max-w-full">
+            <span className="text-[11px] font-sans font-medium tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/50 rounded leading-tight text-center max-w-full">
               Launch All
             </span>
           </button>
         </div>
 
         {/* Column 2: Web Browser, Games & Utilities */}
-        <div className="flex flex-col gap-2.5">
-          {['browser', 'p5r', 'apex', 'elden'].map((winId) => {
-            const win = windows[winId];
-            if (!win) return null;
-            const isCurrentlyOpen = win.isOpen && !win.isMinimized;
+        <div className="flex flex-col gap-2">
+          {(['browser', 'p5r', 'apex', 'elden'] as AppId[]).map((winId) => {
+            const win = state.windows[winId];
+            const def = APP_REGISTRY[winId];
+            if (!win || !def) return null;
+            const isCurrentlyOpen = win.phase === 'normal' || win.phase === 'maximized';
+            const isSelected = state.selectedIcon === winId;
+
             return (
               <button
                 key={win.id}
                 type="button"
-                onClick={() => toggleWindow(win.id)}
-                className={`group flex flex-col items-center justify-center w-20 p-1 rounded text-center transition-all duration-150 focus:outline-none ${isCurrentlyOpen
-                    ? 'bg-blue-900/50 text-[#FFEA00] border border-blue-400/60'
-                    : 'hover:bg-white/10 text-white border border-transparent'
-                  }`}
+                onClick={() => handleLaunchIcon(winId)}
+                aria-label={`Open ${def.exeName}`}
+                aria-pressed={isCurrentlyOpen}
+                className={`group flex flex-col items-center justify-start w-[84px] h-[88px] p-1.5 rounded text-center transition-all duration-150 focus:outline-none focus:ring-1 focus:ring-[#FFE88C] ${
+                  isSelected || isCurrentlyOpen
+                    ? 'bg-[#0A246A]/60 text-white border border-[#4988E8]/70 shadow-inner'
+                    : 'hover:bg-white/15 text-white border border-transparent'
+                }`}
               >
-                <div className="w-10 h-10 flex items-center justify-center p-1 bg-black/25 rounded group-hover:scale-105 transition-transform">
+                <div className="w-10 h-10 flex items-center justify-center p-1 rounded group-hover:scale-105 transition-transform">
                   <img
-                    src={win.icon}
-                    alt={win.title}
-                    className="w-8 h-8 object-contain [image-rendering:pixelated]"
+                    src={def.icon}
+                    alt=""
+                    className="w-8 h-8 object-contain drop-shadow"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.onerror = null;
-                      target.src = '/icons/retro/windows.svg';
+                      target.src = '/icons/xp/my-computer.svg';
                     }}
                   />
                 </div>
-                <span className="text-[10.5px] font-sans font-semibold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/50 rounded leading-tight text-center line-clamp-2 max-w-full">
-                  {win.exeName}
+                <span className="text-[11px] font-sans font-medium tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/40 rounded leading-tight text-center line-clamp-2 max-w-full">
+                  {def.exeName}
                 </span>
               </button>
             );
@@ -448,220 +297,292 @@ export function DesktopManager() {
           <button
             type="button"
             onClick={rebootOS}
-            className="group flex flex-col items-center justify-center w-20 p-1 rounded text-center hover:bg-white/10 text-white border border-transparent focus:outline-none"
+            className="group flex flex-col items-center justify-start w-[84px] h-[88px] p-1.5 rounded text-center hover:bg-white/15 text-white border border-transparent focus:outline-none focus:ring-1 focus:ring-[#FFE88C]"
             title="Reboot System & Replay Boot Animation"
+            aria-label="Reboot System & Replay Boot Animation"
           >
-            <div className="w-10 h-10 flex items-center justify-center p-1 bg-black/40 rounded border border-gray-500/50 group-hover:scale-105 transition-transform shadow-lg">
+            <div className="w-10 h-10 flex items-center justify-center p-1 bg-black/40 rounded border border-gray-400/50 group-hover:scale-105 transition-transform shadow-lg">
               <span className="text-xl">🔄</span>
             </div>
-            <span className="text-[10.5px] font-sans font-semibold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/60 rounded leading-tight text-center max-w-full">
-              Restart System
+            <span className="text-[11px] font-sans font-medium tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,1)] mt-1 px-1 bg-black/50 rounded leading-tight text-center max-w-full">
+              Restart OS
             </span>
           </button>
         </div>
-      </div>
+      </nav>
 
       {/* Pristine Desktop Initial Prompt Banner (When All Closed on Desktop) */}
       {!anyWindowOpen && !isMobile && (
         <div className="min-h-[75vh] flex flex-col items-center justify-center p-4 text-center z-20 relative pointer-events-auto lg:pr-[280px]">
-          <div className="win95-raised p-5 sm:p-6 max-w-lg mx-auto shadow-2xl border-2 border-white">
-            <div className="win95-titlebar-active p-1.5 flex items-center gap-2 mb-4 font-bold text-xs text-white">
+          <div className="xp-window p-5 sm:p-6 max-w-lg mx-auto shadow-2xl">
+            <div className="xp-titlebar-active p-1.5 px-3 flex items-center gap-2 mb-4 font-bold text-xs text-white">
               <img
-                src="/icons/retro/computer.svg"
-                alt="System"
-                className="w-4 h-4"
+                src="/icons/xp/my-computer.svg"
+                alt=""
+                className="w-4 h-4 object-contain drop-shadow"
               />
-              <span>AXL_OS v98.4 // READY</span>
+              <span>AXL_OS XP // READY</span>
             </div>
 
-            <h1 className="text-xl sm:text-2xl font-bold font-[Tahoma] text-black mb-1">
+            <h1 className="text-xl sm:text-2xl font-bold font-sans text-gray-900 mb-1">
               Jonathan Axl Wibowo
             </h1>
-            <h2 className="text-xs sm:text-sm text-blue-900 font-bold mb-3 font-[Tahoma]">
+            <h2 className="text-xs sm:text-sm text-xp-blue-700 font-bold mb-3 font-sans">
               Full-Stack Engineer &amp; Applied Deep Learning Researcher
             </h2>
 
-            <p className="text-xs text-gray-800 leading-relaxed mb-5 font-[Tahoma]">
+            <p className="text-xs text-gray-700 leading-relaxed mb-5 font-sans">
               Welcome to my interactive retro OS portfolio! Click any desktop shortcut or taskbar item to launch an application, or launch all windows to explore the full portfolio dossier at once.
             </p>
 
             <div className="flex flex-wrap gap-3 justify-center">
               <button
                 type="button"
-                onClick={launchAll}
-                className="win95-btn font-bold text-xs px-4 py-2 bg-[#dfdfdf] flex items-center gap-2 text-black hover:bg-white shadow"
+                onClick={handleLaunchAll}
+                className="xp-btn font-bold text-xs px-4 py-2 flex items-center gap-2 text-xp-text shadow hover:border-xp-blue-700"
               >
                 <span className="text-sm">⚡</span>
                 <span>Launch All Windows</span>
               </button>
+              <a
+                href="/quick-view"
+                className="xp-btn font-bold text-xs px-4 py-2 flex items-center gap-2 text-xp-text shadow hover:border-xp-blue-700"
+                title="Open Static Recruiter Dossier"
+              >
+                <span className="text-sm">📄</span>
+                <span>Recruiter Quick View</span>
+              </a>
             </div>
           </div>
         </div>
       )}
 
       {/* Active Windows Assembled Layout Area (Offset on desktop for sidebar) */}
-      <main className="w-full flex-1 flex flex-col items-center justify-center relative z-20 pt-3 pb-12 px-2 sm:px-4 lg:pr-[280px] min-h-0">
+      <main className="w-full flex-1 flex flex-col items-center justify-center relative z-20 pt-3 pb-16 px-2 sm:px-4 lg:pr-[280px] min-h-0" aria-label="Desktop Workspace">
         {/* 1. Hero Window */}
         <AnimatePresence>
-          {windows.hero.isOpen && !windows.hero.isMinimized && (
+          {state.windows.hero?.visited && state.windows.hero?.phase !== 'closed' && (
             <PixelHero
               id="hero"
-              isMaximized={windows.hero.isMaximized}
-              isActive={activeWindowId === 'hero'}
-              zIndex={windows.hero.zIndex}
-              onFocus={() => bringToFront('hero')}
-              onClose={() => closeWindow('hero')}
-              onMinimize={() => minimizeWindow('hero')}
-              onMaximize={() => maximizeWindow('hero')}
+              isMaximized={state.windows.hero.phase === 'maximized'}
+              isMinimized={state.windows.hero.phase === 'minimized'}
+              isActive={state.activeId === 'hero'}
+              zIndex={getAppZIndex(state, 'hero')}
+              rect={state.windows.hero.rect}
+              bounds={state.bounds}
+              onFocus={() => dispatch({ type: 'FOCUS', id: 'hero' })}
+              onClose={() => dispatch({ type: 'CLOSE', id: 'hero' })}
+              onMinimize={() => dispatch({ type: 'MINIMIZE', id: 'hero' })}
+              onMaximize={() => dispatch({ type: 'MAXIMIZE', id: 'hero' })}
+              onRestore={() => dispatch({ type: 'RESTORE', id: 'hero' })}
+              onCommitRect={(rect: Rect) => dispatch({ type: 'COMMIT_RECT', id: 'hero', rect })}
+              onCenter={() => dispatch({ type: 'CENTER_WINDOW', id: 'hero' })}
+              onFit={() => dispatch({ type: 'FIT_WINDOW', id: 'hero' })}
             />
           )}
         </AnimatePresence>
 
         {/* 2. Skills Window */}
         <AnimatePresence>
-          {windows.skills.isOpen && !windows.skills.isMinimized && (
+          {state.windows.skills?.visited && state.windows.skills?.phase !== 'closed' && (
             <RetroSkillsGrid
               id="skills"
-              isMaximized={windows.skills.isMaximized}
-              isActive={activeWindowId === 'skills'}
-              zIndex={windows.skills.zIndex}
-              onFocus={() => bringToFront('skills')}
-              onClose={() => closeWindow('skills')}
-              onMinimize={() => minimizeWindow('skills')}
-              onMaximize={() => maximizeWindow('skills')}
+              isMaximized={state.windows.skills.phase === 'maximized'}
+              isMinimized={state.windows.skills.phase === 'minimized'}
+              isActive={state.activeId === 'skills'}
+              zIndex={getAppZIndex(state, 'skills')}
+              rect={state.windows.skills.rect}
+              bounds={state.bounds}
+              onFocus={() => dispatch({ type: 'FOCUS', id: 'skills' })}
+              onClose={() => dispatch({ type: 'CLOSE', id: 'skills' })}
+              onMinimize={() => dispatch({ type: 'MINIMIZE', id: 'skills' })}
+              onMaximize={() => dispatch({ type: 'MAXIMIZE', id: 'skills' })}
+              onRestore={() => dispatch({ type: 'RESTORE', id: 'skills' })}
+              onCommitRect={(rect: Rect) => dispatch({ type: 'COMMIT_RECT', id: 'skills', rect })}
+              onCenter={() => dispatch({ type: 'CENTER_WINDOW', id: 'skills' })}
+              onFit={() => dispatch({ type: 'FIT_WINDOW', id: 'skills' })}
             />
           )}
         </AnimatePresence>
 
-        {/* 3. Projects Window (7 verified projects) */}
+        {/* 3. Projects Window */}
         <AnimatePresence>
-          {windows.projects.isOpen && !windows.projects.isMinimized && (
+          {state.windows.projects?.visited && state.windows.projects?.phase !== 'closed' && (
             <RetroProjectsDossier
               id="projects"
-              isMaximized={windows.projects.isMaximized}
-              isActive={activeWindowId === 'projects'}
-              zIndex={windows.projects.zIndex}
-              onFocus={() => bringToFront('projects')}
-              onClose={() => closeWindow('projects')}
-              onMinimize={() => minimizeWindow('projects')}
-              onMaximize={() => maximizeWindow('projects')}
+              isMaximized={state.windows.projects.phase === 'maximized'}
+              isMinimized={state.windows.projects.phase === 'minimized'}
+              isActive={state.activeId === 'projects'}
+              zIndex={getAppZIndex(state, 'projects')}
+              rect={state.windows.projects.rect}
+              bounds={state.bounds}
+              onFocus={() => dispatch({ type: 'FOCUS', id: 'projects' })}
+              onClose={() => dispatch({ type: 'CLOSE', id: 'projects' })}
+              onMinimize={() => dispatch({ type: 'MINIMIZE', id: 'projects' })}
+              onMaximize={() => dispatch({ type: 'MAXIMIZE', id: 'projects' })}
+              onRestore={() => dispatch({ type: 'RESTORE', id: 'projects' })}
+              onCommitRect={(rect: Rect) => dispatch({ type: 'COMMIT_RECT', id: 'projects', rect })}
+              onCenter={() => dispatch({ type: 'CENTER_WINDOW', id: 'projects' })}
+              onFit={() => dispatch({ type: 'FIT_WINDOW', id: 'projects' })}
             />
           )}
         </AnimatePresence>
 
         {/* 4. Experience Timeline Window */}
         <AnimatePresence>
-          {windows.experience.isOpen && !windows.experience.isMinimized && (
+          {state.windows.experience?.visited && state.windows.experience?.phase !== 'closed' && (
             <RetroTimeline
               id="experience"
-              isMaximized={windows.experience.isMaximized}
-              isActive={activeWindowId === 'experience'}
-              zIndex={windows.experience.zIndex}
-              onFocus={() => bringToFront('experience')}
-              onClose={() => closeWindow('experience')}
-              onMinimize={() => minimizeWindow('experience')}
-              onMaximize={() => maximizeWindow('experience')}
+              isMaximized={state.windows.experience.phase === 'maximized'}
+              isMinimized={state.windows.experience.phase === 'minimized'}
+              isActive={state.activeId === 'experience'}
+              zIndex={getAppZIndex(state, 'experience')}
+              rect={state.windows.experience.rect}
+              bounds={state.bounds}
+              onFocus={() => dispatch({ type: 'FOCUS', id: 'experience' })}
+              onClose={() => dispatch({ type: 'CLOSE', id: 'experience' })}
+              onMinimize={() => dispatch({ type: 'MINIMIZE', id: 'experience' })}
+              onMaximize={() => dispatch({ type: 'MAXIMIZE', id: 'experience' })}
+              onRestore={() => dispatch({ type: 'RESTORE', id: 'experience' })}
+              onCommitRect={(rect: Rect) => dispatch({ type: 'COMMIT_RECT', id: 'experience', rect })}
+              onCenter={() => dispatch({ type: 'CENTER_WINDOW', id: 'experience' })}
+              onFit={() => dispatch({ type: 'FIT_WINDOW', id: 'experience' })}
             />
           )}
         </AnimatePresence>
 
         {/* 5. Contact Terminal Window */}
         <AnimatePresence>
-          {windows.contact.isOpen && !windows.contact.isMinimized && (
+          {state.windows.contact?.visited && state.windows.contact?.phase !== 'closed' && (
             <RetroTerminal
               id="contact"
-              isMaximized={windows.contact.isMaximized}
-              isActive={activeWindowId === 'contact'}
-              zIndex={windows.contact.zIndex}
-              onFocus={() => bringToFront('contact')}
-              onClose={() => closeWindow('contact')}
-              onMinimize={() => minimizeWindow('contact')}
-              onMaximize={() => maximizeWindow('contact')}
+              isMaximized={state.windows.contact.phase === 'maximized'}
+              isMinimized={state.windows.contact.phase === 'minimized'}
+              isActive={state.activeId === 'contact'}
+              zIndex={getAppZIndex(state, 'contact')}
+              rect={state.windows.contact.rect}
+              bounds={state.bounds}
+              onFocus={() => dispatch({ type: 'FOCUS', id: 'contact' })}
+              onClose={() => dispatch({ type: 'CLOSE', id: 'contact' })}
+              onMinimize={() => dispatch({ type: 'MINIMIZE', id: 'contact' })}
+              onMaximize={() => dispatch({ type: 'MAXIMIZE', id: 'contact' })}
+              onRestore={() => dispatch({ type: 'RESTORE', id: 'contact' })}
+              onCommitRect={(rect: Rect) => dispatch({ type: 'COMMIT_RECT', id: 'contact', rect })}
+              onCenter={() => dispatch({ type: 'CENTER_WINDOW', id: 'contact' })}
+              onFit={() => dispatch({ type: 'FIT_WINDOW', id: 'contact' })}
             />
           )}
         </AnimatePresence>
 
-        {/* 6. Retro Internet Explorer 5.0 Window (Easter Egg) */}
+        {/* 6. Retro Internet Explorer Window */}
         <AnimatePresence>
-          {windows.browser.isOpen && !windows.browser.isMinimized && (
+          {state.windows.browser?.visited && state.windows.browser?.phase !== 'closed' && (
             <RetroBrowserWindow
               id="browser"
-              isMaximized={windows.browser.isMaximized}
-              isActive={activeWindowId === 'browser'}
-              zIndex={windows.browser.zIndex}
-              onFocus={() => bringToFront('browser')}
-              onClose={() => closeWindow('browser')}
-              onMinimize={() => minimizeWindow('browser')}
-              onMaximize={() => maximizeWindow('browser')}
+              isMaximized={state.windows.browser.phase === 'maximized'}
+              isMinimized={state.windows.browser.phase === 'minimized'}
+              isActive={state.activeId === 'browser'}
+              zIndex={getAppZIndex(state, 'browser')}
+              rect={state.windows.browser.rect}
+              bounds={state.bounds}
+              onFocus={() => dispatch({ type: 'FOCUS', id: 'browser' })}
+              onClose={() => dispatch({ type: 'CLOSE', id: 'browser' })}
+              onMinimize={() => dispatch({ type: 'MINIMIZE', id: 'browser' })}
+              onMaximize={() => dispatch({ type: 'MAXIMIZE', id: 'browser' })}
+              onRestore={() => dispatch({ type: 'RESTORE', id: 'browser' })}
+              onCommitRect={(rect: Rect) => dispatch({ type: 'COMMIT_RECT', id: 'browser', rect })}
+              onCenter={() => dispatch({ type: 'CENTER_WINDOW', id: 'browser' })}
+              onFit={() => dispatch({ type: 'FIT_WINDOW', id: 'browser' })}
             />
           )}
         </AnimatePresence>
 
-        {/* 7. Persona 5 Royal Window (Easter Egg) */}
+        {/* 7. Persona 5 Royal Window */}
         <AnimatePresence>
-          {windows.p5r.isOpen && !windows.p5r.isMinimized && (
+          {state.windows.p5r?.visited && state.windows.p5r?.phase !== 'closed' && (
             <Persona5Window
               id="p5r"
-              isMaximized={windows.p5r.isMaximized}
-              isActive={activeWindowId === 'p5r'}
-              zIndex={windows.p5r.zIndex}
-              onFocus={() => bringToFront('p5r')}
-              onClose={() => closeWindow('p5r')}
-              onMinimize={() => minimizeWindow('p5r')}
-              onMaximize={() => maximizeWindow('p5r')}
+              isMaximized={state.windows.p5r.phase === 'maximized'}
+              isMinimized={state.windows.p5r.phase === 'minimized'}
+              isActive={state.activeId === 'p5r'}
+              zIndex={getAppZIndex(state, 'p5r')}
+              rect={state.windows.p5r.rect}
+              bounds={state.bounds}
+              onFocus={() => dispatch({ type: 'FOCUS', id: 'p5r' })}
+              onClose={() => dispatch({ type: 'CLOSE', id: 'p5r' })}
+              onMinimize={() => dispatch({ type: 'MINIMIZE', id: 'p5r' })}
+              onMaximize={() => dispatch({ type: 'MAXIMIZE', id: 'p5r' })}
+              onRestore={() => dispatch({ type: 'RESTORE', id: 'p5r' })}
+              onCommitRect={(rect: Rect) => dispatch({ type: 'COMMIT_RECT', id: 'p5r', rect })}
+              onCenter={() => dispatch({ type: 'CENTER_WINDOW', id: 'p5r' })}
+              onFit={() => dispatch({ type: 'FIT_WINDOW', id: 'p5r' })}
             />
           )}
         </AnimatePresence>
 
-        {/* 8. Apex Legends Window (Easter Egg) */}
+        {/* 8. Apex Legends Window */}
         <AnimatePresence>
-          {windows.apex.isOpen && !windows.apex.isMinimized && (
+          {state.windows.apex?.visited && state.windows.apex?.phase !== 'closed' && (
             <ApexLegendsWindow
               id="apex"
-              isMaximized={windows.apex.isMaximized}
-              isActive={activeWindowId === 'apex'}
-              zIndex={windows.apex.zIndex}
-              onFocus={() => bringToFront('apex')}
-              onClose={() => closeWindow('apex')}
-              onMinimize={() => minimizeWindow('apex')}
-              onMaximize={() => maximizeWindow('apex')}
+              isMaximized={state.windows.apex.phase === 'maximized'}
+              isMinimized={state.windows.apex.phase === 'minimized'}
+              isActive={state.activeId === 'apex'}
+              zIndex={getAppZIndex(state, 'apex')}
+              rect={state.windows.apex.rect}
+              bounds={state.bounds}
+              onFocus={() => dispatch({ type: 'FOCUS', id: 'apex' })}
+              onClose={() => dispatch({ type: 'CLOSE', id: 'apex' })}
+              onMinimize={() => dispatch({ type: 'MINIMIZE', id: 'apex' })}
+              onMaximize={() => dispatch({ type: 'MAXIMIZE', id: 'apex' })}
+              onRestore={() => dispatch({ type: 'RESTORE', id: 'apex' })}
+              onCommitRect={(rect: Rect) => dispatch({ type: 'COMMIT_RECT', id: 'apex', rect })}
+              onCenter={() => dispatch({ type: 'CENTER_WINDOW', id: 'apex' })}
+              onFit={() => dispatch({ type: 'FIT_WINDOW', id: 'apex' })}
             />
           )}
         </AnimatePresence>
 
-        {/* 9. Elden Ring Window (Easter Egg) */}
+        {/* 9. Elden Ring Window */}
         <AnimatePresence>
-          {windows.elden.isOpen && !windows.elden.isMinimized && (
+          {state.windows.elden?.visited && state.windows.elden?.phase !== 'closed' && (
             <EldenRingWindow
               id="elden"
-              isMaximized={windows.elden.isMaximized}
-              isActive={activeWindowId === 'elden'}
-              zIndex={windows.elden.zIndex}
-              onFocus={() => bringToFront('elden')}
-              onClose={() => closeWindow('elden')}
-              onMinimize={() => minimizeWindow('elden')}
-              onMaximize={() => maximizeWindow('elden')}
+              isMaximized={state.windows.elden.phase === 'maximized'}
+              isMinimized={state.windows.elden.phase === 'minimized'}
+              isActive={state.activeId === 'elden'}
+              zIndex={getAppZIndex(state, 'elden')}
+              rect={state.windows.elden.rect}
+              bounds={state.bounds}
+              onFocus={() => dispatch({ type: 'FOCUS', id: 'elden' })}
+              onClose={() => dispatch({ type: 'CLOSE', id: 'elden' })}
+              onMinimize={() => dispatch({ type: 'MINIMIZE', id: 'elden' })}
+              onMaximize={() => dispatch({ type: 'MAXIMIZE', id: 'elden' })}
+              onRestore={() => dispatch({ type: 'RESTORE', id: 'elden' })}
+              onCommitRect={(rect: Rect) => dispatch({ type: 'COMMIT_RECT', id: 'elden', rect })}
+              onCenter={() => dispatch({ type: 'CENTER_WINDOW', id: 'elden' })}
+              onFit={() => dispatch({ type: 'FIT_WINDOW', id: 'elden' })}
             />
           )}
         </AnimatePresence>
       </main>
 
-      {/* Retro Certificate Gallery (Desktop Sidebar & Mobile Toggle Drawer) */}
+      {/* Retro Certificate Gallery (Desktop Sidebar & Mobile Drawer) */}
       <RetroCertificateGallery />
 
       {/* Interactive Bottom Taskbar */}
       <RetroTaskbar
         windows={taskbarWindows}
-        activeWindowId={activeWindowId}
-        onToggleWindow={toggleWindow}
-        onLaunchAll={launchAll}
-        onMinimizeAll={minimizeAll}
-        onCloseAll={closeAll}
+        activeWindowId={state.activeId}
+        onToggleWindow={handleToggleTaskbar}
+        onLaunchAll={handleLaunchAll}
+        onMinimizeAll={handleMinimizeAll}
+        onCloseAll={handleCloseAll}
         onReboot={rebootOS}
         hasInteracted={hasInteracted}
       />
 
-      {/* ── Retro Windows XP / 95 Boot Loading Screen ── */}
+      {/* ── Retro Windows XP Boot Loading Screen ── */}
       <AnimatePresence>
         {isBooting && (
           <RetroBootScreen

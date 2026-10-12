@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- Document Sheet -->
+  <path d="M8 8 C8 6.5 9.5 5 11 5 L28 5 L38 15 L38 41 C38 42.5 36.5 44 35 44 L11 44 C9.5 44 8 42.5 8 41 Z" fill="#FFFFFF" stroke="#1854B4" stroke-width="2"/>
+  <polygon points="28,5 28,15 38,15" fill="#DCEBFA" stroke="#1854B4" stroke-width="1.5"/>
+  <!-- Lines -->
+  <line x1="14" y1="18" x2="24" y2="18" stroke="#1854B4" stroke-width="2" stroke-linecap="round"/>
+  <line x1="14" y1="24" x2="32" y2="24" stroke="#7890B1" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="14" y1="29" x2="32" y2="29" stroke="#7890B1" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Lightning / Fast badge -->
+  <circle cx="28" cy="34" r="9" fill="#F7CA5E" stroke="#B08020" stroke-width="1.5"/>
+  <polygon points="28,28 24,35 28,35 26,40 32,33 28,33" fill="#1854B4"/>
+</svg>

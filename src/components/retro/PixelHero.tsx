@@ -5,8 +5,8 @@ export function PixelHero(props?: Partial<RetroWindowProps>) {
   return (
     <RetroWindow 
       id="hero"
-      title="Hero Section" 
-      icon="/icons/retro/hero.svg"
+      title="Jonathan Axl — System Profile" 
+      icon="/icons/xp/my-computer.svg"
       hasMenu={true}
       {...props}
     >
@@ -70,14 +70,17 @@ export function PixelHero(props?: Partial<RetroWindowProps>) {
             </div>
 
             <div className="flex flex-wrap gap-2 mt-1 sm:mt-2">
-              <a href="/cv.pdf" target="_blank" rel="noreferrer" className="win95-btn font-bold text-xs px-3 py-1.5 no-underline text-black hover:bg-white shadow">
+              <a href="/cv.pdf" target="_blank" rel="noreferrer" className="xp-btn font-bold text-xs px-3 py-1.5 no-underline text-xp-text shadow hover:border-xp-blue-700">
                 📄 Download CV (PDF)
               </a>
-              <a href="#projects" className="win95-btn font-bold text-xs px-3 py-1.5 no-underline text-black hover:bg-white shadow">
+              <a href="#projects" className="xp-btn font-bold text-xs px-3 py-1.5 no-underline text-xp-text shadow hover:border-xp-blue-700">
                 📁 Explore Projects
               </a>
-              <a href="#contact" className="win95-btn font-bold text-xs px-3 py-1.5 no-underline text-black hover:bg-white shadow">
+              <a href="#contact" className="xp-btn font-bold text-xs px-3 py-1.5 no-underline text-xp-text shadow hover:border-xp-blue-700">
                 ✉️ Get in Touch
+              </a>
+              <a href="/quick-view" className="xp-btn font-bold text-xs px-3 py-1.5 no-underline text-xp-text shadow hover:border-xp-blue-700">
+                ⚡ Recruiter View
               </a>
             </div>
           </div>

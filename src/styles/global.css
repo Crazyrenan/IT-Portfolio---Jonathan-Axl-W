@@ -18,6 +18,30 @@
     --color-border: 224 213 201;
     --color-grid: 224 213 201;
     --color-nav-bg: 15 15 17;
+
+    /* ── Windows XP Luna Design Tokens (04-DESIGN-BRIEF) ── */
+    --xp-blue-900: #123A7A;
+    --xp-blue-700: #1854B4;
+    --xp-blue-600: #2466CF;
+    --xp-blue-300: #91B8ED;
+    --xp-blue-100: #DCEBFA;
+    --xp-start-900: #19551F;
+    --xp-start-700: #287D2D;
+    --xp-start-400: #78B66A;
+    --xp-surface: #ECE9D8;
+    --xp-surface-raised: #F8F6ED;
+    --xp-content: #FFFFFF;
+    --xp-text: #1B2533;
+    --xp-text-muted: #46566B;
+    --xp-border: #7890B1;
+    --xp-control-border: #486587;
+    --xp-selected: #164DA6;
+    --xp-selected-text: #FFFFFF;
+    --xp-focus: #173F8A;
+    --xp-danger: #A52720;
+    --xp-danger-light: #DB786D;
+    --xp-success: #25652C;
+    --xp-inactive: #496D9F;
   }
 }
 
@@ -90,6 +114,119 @@ body {
   }
   .animate-slide-in-right {
     animation: win95-slide-in-right 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* ── Windows XP Luna Surface & Window Primitives ── */
+  .xp-window {
+    background-color: var(--xp-surface);
+    border: 1px solid var(--xp-blue-900);
+    border-top: 1px solid #3d88e8;
+    border-radius: 8px 8px 3px 3px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28), 0 2px 6px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+  .xp-window-inactive {
+    background-color: var(--xp-surface);
+    border: 1px solid var(--xp-border);
+    border-top: 1px solid #91B8ED;
+    border-radius: 8px 8px 3px 3px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+  }
+  .xp-titlebar-active {
+    background: linear-gradient(180deg, #2466CF 0%, #1854B4 35%, #123A7A 100%);
+    color: #FFFFFF;
+    border-radius: 7px 7px 0 0;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  }
+  .xp-titlebar-inactive {
+    background: linear-gradient(180deg, #7A96DF 0%, #496D9F 40%, #2A4878 100%);
+    color: #DCEBFA;
+    border-radius: 7px 7px 0 0;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+  }
+  .xp-btn-ctrl {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 4px;
+    border-radius: 3px;
+    background: linear-gradient(180deg, #5A94E8 0%, #2466CF 45%, #1854B4 100%);
+    border: 1px solid #FFFFFF;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65), 0 1px 2px rgba(0, 0, 0, 0.3);
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 1;
+    cursor: var(--cursor-pointer);
+    transition: filter 0.1s ease;
+  }
+  .xp-btn-ctrl:hover {
+    filter: brightness(1.15);
+  }
+  .xp-btn-ctrl:active {
+    background: linear-gradient(180deg, #1854B4 0%, #123A7A 100%);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+    transform: translateY(1px);
+  }
+  .xp-btn-close {
+    background: linear-gradient(180deg, #E87A6E 0%, #DB786D 30%, #A52720 100%);
+    border: 1px solid #FFFFFF;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 1px 2px rgba(0, 0, 0, 0.35);
+  }
+  .xp-btn-close:hover {
+    background: linear-gradient(180deg, #FF8E82 0%, #E85A4E 40%, #B81E16 100%);
+    filter: brightness(1.1);
+  }
+  .xp-btn-close:active {
+    background: linear-gradient(180deg, #8A1B15 0%, #A52720 100%);
+  }
+  .xp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 12px;
+    border-radius: 3px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #ECE9D8 45%, #D8D4C0 100%);
+    border: 1px solid var(--xp-control-border);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 1px rgba(0, 0, 0, 0.1);
+    color: var(--xp-text);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: var(--cursor-pointer);
+  }
+  .xp-btn:hover {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F5F3E8 40%, #E2DEC8 100%);
+    border-color: var(--xp-blue-700);
+    box-shadow: inset 0 0 0 1px #FFE88C, 0 1px 2px rgba(0, 0, 0, 0.15);
+  }
+  .xp-btn:active {
+    background: linear-gradient(180deg, #D4D0BC 0%, #ECE9D8 100%);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+    transform: translateY(1px);
+  }
+  .xp-sunken {
+    background-color: var(--xp-content);
+    border: 1px solid #7F9DB9;
+    box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.12);
+  }
+  .xp-desktop-bg {
+    background: linear-gradient(180deg, #1854B4 0%, #2466CF 25%, #5694E8 50%, #9BC4F5 75%, #D4E8FC 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .xp-desktop-bg::after {
+    content: "";
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 48vh;
+    background: radial-gradient(ellipse 120% 80% at 50% 100%, #357718 0%, #479822 45%, #60B830 85%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
   }
 }
 
@@ -291,15 +428,23 @@ body {
   white-space: nowrap;
 }
 
-/* reduced-motion: keep everything static, reveal GSAP-deferred elements */
+/* reduced-motion: keep everything static, disable nonessential transforms and loops */
 @media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
   .hero-wordmark,
-  .hud-overlay * {
+  .hud-overlay *,
+  .animate-xp-caterpillar {
     animation: none !important;
     transition: none !important;
   }
 
-  /* Force-reveal elements that start at opacity:0 awaiting GSAP */
+  /* Force-reveal elements that start at opacity:0 awaiting deferred effects */
   .hud-corner,
   .hud-readout,
   .hud-progress-bar,
@@ -313,10 +458,19 @@ body {
   }
 }
 
-/* Forced-colors / Windows High Contrast: ensure focus rings are visible system-color */
+/* Forced-colors / Windows High Contrast: ensure focus rings and window controls are visible system-color */
 @media (forced-colors: active) {
   :focus-visible {
     outline: 3px solid ButtonText !important;
     outline-offset: 2px !important;
+  }
+  .xp-window,
+  .xp-titlebar-active,
+  .xp-titlebar-inactive,
+  .xp-btn,
+  .xp-btn-ctrl,
+  .xp-btn-close {
+    forced-color-adjust: auto;
+    border: 1px solid ButtonText !important;
   }
 }

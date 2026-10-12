@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- Globe / World -->
+  <circle cx="24" cy="24" r="18" fill="#DCEBFA" stroke="#1854B4" stroke-width="2"/>
+  <!-- Continents / Lat-long lines -->
+  <ellipse cx="24" cy="24" rx="9" ry="18" fill="none" stroke="#2466CF" stroke-width="1.5"/>
+  <line x1="6" y1="24" x2="42" y2="24" stroke="#2466CF" stroke-width="1.5"/>
+  <ellipse cx="24" cy="24" rx="16" ry="8" fill="none" stroke="#91B8ED" stroke-width="1"/>
+  <!-- Compass pointer / Web cue -->
+  <circle cx="34" cy="14" r="5" fill="#F7CA5E" stroke="#B08020" stroke-width="1"/>
+</svg>

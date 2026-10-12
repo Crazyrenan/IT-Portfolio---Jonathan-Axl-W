@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- Certificate Sheet -->
+  <rect x="7" y="6" width="34" height="36" rx="2" fill="#FFFFF0" stroke="#1854B4" stroke-width="2"/>
+  <rect x="10" y="9" width="28" height="30" fill="none" stroke="#DCEBFA" stroke-width="1.5"/>
+  <!-- Gold Ribbon and Seal -->
+  <circle cx="24" cy="22" r="7" fill="#F7CA5E" stroke="#B08020" stroke-width="1.5"/>
+  <polygon points="21,27 18,36 24,33 30,36 27,27" fill="#A52720"/>
+  <!-- Text lines -->
+  <line x1="14" y1="14" x2="34" y2="14" stroke="#1854B4" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

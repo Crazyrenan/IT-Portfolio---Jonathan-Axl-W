@@ -28,15 +28,55 @@ export default {
           hover: 'var(--color-orange-400)',
           glow: 'var(--color-orange-glow)',
         },
+        // Windows XP Luna design tokens
+        xp: {
+          blue: {
+            900: 'var(--xp-blue-900)',
+            700: 'var(--xp-blue-700)',
+            600: 'var(--xp-blue-600)',
+            300: 'var(--xp-blue-300)',
+            100: 'var(--xp-blue-100)',
+          },
+          start: {
+            900: 'var(--xp-start-900)',
+            700: 'var(--xp-start-700)',
+            400: 'var(--xp-start-400)',
+          },
+          surface: {
+            DEFAULT: 'var(--xp-surface)',
+            raised: 'var(--xp-surface-raised)',
+          },
+          content: 'var(--xp-content)',
+          text: {
+            DEFAULT: 'var(--xp-text)',
+            muted: 'var(--xp-text-muted)',
+          },
+          border: {
+            DEFAULT: 'var(--xp-border)',
+            control: 'var(--xp-control-border)',
+          },
+          selected: {
+            DEFAULT: 'var(--xp-selected)',
+            text: 'var(--xp-selected-text)',
+          },
+          focus: 'var(--xp-focus)',
+          danger: {
+            DEFAULT: 'var(--xp-danger)',
+            light: 'var(--xp-danger-light)',
+          },
+          success: 'var(--xp-success)',
+          inactive: 'var(--xp-inactive)',
+        },
       },
-      dropShadow: {
-        'rim-light': [
-          '6px -6px 0 rgb(255 102 0 / 0.15)',
-          '0 24px 48px rgb(0 0 0 / 0.55)',
-        ],
+      borderRadius: {
+        'xp-ctrl': '3px',
+        'xp-pane': '4px',
+        'xp-window-top': '8px',
       },
       fontFamily: {
-        sans: ['"Space Grotesk"', 'sans-serif'],
+        sans: ['"Segoe UI"', 'Tahoma', 'Arial', 'sans-serif'],
+        tahoma: ['Tahoma', '"Segoe UI"', 'sans-serif'],
+        grotesk: ['"Space Grotesk"', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
       },
       typography: (theme) => ({

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- Briefcase Body -->
+  <rect x="7" y="16" width="34" height="24" rx="3" fill="#8B5A2B" stroke="#5C3A1E" stroke-width="2"/>
+  <!-- Handle -->
+  <path d="M19 16 L19 11 C19 9.5 20.5 8 22 8 L26 8 C27.5 8 29 9.5 29 11 L29 16" fill="none" stroke="#5C3A1E" stroke-width="2.5"/>
+  <!-- Straps and Brass locks -->
+  <rect x="14" y="16" width="3" height="24" fill="#6B4423"/>
+  <rect x="31" y="16" width="3" height="24" fill="#6B4423"/>
+  <rect x="13" y="24" width="5" height="4" rx="1" fill="#E8B84B" stroke="#B08020" stroke-width="1"/>
+  <rect x="30" y="24" width="5" height="4" rx="1" fill="#E8B84B" stroke="#B08020" stroke-width="1"/>
+</svg>

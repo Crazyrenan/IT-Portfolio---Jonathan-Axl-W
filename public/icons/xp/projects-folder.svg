@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- Back Folder Tab -->
+  <path d="M6 14 C6 12 7 11 9 11 L19 11 L23 15 L39 15 C41 15 42 16 42 18 L42 36 C42 38 41 39 39 39 L9 39 C7 39 6 38 6 36 Z" fill="#E8B84B" stroke="#B08020" stroke-width="1.5"/>
+  <!-- Paper Inside -->
+  <rect x="10" y="14" width="28" height="20" rx="1" fill="#FFFFFF" stroke="#D0D0D0" stroke-width="1"/>
+  <line x1="14" y1="18" x2="32" y2="18" stroke="#1854B4" stroke-width="1.5"/>
+  <line x1="14" y1="22" x2="28" y2="22" stroke="#7890B1" stroke-width="1.5"/>
+  <line x1="14" y1="26" x2="30" y2="26" stroke="#7890B1" stroke-width="1.5"/>
+  <!-- Front Folder Flap -->
+  <path d="M4 21 C4 19 5 18 7 18 L41 18 C43 18 44 19 44 21 L41 38 C41 40 40 41 38 41 L10 41 C8 41 7 40 6 38 Z" fill="#F7CA5E" stroke="#B08020" stroke-width="1.5"/>
+</svg>

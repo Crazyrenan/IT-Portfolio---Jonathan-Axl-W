@@ -16,6 +16,7 @@ export interface RetroTaskbarProps {
   windows: TaskbarWindowItem[];
   activeWindowId: string | null;
   onToggleWindow: (id: string) => void;
+  onLaunchApp?: (id: string) => void;
   onLaunchAll: () => void;
   onMinimizeAll: () => void;
   onCloseAll: () => void;
@@ -28,6 +29,7 @@ export function RetroTaskbar({
   windows,
   activeWindowId,
   onToggleWindow,
+  onLaunchApp,
   onLaunchAll,
   onMinimizeAll,
   onCloseAll,
@@ -36,7 +38,25 @@ export function RetroTaskbar({
   hasInteracted
 }: RetroTaskbarProps) {
   const [startMenuOpen, setStartMenuOpen] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      return sessionStorage.getItem('axl_sound_enabled') === 'true';
+    } catch {
+      return false;
+    }
+  });
   const startBtnRef = useRef<HTMLButtonElement>(null);
+
+  const toggleSound = () => {
+    setSoundEnabled((prev) => {
+      const next = !prev;
+      try {
+        sessionStorage.setItem('axl_sound_enabled', String(next));
+      } catch {}
+      return next;
+    });
+  };
 
   const handleShowDesktop = () => {
     if (onShowDesktop) {
@@ -56,6 +76,7 @@ export function RetroTaskbar({
         onClose={() => setStartMenuOpen(false)}
         windows={windows}
         onToggleWindow={onToggleWindow}
+        onLaunchApp={onLaunchApp}
         onLaunchAll={onLaunchAll}
         onMinimizeAll={onMinimizeAll}
         onCloseAll={onCloseAll}
@@ -145,11 +166,11 @@ export function RetroTaskbar({
           </div>
         </div>
 
-        {/* Center: Running Task Tabs Strip */}
+        {/* Center: Running Task Buttons Strip */}
         <div
           className="flex items-center gap-1 h-full py-0.5 flex-1 overflow-x-auto scrollbar-none px-1"
-          role="tablist"
-          aria-label="Open Windows"
+          role="toolbar"
+          aria-label="Running Applications"
         >
           {openWindows.map((win) => {
             const isTabActive = !win.isMinimized && win.isActive;
@@ -168,8 +189,7 @@ export function RetroTaskbar({
               <button
                 key={win.id}
                 type="button"
-                role="tab"
-                aria-selected={isTabActive}
+                aria-pressed={isTabActive}
                 aria-label={accessibleLabel}
                 title={accessibleLabel}
                 onClick={() => onToggleWindow(win.id)}
@@ -199,16 +219,26 @@ export function RetroTaskbar({
         {/* Right: Windows XP Luna System Tray */}
         <div className="flex items-center h-full py-0.5 ml-auto flex-shrink-0">
           <div className="xp-tray px-2 py-0.5 flex items-center h-full gap-2 rounded-sm">
-            {/* Audio Icon (Visual cue) */}
+            {/* Audio Icon (Functional Toggle - R08) */}
             <button
               type="button"
-              title="System Audio"
-              aria-label="System Audio"
-              className="text-white hover:text-cyan-200 bg-transparent border-0 p-0 cursor-pointer hidden xs:flex items-center justify-center"
+              onClick={toggleSound}
+              aria-pressed={soundEnabled}
+              title={soundEnabled ? 'System Sound: Enabled (Click to mute)' : 'System Sound: Muted (Click to enable)'}
+              aria-label={soundEnabled ? 'Mute system audio' : 'Enable system audio'}
+              className="text-white hover:text-cyan-200 bg-transparent border-0 p-0 cursor-pointer hidden xs:flex items-center justify-center transition-colors"
             >
-              <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-                <path d="M2 5h3l4-3v12l-4-3H2V5zm10 0a4 4 0 0 1 0 6v-1.5a2.5 2.5 0 0 0 0-3V5zm2-2a6.5 6.5 0 0 1 0 10v-1.5a5 5 0 0 0 0-7V3z"/>
-              </svg>
+              {soundEnabled ? (
+                <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                  <path d="M2 5h3l4-3v12l-4-3H2V5zm10 0a4 4 0 0 1 0 6v-1.5a2.5 2.5 0 0 0 0-3V5zm2-2a6.5 6.5 0 0 1 0 10v-1.5a5 5 0 0 0 0-7V3z"/>
+                </svg>
+              ) : (
+                <svg className="w-3.5 h-3.5 opacity-70" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                  <path d="M2 5h3l4-3v12l-4-3H2V5z"/>
+                  <line x1="11" y1="5" x2="15" y2="9" stroke="currentColor" strokeWidth="1.5"/>
+                  <line x1="15" y1="5" x2="11" y2="9" stroke="currentColor" strokeWidth="1.5"/>
+                </svg>
+              )}
             </button>
 
             {/* Isolated Minute-Level System Clock (Asia/Jakarta WIB) */}

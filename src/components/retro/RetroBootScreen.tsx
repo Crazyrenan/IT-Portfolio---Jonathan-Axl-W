@@ -201,21 +201,32 @@ export function RetroBootScreen({
         </div>
       </div>
 
-      {/* Bottom: Copyright & Skip Instruction */}
-      <div className="w-full flex flex-col sm:flex-row justify-between items-center text-[10px] sm:text-[11px] text-gray-500 z-20 gap-2">
-        <div className="text-center sm:text-left">
+      {/* Bottom: Copyright & Explicit Professional Bypass Actions (R10) */}
+      <div className="w-full flex flex-col sm:flex-row justify-between items-center text-[11px] text-gray-400 z-20 gap-3 border-t border-gray-800/80 pt-3">
+        <div className="text-center sm:text-left text-[10px] text-gray-500">
           <span>Copyright © 2001-2026 Jonathan Axl Wibowo. All rights reserved.</span>
         </div>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            finishBoot();
-          }}
-          className="text-center sm:text-right text-[#FFE88C] hover:underline font-mono bg-transparent border-0 cursor-pointer p-0"
-        >
-          [ Click anywhere or press ESC to enter ]
-        </button>
+        <div className="flex items-center gap-2.5">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              finishBoot();
+            }}
+            aria-label="Skip Intro and enter desktop portfolio"
+            className="px-3 py-1.5 bg-[#1B56B7] hover:bg-[#2B72E2] text-white rounded font-sans font-bold text-xs border border-white/40 cursor-pointer shadow transition-colors focus:outline-none focus:ring-2 focus:ring-[#FFE88C]"
+          >
+            Skip Intro &amp; Enter Portfolio
+          </button>
+          <a
+            href="/quick-view"
+            onClick={(e) => e.stopPropagation()}
+            title="Open accessible recruiter summary"
+            className="px-3 py-1.5 bg-black/70 hover:bg-black/90 text-[#FFE88C] rounded font-sans font-medium text-xs border border-[#FFE88C]/60 hover:underline transition-colors focus:outline-none focus:ring-2 focus:ring-[#FFE88C]"
+          >
+            Recruiter Quick View ↗
+          </a>
+        </div>
       </div>
     </motion.div>
   );

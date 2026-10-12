@@ -63,3 +63,35 @@ test('Taskbar windows ordering respects APP_REGISTRY order', () => {
     );
   }
 });
+
+test('R08: tailwind.config.js defines xs breakpoint for Quick Launch toolbar visibility', async () => {
+  const fs = await import('node:fs');
+  const tailwindContent = fs.readFileSync('tailwind.config.js', 'utf8');
+  assert.ok(
+    tailwindContent.includes("xs: '420px'") || tailwindContent.includes('xs: "420px"'),
+    'tailwind.config.js must explicitly define the xs breakpoint so xs:flex is not hidden'
+  );
+});
+
+test('R11: src/styles/global.css defines 32px desktop and 44px touch hitbox for window controls', async () => {
+  const fs = await import('node:fs');
+  const cssContent = fs.readFileSync('src/styles/global.css', 'utf8');
+  assert.ok(
+    cssContent.includes('min-width: 32px') && cssContent.includes('height: 32px'),
+    '.xp-btn-ctrl must specify 32px desktop dimensions'
+  );
+  assert.ok(
+    cssContent.includes('@media (pointer: coarse)') && cssContent.includes('min-width: 44px'),
+    '.xp-btn-ctrl must include @media (pointer: coarse) with 44px touch hitbox'
+  );
+});
+
+test('R09: Certificates window is fully registered in CORE_APP_IDS with valid defaultRect and minSize', () => {
+  assert.ok(CORE_APP_IDS.includes('certificates'), 'certificates must be in CORE_APP_IDS');
+  const certDef = APP_REGISTRY.certificates;
+  assert.ok(certDef, 'certificates must be in APP_REGISTRY');
+  assert.ok(certDef.defaultRect.width >= 320, 'certificates defaultRect width must be valid');
+  assert.ok(certDef.defaultRect.height >= 220, 'certificates defaultRect height must be valid');
+  assert.ok(certDef.minSize.width > 0 && certDef.minSize.height > 0, 'certificates must have positive minSize');
+});
+

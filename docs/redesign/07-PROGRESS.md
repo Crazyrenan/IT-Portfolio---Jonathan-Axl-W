@@ -198,9 +198,56 @@ under docs/redesign/. An authorized governance sync is required before approval.
 
 ## Independent review and final validation
 
-Review target SHA: NOT_SET. Review verdict: NOT_PERFORMED.
-Final validated SHA: NOT_SET. Validation verdict: NOT_PERFORMED.
-Correction cycles: 0/3 (operational STATUS is the authoritative counter).
-Final validation must use exactly latest independently PASS-reviewed
-implementation revision; corrections and integration always require re-review.
+- **Phase 0–3 Review Target SHA:** `efca17d`
+- **Review Report:** `docs/redesign/reviews/PHASE-REVIEW.md` (authored by Codex)
+- **Review Verdict:** `CHANGES_REQUIRED` (4 HIGH, 8 MEDIUM findings: R01–R12)
+- **Correction Cycle:** 1 / 3 executed by Antigravity
+
+### Correction Cycle 1 Findings & Resolutions:
+
+- **R01 (HIGH - Start Menu launches dispatch taskbar action):**
+  - Added dedicated `onLaunchApp?: (id: string) => void` prop to `StartMenu.tsx` and `RetroTaskbar.tsx`.
+  - Wired `handleLaunchApp` in `DesktopManager.tsx` to dispatch `OPEN`, ensuring Start Menu app launches open/focus windows idempotently and never minimize active windows.
+- **R02 (HIGH - Frame positioning and geometry contract):**
+  - Updated `RetroWindow.tsx` to position normal windows absolutely inside the workspace (`left: rect.x, top: rect.y, width: rect.width, height: rect.height`).
+  - Added `dragConstraints` relative to workspace bounds; on drag end, coordinates are clamped and committed to `onCommitRect`.
+  - Reset Framer Motion transform offsets in `animate={{ x: 0, y: 0 }}` so reducer coordinates remain authoritative.
+  - Maximized windows fill workspace height reserving the taskbar (`height: bounds.height`).
+  - Wired titlebar double-click to toggle between maximize and restore (`isMaximized ? handleRestore : onMaximize`).
+- **R03 (HIGH - OPEN_CORE & SHOW_DESKTOP stack invariants):**
+  - Implemented `ensureStackInvariants()` in `src/lib/window-manager.ts`. Guarantees every visible window is present in `stack` exactly once, active window is at the top, and open extras are never dropped when core apps are opened or restored.
+- **R04 (HIGH - Prototype properties accepted as app IDs):**
+  - Implemented `isValidAppId()` own-property whitelist check in `src/lib/window-manager.ts` in `parseHashIntent` and `createInitialWorkspaceState`.
+- **R05 (MEDIUM - Resize cancellation, RAF, cleanup, narrow bounds):**
+  - Unified resize handling in `RetroWindow.tsx` with `requestAnimationFrame` throttling, `pointercancel` cleanup, `Escape` key cancellation with start-size restoration, and unmount listener cleanup.
+  - Clamped `clampRect` against actual positive viewport bounds so minimum dimensions never exceed usable space.
+- **R06 (MEDIUM - Desktop selection and launch semantics):**
+  - Separated desktop icon selection (single click) from launch (double click, touch tap, or Enter key).
+  - Added direct launch callbacks `onOpenProjects` and `onOpenContact` to `PixelHero.tsx` rather than relying solely on hashchange.
+  - Synchronized URL hash on user launch (`#appId`).
+- **R07 (MEDIUM - Focus restoration and composite keyboard semantics):**
+  - Added fallback focus to `#start-button` when all windows close or minimize.
+  - Preserved descendant focus when active window changes so input/button focus is not stolen.
+  - Added `role="region"` and `aria-label` landmarks to window frames.
+  - Replaced taskbar strip `role="tablist"`/`role="tab"` with `role="toolbar"` and `aria-pressed`.
+- **R08 (MEDIUM - Quick Launch toolbar hidden by undefined xs breakpoint):**
+  - Added `screens: { xs: '420px' }` to `tailwind.config.js`.
+  - Converted system tray audio button into a functional sound mute/unmute toggle storing state in `sessionStorage`.
+- **R09 (MEDIUM - Certificates managed application missing):**
+  - Refactored `RetroCertificateGallery` into a fully managed `<RetroWindow id="certificates">` component within `<main>` in `DesktopManager.tsx`.
+  - Removed duplicate unmanaged desktop dock aside and mobile toggle badge.
+- **R10 (MEDIUM - Boot screen skip affordances):**
+  - Added explicit high-contrast labeled buttons `[ Skip Intro & Enter Portfolio ]` and link `[ Recruiter Quick View ]` in `RetroBootScreen.tsx`.
+- **R11 (MEDIUM - Frame control button hitboxes):**
+  - Updated `.xp-btn-ctrl` and `.xp-btn-close` to 32x32px desktop dimensions with 44x44px touch hitboxes on coarse pointers in `global.css` and `RetroWindow.tsx`.
+- **R12 (MEDIUM - Progress and approval records):**
+  - Synchronized `.workflow/STATUS.md` and `docs/redesign/07-PROGRESS.md`, removing unsupported `VERIFIED` labels and recording exact verification evidence.
+
+### Verification Evidence:
+- `node scripts/verify-redesign.mjs`: All 31/31 tests passed across 3 test suites (`portfolio-parity`, `window-manager`, `navigation-shell`).
+- `npm run build`: Succeeded with exit code 0; 10 static prerendered routes; bundle within performance budget.
+- Visual inspection: Browser automation unconfigured; visual rendering recorded as `NOT_RUN`.
+
+**Status:** Correction Cycle 1 / 3 COMPLETED. Ready for independent Codex re-review.
+
 

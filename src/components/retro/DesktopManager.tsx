@@ -119,48 +119,69 @@ export function DesktopManager() {
     };
   }, []);
 
-  // Focus restoration: when active window changes, focus its titlebar button unless typing in an input (T07)
+  const updateHash = useCallback((id: AppId) => {
+    if (typeof window !== 'undefined') {
+      window.history.replaceState(null, '', `#${id}`);
+    }
+  }, []);
+
+  // Launch app explicitly: dispatches OPEN, sets URL hash, never minimizes (R01, R06)
+  const handleLaunchApp = useCallback((id: string) => {
+    setHasInteracted(true);
+    dispatch({ type: 'OPEN', id: id as AppId });
+    updateHash(id as AppId);
+  }, [updateHash]);
+
+  // Focus restoration: when active window changes, focus its titlebar button unless descendant is focused.
+  // When activeId is null (all closed/minimized), fallback focus to Start button (R07)
   useEffect(() => {
-    if (!state.activeId) return;
+    if (!state.activeId) {
+      const startBtn = document.getElementById('start-button');
+      if (startBtn && (document.activeElement === document.body || !document.activeElement)) {
+        startBtn.focus();
+      }
+      return;
+    }
     const activeEl = document.getElementById(state.activeId);
     if (activeEl) {
-      const activeTag = document.activeElement?.tagName;
-      const isInputFocused =
-        activeEl.contains(document.activeElement) &&
-        (activeTag === 'INPUT' || activeTag === 'TEXTAREA');
-
-      if (!isInputFocused) {
+      const isDescendantFocused = activeEl.contains(document.activeElement);
+      if (!isDescendantFocused) {
         const titleBtn = activeEl.querySelector<HTMLElement>('button[title^="System Menu"]');
         titleBtn?.focus();
       }
     }
   }, [state.activeId]);
 
-  // Launch from desktop icon: dispatches OPEN (never minimizes, satisfying FR-06)
-  const handleLaunchIcon = useCallback((id: AppId) => {
+  // Desktop icon selection vs launch semantics (R06)
+  const handleIconClick = useCallback((id: AppId) => {
     setHasInteracted(true);
-    dispatch({ type: 'SELECT_ICON', id });
-    dispatch({ type: 'OPEN', id });
+    if (isMobile || state.selectedIcon === id) {
+      dispatch({ type: 'OPEN', id });
+      updateHash(id);
+    } else {
+      dispatch({ type: 'SELECT_ICON', id });
+    }
+  }, [isMobile, state.selectedIcon, updateHash]);
 
-    setTimeout(() => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }, 120);
-  }, []);
+  const handleIconDoubleClick = useCallback((id: AppId) => {
+    setHasInteracted(true);
+    dispatch({ type: 'OPEN', id });
+    updateHash(id);
+  }, [updateHash]);
+
+  const handleIconKeyDown = useCallback((e: React.KeyboardEvent, id: AppId) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setHasInteracted(true);
+      dispatch({ type: 'OPEN', id });
+      updateHash(id);
+    }
+  }, [updateHash]);
 
   // Taskbar window item click (dispatches TASK_ACTIVATE: toggles active / restores minimized / raises inactive)
   const handleToggleTaskbar = useCallback((id: string) => {
     setHasInteracted(true);
     dispatch({ type: 'TASK_ACTIVATE', id: id as AppId });
-
-    setTimeout(() => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }, 120);
   }, []);
 
   // Desktop utilities
@@ -225,7 +246,7 @@ export function DesktopManager() {
             </span>
           </a>
 
-          {(['hero', 'skills', 'projects', 'experience', 'contact'] as AppId[]).map((winId) => {
+          {(['hero', 'skills', 'projects', 'experience', 'contact', 'certificates'] as AppId[]).map((winId) => {
             const win = state.windows[winId];
             const def = APP_REGISTRY[winId];
             if (!win || !def) return null;
@@ -236,7 +257,9 @@ export function DesktopManager() {
               <button
                 key={win.id}
                 type="button"
-                onClick={() => handleLaunchIcon(winId)}
+                onClick={() => handleIconClick(winId)}
+                onDoubleClick={() => handleIconDoubleClick(winId)}
+                onKeyDown={(e) => handleIconKeyDown(e, winId)}
                 aria-label={`Open ${def.exeName}`}
                 aria-pressed={isCurrentlyOpen}
                 className={`group flex flex-col items-center justify-start w-[84px] h-[88px] p-1.5 rounded text-center transition-all duration-150 focus:outline-none focus:ring-1 focus:ring-[#FFE88C] ${
@@ -294,7 +317,9 @@ export function DesktopManager() {
               <button
                 key={win.id}
                 type="button"
-                onClick={() => handleLaunchIcon(winId)}
+                onClick={() => handleIconClick(winId)}
+                onDoubleClick={() => handleIconDoubleClick(winId)}
+                onKeyDown={(e) => handleIconKeyDown(e, winId)}
                 aria-label={`Open ${def.exeName}`}
                 aria-pressed={isCurrentlyOpen}
                 className={`group flex flex-col items-center justify-start w-[84px] h-[88px] p-1.5 rounded text-center transition-all duration-150 focus:outline-none focus:ring-1 focus:ring-[#FFE88C] ${
@@ -342,7 +367,7 @@ export function DesktopManager() {
 
       {/* Pristine Desktop Initial Prompt Banner (When All Closed on Desktop) */}
       {!anyWindowOpen && !isMobile && (
-        <div className="min-h-[75vh] flex flex-col items-center justify-center p-4 text-center z-20 relative pointer-events-auto lg:pr-[280px]">
+        <div className="min-h-[75vh] flex flex-col items-center justify-center p-4 text-center z-20 relative pointer-events-auto">
           <div className="xp-window p-5 sm:p-6 max-w-lg mx-auto shadow-2xl">
             <div className="xp-titlebar-active p-1.5 px-3 flex items-center gap-2 mb-4 font-bold text-xs text-white">
               <img
@@ -386,8 +411,8 @@ export function DesktopManager() {
         </div>
       )}
 
-      {/* Active Windows Assembled Layout Area (Offset on desktop for sidebar) */}
-      <main className="w-full flex-1 flex flex-col items-center justify-center relative z-20 pt-3 pb-16 px-2 sm:px-4 lg:pr-[280px] min-h-0" aria-label="Desktop Workspace">
+      {/* Active Windows Desktop Workspace Plane (R02, R09) */}
+      <main className="w-full flex-1 relative z-20 min-h-[calc(100vh-44px)] overflow-hidden" aria-label="Desktop Workspace">
         {/* 1. Hero Window */}
         <AnimatePresence>
           {state.windows.hero?.visited && state.windows.hero?.phase !== 'closed' && (
@@ -407,6 +432,8 @@ export function DesktopManager() {
               onCommitRect={(rect: Rect) => dispatch({ type: 'COMMIT_RECT', id: 'hero', rect })}
               onCenter={() => dispatch({ type: 'CENTER_WINDOW', id: 'hero' })}
               onFit={() => dispatch({ type: 'FIT_WINDOW', id: 'hero' })}
+              onOpenProjects={() => handleLaunchApp('projects')}
+              onOpenContact={() => handleLaunchApp('contact')}
             />
           )}
         </AnimatePresence>
@@ -594,16 +621,37 @@ export function DesktopManager() {
             />
           )}
         </AnimatePresence>
-      </main>
 
-      {/* Retro Certificate Gallery (Desktop Sidebar & Mobile Drawer) */}
-      <RetroCertificateGallery />
+        {/* 10. Certificates Vault Window (R09) */}
+        <AnimatePresence>
+          {state.windows.certificates?.visited && state.windows.certificates?.phase !== 'closed' && (
+            <RetroCertificateGallery
+              id="certificates"
+              isMaximized={state.windows.certificates.phase === 'maximized'}
+              isMinimized={state.windows.certificates.phase === 'minimized'}
+              isActive={state.activeId === 'certificates'}
+              zIndex={getAppZIndex(state, 'certificates')}
+              rect={state.windows.certificates.rect}
+              bounds={state.bounds}
+              onFocus={() => dispatch({ type: 'FOCUS', id: 'certificates' })}
+              onClose={() => dispatch({ type: 'CLOSE', id: 'certificates' })}
+              onMinimize={() => dispatch({ type: 'MINIMIZE', id: 'certificates' })}
+              onMaximize={() => dispatch({ type: 'MAXIMIZE', id: 'certificates' })}
+              onRestore={() => dispatch({ type: 'RESTORE', id: 'certificates' })}
+              onCommitRect={(rect: Rect) => dispatch({ type: 'COMMIT_RECT', id: 'certificates', rect })}
+              onCenter={() => dispatch({ type: 'CENTER_WINDOW', id: 'certificates' })}
+              onFit={() => dispatch({ type: 'FIT_WINDOW', id: 'certificates' })}
+            />
+          )}
+        </AnimatePresence>
+      </main>
 
       {/* Interactive Bottom Taskbar */}
       <RetroTaskbar
         windows={taskbarWindows}
         activeWindowId={state.activeId}
         onToggleWindow={handleToggleTaskbar}
+        onLaunchApp={handleLaunchApp}
         onLaunchAll={handleLaunchAll}
         onMinimizeAll={handleMinimizeAll}
         onCloseAll={handleCloseAll}

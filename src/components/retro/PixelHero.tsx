@@ -1,14 +1,23 @@
 import React from 'react';
 import { RetroWindow, type RetroWindowProps } from './RetroWindow';
 
-export function PixelHero(props?: Partial<RetroWindowProps>) {
+export interface PixelHeroProps extends Partial<RetroWindowProps> {
+  onOpenProjects?: () => void;
+  onOpenContact?: () => void;
+}
+
+export function PixelHero({
+  onOpenProjects,
+  onOpenContact,
+  ...windowProps
+}: PixelHeroProps = {}) {
   return (
     <RetroWindow 
       id="hero"
       title="Jonathan Axl — System Profile" 
       icon="/icons/xp/my-computer.svg"
       hasMenu={true}
-      {...props}
+      {...windowProps}
     >
       <div className="flex flex-col md:flex-row gap-3.5 items-stretch p-2 bg-[#808080] h-full flex-1 min-h-0">
         
@@ -73,10 +82,28 @@ export function PixelHero(props?: Partial<RetroWindowProps>) {
               <a href="/cv.pdf" target="_blank" rel="noreferrer" className="xp-btn font-bold text-xs px-3 py-1.5 no-underline text-xp-text shadow hover:border-xp-blue-700">
                 📄 Download CV (PDF)
               </a>
-              <a href="#projects" className="xp-btn font-bold text-xs px-3 py-1.5 no-underline text-xp-text shadow hover:border-xp-blue-700">
+              <a
+                href="#projects"
+                onClick={(e) => {
+                  if (onOpenProjects) {
+                    e.preventDefault();
+                    onOpenProjects();
+                  }
+                }}
+                className="xp-btn font-bold text-xs px-3 py-1.5 no-underline text-xp-text shadow hover:border-xp-blue-700"
+              >
                 📁 Explore Projects
               </a>
-              <a href="#contact" className="xp-btn font-bold text-xs px-3 py-1.5 no-underline text-xp-text shadow hover:border-xp-blue-700">
+              <a
+                href="#contact"
+                onClick={(e) => {
+                  if (onOpenContact) {
+                    e.preventDefault();
+                    onOpenContact();
+                  }
+                }}
+                className="xp-btn font-bold text-xs px-3 py-1.5 no-underline text-xp-text shadow hover:border-xp-blue-700"
+              >
                 ✉️ Get in Touch
               </a>
               <a href="/quick-view" className="xp-btn font-bold text-xs px-3 py-1.5 no-underline text-xp-text shadow hover:border-xp-blue-700">

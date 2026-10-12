@@ -234,6 +234,84 @@ test('parseHashIntent correctly parses legacy IDs, query params, and safely reco
     assert.deepEqual(parseHashIntent('#unknown-slug'), { appId: null });
     assert.deepEqual(parseHashIntent(''), { appId: null });
     assert.deepEqual(parseHashIntent('#'), { appId: null });
+    // R04: Reject prototype properties
+    assert.deepEqual(parseHashIntent('#constructor'), { appId: null });
+    assert.deepEqual(parseHashIntent('#toString'), { appId: null });
+    assert.deepEqual(parseHashIntent('#__proto__'), { appId: null });
+    assert.deepEqual(parseHashIntent('#app=constructor'), { appId: null });
   });
 });
+
+test('R04: Prototype properties in createInitialWorkspaceState safely default to hero without crash', () => {
+    // @ts-expect-error Testing invalid runtime input
+    const state = createInitialWorkspaceState({ width: 1200, height: 750 }, 'constructor');
+    assert.equal(state.activeId, 'hero');
+    assert.deepEqual(state.stack, ['hero']);
+    assert.equal(state.windows.hero.phase, 'normal');
+    // Ensure APP_REGISTRY mapping runs without error
+    const openTitles = Object.values(state.windows)
+      .filter((w) => w.phase !== 'closed')
+      .map((w) => APP_REGISTRY[w.id].title);
+    assert.deepEqual(openTitles, ['Jonathan Axl — System Profile']);
+  });
+
+  test('R03: OPEN_CORE preserves already-open extra applications in stack and raises hero to front', () => {
+    const initial = createInitialWorkspaceState({ width: 1200, height: 750 });
+    // Open an extra app (apex)
+    const withApex = windowReducer(initial, { type: 'OPEN', id: 'apex' });
+    assert.ok(withApex.stack.includes('apex'));
+
+    // Launch all core apps
+    const withCore = windowReducer(withApex, { type: 'OPEN_CORE' });
+    const visible = Object.values(withCore.windows)
+      .filter((w) => w.phase === 'normal' || w.phase === 'maximized')
+      .map((w) => w.id);
+
+    // Visible set must contain apex plus all 6 core apps (7 total)
+    assert.equal(visible.length, 7);
+    assert.ok(visible.includes('apex'));
+    assert.ok(visible.includes('hero'));
+
+    // Stack must contain all 7 visible apps with hero at top
+    assert.equal(withCore.stack.length, 7);
+    assert.ok(withCore.stack.includes('apex'));
+    assert.equal(withCore.activeId, 'hero');
+    assert.equal(withCore.stack[withCore.stack.length - 1], 'hero');
+
+    // Invariant: visible set strictly matches stack set
+    assert.deepEqual(new Set(visible), new Set(withCore.stack));
+  });
+
+  test('R03: Mixed SHOW_DESKTOP and TASK_ACTIVATE sequences preserve exact visible stack invariants', () => {
+    const initial = createInitialWorkspaceState({ width: 1200, height: 750 });
+    let s = windowReducer(initial, { type: 'OPEN', id: 'projects' });
+    s = windowReducer(s, { type: 'SHOW_DESKTOP' });
+    assert.equal(s.stack.length, 0);
+
+    // Manually restore hero
+    s = windowReducer(s, { type: 'TASK_ACTIVATE', id: 'hero' });
+    assert.deepEqual(s.stack, ['hero']);
+    assert.equal(s.windows.hero.phase, 'normal');
+
+    // Show desktop again -> minimizes hero
+    s = windowReducer(s, { type: 'SHOW_DESKTOP' });
+    assert.equal(s.stack.length, 0);
+    assert.equal(s.windows.hero.phase, 'minimized');
+
+    const visible = Object.values(s.windows)
+      .filter((w) => w.phase === 'normal' || w.phase === 'maximized')
+      .map((w) => w.id);
+    assert.deepEqual(new Set(visible), new Set(s.stack));
+  });
+
+  test('R05: clampRect never exceeds actual dimensions even on viewports smaller than default minSize', () => {
+    const smallBounds = { width: 290, height: 180 };
+    const rect = { x: 0, y: 0, width: 700, height: 500 };
+    const clamped = clampRect(rect, smallBounds, APP_REGISTRY.hero.minSize);
+
+    assert.ok(clamped.width <= smallBounds.width, `width ${clamped.width} must not exceed bounds ${smallBounds.width}`);
+    assert.ok(clamped.height <= smallBounds.height, `height ${clamped.height} must not exceed bounds ${smallBounds.height}`);
+    assert.ok(clamped.x >= 0 && clamped.x + clamped.width <= smallBounds.width);
+    assert.ok(clamped.y >= 0 && clamped.y + clamped.height <= smallBounds.height);
+  });
 

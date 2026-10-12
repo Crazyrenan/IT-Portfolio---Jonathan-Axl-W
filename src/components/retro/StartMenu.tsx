@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { TaskbarWindowItem } from './RetroTaskbar';
+import { PROFILE_DATA } from '../../data/portfolio';
 
 export interface StartMenuProps {
   isOpen: boolean;
   onClose: () => void;
   windows: TaskbarWindowItem[];
   onToggleWindow: (id: string) => void;
+  onLaunchApp?: (id: string) => void;
   onLaunchAll: () => void;
   onMinimizeAll: () => void;
   onCloseAll: () => void;
@@ -160,7 +162,7 @@ export function StartMenu({
       <div className="bg-gradient-to-r from-xp-blue-900 via-xp-blue-700 to-xp-blue-900 p-3 flex items-center gap-3 border-b-2 border-[#E8A542] shadow-[inset_0_1px_0_rgba(255,255,255,0.4)]">
         <div className="w-11 h-11 rounded-md border-2 border-white shadow-md overflow-hidden bg-white flex-shrink-0">
           <img
-            src="/profile.jpg"
+            src={PROFILE_DATA.avatar}
             alt="Jonathan Axl Wibowo"
             className="w-full h-full object-cover"
             onError={(e) => {
@@ -197,7 +199,7 @@ export function StartMenu({
                     key={app.id}
                     type="button"
                     onClick={() => {
-                      onToggleWindow(app.id);
+                      (onLaunchApp || onToggleWindow)(app.id);
                       onClose();
                     }}
                     className="flex items-center gap-2.5 px-2 py-1.5 rounded hover:bg-[#2B72E2] hover:text-white text-left group transition-colors focus:outline-none focus:ring-1 focus:ring-[#2B72E2]"
@@ -250,7 +252,7 @@ export function StartMenu({
                     key={app.id}
                     type="button"
                     onClick={() => {
-                      onToggleWindow(app.id);
+                      (onLaunchApp || onToggleWindow)(app.id);
                       onClose();
                     }}
                     className="flex items-center gap-2.5 px-2 py-1.5 rounded hover:bg-[#2B72E2] hover:text-white text-left group transition-colors focus:outline-none focus:ring-1 focus:ring-[#2B72E2]"

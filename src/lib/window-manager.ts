@@ -153,6 +153,14 @@ export const CORE_APP_IDS: AppId[] = [
 
 export const ALL_APP_IDS: AppId[] = Object.keys(APP_REGISTRY) as AppId[];
 
+/**
+ * Validates that an arbitrary value is an own registered AppId.
+ * Guarantees prototype properties (e.g. constructor, toString) are rejected (R04).
+ */
+export function isValidAppId(id: unknown): id is AppId {
+  return typeof id === 'string' && Object.prototype.hasOwnProperty.call(APP_REGISTRY, id);
+}
+
 export interface WorkspaceState {
   windows: Record<AppId, WindowState>;
   stack: AppId[];
@@ -184,23 +192,24 @@ export type WindowAction =
 
 /**
  * Bounds clamping ensuring windows remain completely accessible inside the usable workspace plane.
+ * Never exceeds actual usable dimensions even on small/narrow viewports (R05).
  */
 export function clampRect(
   rect: Rect,
   bounds: Bounds,
   minSize: { width: number; height: number }
 ): Rect {
-  const safeBoundsWidth = Math.max(320, bounds.width);
-  const safeBoundsHeight = Math.max(240, bounds.height);
+  const actualBoundsW = Math.max(1, bounds.width);
+  const actualBoundsH = Math.max(1, bounds.height);
 
-  const minW = Math.min(minSize.width, safeBoundsWidth);
-  const minH = Math.min(minSize.height, safeBoundsHeight);
+  const minW = Math.min(minSize.width, actualBoundsW);
+  const minH = Math.min(minSize.height, actualBoundsH);
 
-  const width = Math.max(minW, Math.min(safeBoundsWidth, rect.width));
-  const height = Math.max(minH, Math.min(safeBoundsHeight, rect.height));
+  const width = Math.max(minW, Math.min(actualBoundsW, rect.width));
+  const height = Math.max(minH, Math.min(actualBoundsH, rect.height));
 
-  const maxX = Math.max(0, safeBoundsWidth - width);
-  const maxY = Math.max(0, safeBoundsHeight - height);
+  const maxX = Math.max(0, actualBoundsW - width);
+  const maxY = Math.max(0, actualBoundsH - height);
 
   const x = Math.max(0, Math.min(maxX, rect.x));
   const y = Math.max(0, Math.min(maxY, rect.y));
@@ -222,6 +231,50 @@ export function fitRect(bounds: Bounds, minSize: { width: number; height: number
   return { x, y, width, height };
 }
 
+/**
+ * Enforces visible stack invariants across all transitions (R03):
+ * 1. Every visible window (normal or maximized) is in stack exactly once.
+ * 2. Minimized and closed windows are never in stack.
+ * 3. activeId is the top of the stack (or null if stack is empty).
+ */
+export function ensureStackInvariants(
+  stack: AppId[],
+  windows: Record<AppId, WindowState>,
+  preferredActiveId?: AppId | null
+): { stack: AppId[]; activeId: AppId | null } {
+  const visibleIds = ALL_APP_IDS.filter(
+    (id) => windows[id]?.phase === 'normal' || windows[id]?.phase === 'maximized'
+  );
+  const visibleSet = new Set(visibleIds);
+
+  // Preserve existing relative order for visible windows
+  const nextStack = stack.filter((id) => visibleSet.has(id));
+
+  // Append any visible windows not yet in stack
+  for (const id of visibleIds) {
+    if (!nextStack.includes(id)) {
+      nextStack.unshift(id);
+    }
+  }
+
+  // Raise preferredActiveId to top if specified and visible
+  const targetActive =
+    preferredActiveId !== undefined
+      ? preferredActiveId
+      : nextStack.length > 0
+        ? nextStack[nextStack.length - 1]
+        : null;
+
+  if (targetActive && visibleSet.has(targetActive)) {
+    const withoutActive = nextStack.filter((id) => id !== targetActive);
+    withoutActive.push(targetActive);
+    return { stack: withoutActive, activeId: targetActive };
+  }
+
+  const resolvedActive = nextStack.length > 0 ? nextStack[nextStack.length - 1] : null;
+  return { stack: nextStack, activeId: resolvedActive };
+}
+
 export interface LaunchIntent {
   appId: AppId | null;
   projectSlug?: string | null;
@@ -232,8 +285,8 @@ export function parseHashIntent(hash: string): LaunchIntent {
   const clean = hash.startsWith('#') ? hash.slice(1) : hash;
 
   // Direct ID check like #projects, #skills, #contact
-  if (clean in APP_REGISTRY) {
-    return { appId: clean as AppId };
+  if (clean && isValidAppId(clean)) {
+    return { appId: clean };
   }
 
   // URLSearchParams formatted check like app=projects&project=field-service-pro
@@ -241,8 +294,8 @@ export function parseHashIntent(hash: string): LaunchIntent {
     const params = new URLSearchParams(clean);
     const app = params.get('app');
     const project = params.get('project');
-    if (app && app in APP_REGISTRY) {
-      return { appId: app as AppId, projectSlug: project || null };
+    if (app && isValidAppId(app)) {
+      return { appId: app, projectSlug: project || null };
     }
   } catch {
     // safe fallback
@@ -274,7 +327,7 @@ export function createInitialWorkspaceState(
     };
   }
 
-  const openTarget = initialOpenApp && APP_REGISTRY[initialOpenApp] ? initialOpenApp : 'hero';
+  const openTarget = initialOpenApp && isValidAppId(initialOpenApp) ? initialOpenApp : 'hero';
   windows[openTarget] = {
     ...windows[openTarget],
     phase: 'normal',
@@ -295,16 +348,16 @@ export function createInitialWorkspaceState(
  * Pure window manager reducer. No DOM, timers, or side-effects.
  */
 export function windowReducer(state: WorkspaceState, action: WindowAction): WorkspaceState {
+  // Reject any action targeting an invalid/inherited AppId (R04)
+  if ('id' in action && !isValidAppId(action.id)) {
+    return state;
+  }
+
   switch (action.type) {
     case 'OPEN': {
       const def = APP_REGISTRY[action.id];
-      if (!def) return state; // Unknown ID no-op
-
       const win = state.windows[action.id];
       if (!win) return state;
-
-      // New user action clears any lingering show-desktop snapshot
-      const shownDesktopSnapshot = null;
 
       let nextPhase: WindowPhase = 'normal';
       let nextRect = win.rect;
@@ -323,46 +376,45 @@ export function windowReducer(state: WorkspaceState, action: WindowAction): Work
         nextPhase = win.phase;
       }
 
-      // Raise to top of stack
-      const nextStack = state.stack.filter((id) => id !== action.id);
-      nextStack.push(action.id);
+      const nextWindows = {
+        ...state.windows,
+        [action.id]: {
+          ...win,
+          phase: nextPhase,
+          rect: nextRect,
+          visited: true
+        }
+      };
+
+      const { stack, activeId } = ensureStackInvariants(state.stack, nextWindows, action.id);
+      const nextSnapshot = state.shownDesktopSnapshot
+        ? state.shownDesktopSnapshot.filter((id) => id !== action.id)
+        : null;
 
       return {
         ...state,
-        shownDesktopSnapshot,
-        stack: nextStack,
-        activeId: action.id,
-        windows: {
-          ...state.windows,
-          [action.id]: {
-            ...win,
-            phase: nextPhase,
-            rect: nextRect,
-            visited: true
-          }
-        }
+        shownDesktopSnapshot: nextSnapshot,
+        stack,
+        activeId,
+        windows: nextWindows
       };
     }
 
     case 'FOCUS': {
-      if (!APP_REGISTRY[action.id]) return state;
       const win = state.windows[action.id];
       if (!win || win.phase === 'closed' || win.phase === 'minimized') return state;
-
       if (state.activeId === action.id) return state;
 
-      const nextStack = state.stack.filter((id) => id !== action.id);
-      nextStack.push(action.id);
+      const { stack, activeId } = ensureStackInvariants(state.stack, state.windows, action.id);
 
       return {
         ...state,
-        stack: nextStack,
-        activeId: action.id
+        stack,
+        activeId
       };
     }
 
     case 'TASK_ACTIVATE': {
-      if (!APP_REGISTRY[action.id]) return state;
       const win = state.windows[action.id];
       if (!win || win.phase === 'closed') return state;
 
@@ -374,105 +426,109 @@ export function windowReducer(state: WorkspaceState, action: WindowAction): Work
             ? { x: 0, y: 0, width: state.bounds.width, height: state.bounds.height }
             : clampRect(win.restoreRect, state.bounds, APP_REGISTRY[action.id].minSize);
 
-        const nextStack = state.stack.filter((id) => id !== action.id);
-        nextStack.push(action.id);
+        const nextWindows = {
+          ...state.windows,
+          [action.id]: {
+            ...win,
+            phase: nextPhase,
+            rect: nextRect
+          }
+        };
+
+        const { stack, activeId } = ensureStackInvariants(state.stack, nextWindows, action.id);
+        const nextSnapshot = state.shownDesktopSnapshot
+          ? state.shownDesktopSnapshot.filter((id) => id !== action.id)
+          : null;
 
         return {
           ...state,
-          stack: nextStack,
-          activeId: action.id,
-          windows: {
-            ...state.windows,
-            [action.id]: {
-              ...win,
-              phase: nextPhase,
-              rect: nextRect
-            }
-          }
+          shownDesktopSnapshot: nextSnapshot,
+          stack,
+          activeId,
+          windows: nextWindows
         };
       }
 
       // If visible and active: minimize
       if (state.activeId === action.id) {
-        const nextStack = state.stack.filter((id) => id !== action.id);
-        const nextActive = nextStack.length > 0 ? nextStack[nextStack.length - 1] : null;
+        const nextWindows = {
+          ...state.windows,
+          [action.id]: {
+            ...win,
+            phase: 'minimized' as WindowPhase,
+            beforeMinimize: win.phase === 'maximized' ? ('maximized' as const) : ('normal' as const)
+          }
+        };
+
+        const { stack, activeId } = ensureStackInvariants(state.stack, nextWindows);
 
         return {
           ...state,
-          stack: nextStack,
-          activeId: nextActive,
-          windows: {
-            ...state.windows,
-            [action.id]: {
-              ...win,
-              phase: 'minimized',
-              beforeMinimize: win.phase === 'maximized' ? 'maximized' : 'normal'
-            }
-          }
+          stack,
+          activeId,
+          windows: nextWindows
         };
       }
 
       // If visible but inactive: raise to front
-      const nextStack = state.stack.filter((id) => id !== action.id);
-      nextStack.push(action.id);
+      const { stack, activeId } = ensureStackInvariants(state.stack, state.windows, action.id);
 
       return {
         ...state,
-        stack: nextStack,
-        activeId: action.id
+        stack,
+        activeId
       };
     }
 
     case 'MINIMIZE': {
-      if (!APP_REGISTRY[action.id]) return state;
       const win = state.windows[action.id];
       if (!win || win.phase === 'closed' || win.phase === 'minimized') return state;
 
-      const nextStack = state.stack.filter((id) => id !== action.id);
-      const nextActive = nextStack.length > 0 ? nextStack[nextStack.length - 1] : null;
+      const nextWindows = {
+        ...state.windows,
+        [action.id]: {
+          ...win,
+          phase: 'minimized' as WindowPhase,
+          beforeMinimize: win.phase === 'maximized' ? ('maximized' as const) : ('normal' as const)
+        }
+      };
+
+      const { stack, activeId } = ensureStackInvariants(state.stack, nextWindows);
 
       return {
         ...state,
-        stack: nextStack,
-        activeId: nextActive,
-        windows: {
-          ...state.windows,
-          [action.id]: {
-            ...win,
-            phase: 'minimized',
-            beforeMinimize: win.phase === 'maximized' ? 'maximized' : 'normal'
-          }
-        }
+        stack,
+        activeId,
+        windows: nextWindows
       };
     }
 
     case 'MAXIMIZE': {
-      if (!APP_REGISTRY[action.id]) return state;
       const win = state.windows[action.id];
       if (!win || win.phase === 'closed' || win.phase === 'minimized') return state;
       if (win.phase === 'maximized') return state;
 
-      const nextStack = state.stack.filter((id) => id !== action.id);
-      nextStack.push(action.id);
+      const nextWindows = {
+        ...state.windows,
+        [action.id]: {
+          ...win,
+          phase: 'maximized' as WindowPhase,
+          restoreRect: win.rect,
+          rect: { x: 0, y: 0, width: state.bounds.width, height: state.bounds.height }
+        }
+      };
+
+      const { stack, activeId } = ensureStackInvariants(state.stack, nextWindows, action.id);
 
       return {
         ...state,
-        stack: nextStack,
-        activeId: action.id,
-        windows: {
-          ...state.windows,
-          [action.id]: {
-            ...win,
-            phase: 'maximized',
-            restoreRect: win.rect,
-            rect: { x: 0, y: 0, width: state.bounds.width, height: state.bounds.height }
-          }
-        }
+        stack,
+        activeId,
+        windows: nextWindows
       };
     }
 
     case 'RESTORE': {
-      if (!APP_REGISTRY[action.id]) return state;
       const win = state.windows[action.id];
       if (!win || win.phase === 'closed') return state;
 
@@ -480,21 +536,22 @@ export function windowReducer(state: WorkspaceState, action: WindowAction): Work
 
       if (win.phase === 'maximized') {
         const nextRect = clampRect(win.restoreRect, state.bounds, def.minSize);
-        const nextStack = state.stack.filter((id) => id !== action.id);
-        nextStack.push(action.id);
+        const nextWindows = {
+          ...state.windows,
+          [action.id]: {
+            ...win,
+            phase: 'normal' as WindowPhase,
+            rect: nextRect
+          }
+        };
+
+        const { stack, activeId } = ensureStackInvariants(state.stack, nextWindows, action.id);
 
         return {
           ...state,
-          stack: nextStack,
-          activeId: action.id,
-          windows: {
-            ...state.windows,
-            [action.id]: {
-              ...win,
-              phase: 'normal',
-              rect: nextRect
-            }
-          }
+          stack,
+          activeId,
+          windows: nextWindows
         };
       }
 
@@ -505,21 +562,22 @@ export function windowReducer(state: WorkspaceState, action: WindowAction): Work
             ? { x: 0, y: 0, width: state.bounds.width, height: state.bounds.height }
             : clampRect(win.restoreRect, state.bounds, def.minSize);
 
-        const nextStack = state.stack.filter((id) => id !== action.id);
-        nextStack.push(action.id);
+        const nextWindows = {
+          ...state.windows,
+          [action.id]: {
+            ...win,
+            phase: nextPhase,
+            rect: nextRect
+          }
+        };
+
+        const { stack, activeId } = ensureStackInvariants(state.stack, nextWindows, action.id);
 
         return {
           ...state,
-          stack: nextStack,
-          activeId: action.id,
-          windows: {
-            ...state.windows,
-            [action.id]: {
-              ...win,
-              phase: nextPhase,
-              rect: nextRect
-            }
-          }
+          stack,
+          activeId,
+          windows: nextWindows
         };
       }
 
@@ -527,12 +585,19 @@ export function windowReducer(state: WorkspaceState, action: WindowAction): Work
     }
 
     case 'CLOSE': {
-      if (!APP_REGISTRY[action.id]) return state;
       const win = state.windows[action.id];
       if (!win || win.phase === 'closed') return state;
 
-      const nextStack = state.stack.filter((id) => id !== action.id);
-      const nextActive = nextStack.length > 0 ? nextStack[nextStack.length - 1] : null;
+      const nextWindows = {
+        ...state.windows,
+        [action.id]: {
+          ...win,
+          phase: 'closed' as WindowPhase,
+          visited: false
+        }
+      };
+
+      const { stack, activeId } = ensureStackInvariants(state.stack, nextWindows);
 
       // Stale snapshot must never resurrect a closed app
       const nextSnapshot = state.shownDesktopSnapshot
@@ -542,21 +607,13 @@ export function windowReducer(state: WorkspaceState, action: WindowAction): Work
       return {
         ...state,
         shownDesktopSnapshot: nextSnapshot,
-        stack: nextStack,
-        activeId: nextActive,
-        windows: {
-          ...state.windows,
-          [action.id]: {
-            ...win,
-            phase: 'closed',
-            visited: false
-          }
-        }
+        stack,
+        activeId,
+        windows: nextWindows
       };
     }
 
     case 'COMMIT_RECT': {
-      if (!APP_REGISTRY[action.id]) return state;
       const win = state.windows[action.id];
       if (!win || win.phase !== 'normal') return state;
 
@@ -576,7 +633,6 @@ export function windowReducer(state: WorkspaceState, action: WindowAction): Work
     }
 
     case 'CENTER_WINDOW': {
-      if (!APP_REGISTRY[action.id]) return state;
       const win = state.windows[action.id];
       if (!win || win.phase !== 'normal') return state;
       const centered = centerRect(win.rect, state.bounds);
@@ -590,7 +646,6 @@ export function windowReducer(state: WorkspaceState, action: WindowAction): Work
     }
 
     case 'FIT_WINDOW': {
-      if (!APP_REGISTRY[action.id]) return state;
       const win = state.windows[action.id];
       if (!win || win.phase !== 'normal') return state;
       const fitted = fitRect(state.bounds, APP_REGISTRY[action.id].minSize);
@@ -604,7 +659,6 @@ export function windowReducer(state: WorkspaceState, action: WindowAction): Work
     }
 
     case 'MOVE_WINDOW': {
-      if (!APP_REGISTRY[action.id]) return state;
       const win = state.windows[action.id];
       if (!win || win.phase !== 'normal') return state;
       const moved = clampRect(
@@ -622,7 +676,6 @@ export function windowReducer(state: WorkspaceState, action: WindowAction): Work
     }
 
     case 'RESIZE_WINDOW': {
-      if (!APP_REGISTRY[action.id]) return state;
       const win = state.windows[action.id];
       if (!win || win.phase !== 'normal') return state;
       const resized = clampRect(
@@ -667,10 +720,8 @@ export function windowReducer(state: WorkspaceState, action: WindowAction): Work
     }
 
     case 'SHOW_DESKTOP': {
-      // Toggle logic: If snapshot exists, restore surviving apps. If not, minimize all and snapshot.
-      if (state.shownDesktopSnapshot === null) {
-        if (state.stack.length === 0) return state; // nothing visible to minimize
-
+      // If any window is currently visible: minimize all and take snapshot (R03)
+      if (state.stack.length > 0) {
         const visibleIds = [...state.stack];
         const nextWindows = { ...state.windows };
 
@@ -692,40 +743,43 @@ export function windowReducer(state: WorkspaceState, action: WindowAction): Work
         };
       }
 
-      // Snapshot exists: restore only those apps that are still open/minimized (not closed)
-      const surviving = state.shownDesktopSnapshot.filter((id) => {
-        const win = state.windows[id];
-        return win && win.phase === 'minimized';
-      });
+      // If desktop is currently completely clear and snapshot exists: restore surviving apps
+      if (state.shownDesktopSnapshot && state.shownDesktopSnapshot.length > 0) {
+        const surviving = state.shownDesktopSnapshot.filter((id) => {
+          const win = state.windows[id];
+          return win && win.phase !== 'closed';
+        });
 
-      const nextWindows = { ...state.windows };
-      for (const id of surviving) {
-        const win = nextWindows[id];
-        const nextPhase = win.beforeMinimize;
-        nextWindows[id] = {
-          ...win,
-          phase: nextPhase,
-          rect:
-            nextPhase === 'maximized'
-              ? { x: 0, y: 0, width: state.bounds.width, height: state.bounds.height }
-              : clampRect(win.restoreRect, state.bounds, APP_REGISTRY[id].minSize)
+        const nextWindows = { ...state.windows };
+        for (const id of surviving) {
+          const win = nextWindows[id];
+          const nextPhase = win.beforeMinimize;
+          nextWindows[id] = {
+            ...win,
+            phase: nextPhase,
+            rect:
+              nextPhase === 'maximized'
+                ? { x: 0, y: 0, width: state.bounds.width, height: state.bounds.height }
+                : clampRect(win.restoreRect, state.bounds, APP_REGISTRY[id].minSize)
+          };
+        }
+
+        const { stack, activeId } = ensureStackInvariants(surviving, nextWindows, surviving[surviving.length - 1]);
+
+        return {
+          ...state,
+          stack,
+          activeId,
+          shownDesktopSnapshot: null,
+          windows: nextWindows
         };
       }
 
-      const nextActive = surviving.length > 0 ? surviving[surviving.length - 1] : null;
-
-      return {
-        ...state,
-        stack: surviving,
-        activeId: nextActive,
-        shownDesktopSnapshot: null,
-        windows: nextWindows
-      };
+      return state;
     }
 
     case 'OPEN_CORE': {
       const nextWindows = { ...state.windows };
-      const nextStack: AppId[] = [];
 
       for (const id of CORE_APP_IDS) {
         const win = nextWindows[id];
@@ -736,14 +790,26 @@ export function windowReducer(state: WorkspaceState, action: WindowAction): Work
           visited: true,
           rect: clampRect(win.restoreRect, state.bounds, def.minSize)
         };
-        nextStack.push(id);
       }
+
+      // Existing visible extras must NOT be dropped from stack (R03)
+      const existingVisibleExtras = state.stack.filter(
+        (id) => !CORE_APP_IDS.includes(id) && nextWindows[id]?.phase !== 'closed' && nextWindows[id]?.phase !== 'minimized'
+      );
+
+      const baseStack = [
+        ...existingVisibleExtras,
+        ...CORE_APP_IDS.filter((id) => id !== 'hero'),
+        'hero'
+      ];
+
+      const { stack, activeId } = ensureStackInvariants(baseStack, nextWindows, 'hero');
 
       return {
         ...state,
         shownDesktopSnapshot: null,
-        stack: nextStack,
-        activeId: 'hero', // Explicitly raised last
+        stack,
+        activeId,
         windows: nextWindows
       };
     }

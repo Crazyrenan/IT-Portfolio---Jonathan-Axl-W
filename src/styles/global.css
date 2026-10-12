@@ -149,8 +149,8 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 24px;
-    height: 24px;
+    min-width: 32px;
+    height: 32px;
     padding: 0 4px;
     border-radius: 3px;
     background: linear-gradient(180deg, #5A94E8 0%, #2466CF 45%, #1854B4 100%);
@@ -162,6 +162,13 @@ body {
     line-height: 1;
     cursor: var(--cursor-pointer);
     transition: filter 0.1s ease;
+  }
+  @media (pointer: coarse) {
+    .xp-btn-ctrl {
+      min-width: 44px;
+      height: 44px;
+      font-size: 13px;
+    }
   }
   .xp-btn-ctrl:hover {
     filter: brightness(1.15);

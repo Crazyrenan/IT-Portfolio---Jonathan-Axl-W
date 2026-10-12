@@ -51,6 +51,7 @@ export function RetroWindow({
   const dragControls = useDragControls();
   const windowRef = useRef<HTMLDivElement>(null);
   const systemMenuRef = useRef<HTMLDivElement>(null);
+  const activeResizeCleanupRef = useRef<(() => void) | null>(null);
 
   // Custom size state for interactive window resizing
   const [size, setSize] = useState<{ width: number | null; height: number | null }>({
@@ -66,6 +67,16 @@ export function RetroWindow({
       setSize({ width: rect.width, height: rect.height });
     }
   }, [rect?.width, rect?.height]);
+
+  // Clean up any active resize listener session on unmount (R05)
+  useEffect(() => {
+    return () => {
+      if (activeResizeCleanupRef.current) {
+        activeResizeCleanupRef.current();
+        activeResizeCleanupRef.current = null;
+      }
+    };
+  }, []);
 
   // Outside click listener to dismiss system menu
   useEffect(() => {
@@ -99,12 +110,20 @@ export function RetroWindow({
     }
   };
 
-  // Corner Resize Handler (Both Width & Height)
-  const handleCornerResize = (e: React.PointerEvent) => {
+  // Unified Resize Handler with RAF, pointercancel, Escape cancellation and bounds clamping (R05)
+  const startResize = (
+    e: React.PointerEvent,
+    mode: 'both' | 'width' | 'height'
+  ) => {
     if (isMaximized) return;
     e.preventDefault();
     e.stopPropagation();
     onFocus?.();
+
+    if (activeResizeCleanupRef.current) {
+      activeResizeCleanupRef.current();
+      activeResizeCleanupRef.current = null;
+    }
 
     const startX = e.clientX;
     const startY = e.clientY;
@@ -113,105 +132,74 @@ export function RetroWindow({
 
     const startWidth = el.offsetWidth;
     const startHeight = el.offsetHeight;
-    let latestWidth = startWidth;
-    let latestHeight = startHeight;
+    let currentW = startWidth;
+    let currentH = startHeight;
+    let rafId: number | null = null;
+
+    const actualBoundsW = Math.max(1, bounds ? bounds.width : (typeof window !== 'undefined' ? window.innerWidth - 30 : 1200));
+    const actualBoundsH = Math.max(1, bounds ? bounds.height : (typeof window !== 'undefined' ? window.innerHeight - 70 : 800));
+
+    // Minimum size never exceeds usable bounds (R05)
+    const minW = Math.min(320, actualBoundsW);
+    const minH = Math.min(220, actualBoundsH);
+
+    const cancelResize = () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointercancel', cancelResize);
+      window.removeEventListener('keydown', onKeyDown);
+      activeResizeCleanupRef.current = null;
+      setSize({ width: startWidth, height: startHeight });
+    };
+
+    const onKeyDown = (keyEvent: KeyboardEvent) => {
+      if (keyEvent.key === 'Escape') {
+        cancelResize();
+      }
+    };
 
     const onPointerMove = (moveEvent: PointerEvent) => {
-      const maxWidth = bounds ? bounds.width : typeof window !== 'undefined' ? window.innerWidth - 30 : 1200;
-      const maxHeight = bounds ? bounds.height : typeof window !== 'undefined' ? window.innerHeight - 70 : 800;
-      latestWidth = Math.max(340, Math.min(maxWidth, startWidth + (moveEvent.clientX - startX)));
-      latestHeight = Math.max(220, Math.min(maxHeight, startHeight + (moveEvent.clientY - startY)));
-      setSize({ width: latestWidth, height: latestHeight });
+      if (mode === 'both' || mode === 'width') {
+        currentW = Math.max(minW, Math.min(actualBoundsW, startWidth + (moveEvent.clientX - startX)));
+      }
+      if (mode === 'both' || mode === 'height') {
+        currentH = Math.max(minH, Math.min(actualBoundsH, startHeight + (moveEvent.clientY - startY)));
+      }
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        setSize({ width: currentW, height: currentH });
+      });
     };
 
     const onPointerUp = () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointercancel', cancelResize);
+      window.removeEventListener('keydown', onKeyDown);
+      activeResizeCleanupRef.current = null;
+
       if (onCommitRect) {
         onCommitRect({
           x: rect?.x ?? 0,
           y: rect?.y ?? 0,
-          width: latestWidth,
-          height: latestHeight
+          width: currentW,
+          height: currentH
         });
       }
     };
 
+    activeResizeCleanupRef.current = cancelResize;
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', cancelResize);
+    window.addEventListener('keydown', onKeyDown);
   };
 
-  // Right Edge Resize Handler (Width only)
-  const handleRightResize = (e: React.PointerEvent) => {
-    if (isMaximized) return;
-    e.preventDefault();
-    e.stopPropagation();
-    onFocus?.();
-
-    const startX = e.clientX;
-    const el = windowRef.current;
-    if (!el) return;
-    const startWidth = el.offsetWidth;
-    let latestWidth = startWidth;
-
-    const onPointerMove = (moveEvent: PointerEvent) => {
-      const maxWidth = bounds ? bounds.width : typeof window !== 'undefined' ? window.innerWidth - 30 : 1200;
-      latestWidth = Math.max(340, Math.min(maxWidth, startWidth + (moveEvent.clientX - startX)));
-      setSize((prev) => ({ ...prev, width: latestWidth }));
-    };
-
-    const onPointerUp = () => {
-      window.removeEventListener('pointermove', onPointerMove);
-      window.removeEventListener('pointerup', onPointerUp);
-      if (onCommitRect) {
-        onCommitRect({
-          x: rect?.x ?? 0,
-          y: rect?.y ?? 0,
-          width: latestWidth,
-          height: size.height ?? rect?.height ?? 540
-        });
-      }
-    };
-
-    window.addEventListener('pointermove', onPointerMove);
-    window.addEventListener('pointerup', onPointerUp);
-  };
-
-  // Bottom Edge Resize Handler (Height only)
-  const handleBottomResize = (e: React.PointerEvent) => {
-    if (isMaximized) return;
-    e.preventDefault();
-    e.stopPropagation();
-    onFocus?.();
-
-    const startY = e.clientY;
-    const el = windowRef.current;
-    if (!el) return;
-    const startHeight = el.offsetHeight;
-    let latestHeight = startHeight;
-
-    const onPointerMove = (moveEvent: PointerEvent) => {
-      const maxHeight = bounds ? bounds.height : typeof window !== 'undefined' ? window.innerHeight - 70 : 800;
-      latestHeight = Math.max(220, Math.min(maxHeight, startHeight + (moveEvent.clientY - startY)));
-      setSize((prev) => ({ ...prev, height: latestHeight }));
-    };
-
-    const onPointerUp = () => {
-      window.removeEventListener('pointermove', onPointerMove);
-      window.removeEventListener('pointerup', onPointerUp);
-      if (onCommitRect) {
-        onCommitRect({
-          x: rect?.x ?? 0,
-          y: rect?.y ?? 0,
-          width: size.width ?? rect?.width ?? 760,
-          height: latestHeight
-        });
-      }
-    };
-
-    window.addEventListener('pointermove', onPointerMove);
-    window.addEventListener('pointerup', onPointerUp);
-  };
+  const handleCornerResize = (e: React.PointerEvent) => startResize(e, 'both');
+  const handleRightResize = (e: React.PointerEvent) => startResize(e, 'width');
+  const handleBottomResize = (e: React.PointerEvent) => startResize(e, 'height');
 
   const handleRestore = useCallback(() => {
     setIsSystemMenuOpen(false);
@@ -222,10 +210,26 @@ export function RetroWindow({
     }
   }, [onRestore, isMaximized, onMaximize]);
 
+  const currentW = size.width ?? rect?.width ?? 760;
+  const currentH = size.height ?? rect?.height ?? 540;
+  const posX = rect?.x ?? 0;
+  const posY = rect?.y ?? 0;
+  const workspaceW = bounds?.width ?? 1200;
+  const workspaceH = bounds?.height ?? 750;
+
+  const dragConstraints = bounds && rect ? {
+    left: -posX,
+    top: -posY,
+    right: Math.max(0, workspaceW - posX - currentW),
+    bottom: Math.max(0, workspaceH - posY - currentH)
+  } : undefined;
+
   return (
     <motion.div
       ref={windowRef}
       id={id}
+      role="region"
+      aria-label={title}
       tabIndex={-1}
       // When minimized, mark inert so it is completely removed from tab & AX tree
       // @ts-ignore
@@ -235,17 +239,22 @@ export function RetroWindow({
       dragListener={false}
       dragMomentum={false}
       dragElastic={0.02}
+      dragConstraints={dragConstraints}
       onDragEnd={(_e, info) => {
         if (rect && onCommitRect) {
+          const clampedX = Math.max(0, Math.min(workspaceW - currentW, posX + info.offset.x));
+          const clampedY = Math.max(0, Math.min(workspaceH - currentH, posY + info.offset.y));
           onCommitRect({
             ...rect,
-            x: Math.max(0, rect.x + info.offset.x),
-            y: Math.max(0, rect.y + info.offset.y)
+            x: Math.round(clampedX),
+            y: Math.round(clampedY),
+            width: currentW,
+            height: currentH
           });
         }
       }}
       initial={{ scale: 0.95, opacity: 0 }}
-      animate={isMaximized ? { x: 0, y: 0, scale: 1, opacity: 1 } : { scale: 1, opacity: 1 }}
+      animate={{ x: 0, y: 0, scale: 1, opacity: 1 }}
       exit={{ scale: 0.95, opacity: 0, transition: { duration: 0.12, ease: "easeOut" } }}
       transition={{
         type: "spring",
@@ -255,27 +264,25 @@ export function RetroWindow({
       }}
       style={{
         zIndex,
+        position: 'absolute',
+        left: isMaximized ? 0 : `${posX}px`,
+        top: isMaximized ? 0 : `${posY}px`,
+        width: isMaximized ? '100%' : `${currentW}px`,
+        height: isMaximized ? (bounds?.height ? `${bounds.height}px` : 'calc(100vh - 44px)') : `${currentH}px`,
+        maxWidth: isMaximized ? '100%' : `${workspaceW}px`,
+        maxHeight: isMaximized ? '100%' : `${workspaceH}px`,
         display: isMinimized ? 'none' : undefined,
-        width: !isMaximized && size.width ? `${size.width}px` : undefined,
-        height: !isMaximized && size.height ? `${size.height}px` : undefined,
-        minHeight: !isMaximized && size.height ? `${size.height}px` : undefined
       }}
       onPointerDown={onFocus}
       onFocusCapture={onFocus}
-      className={`relative flex flex-col p-[3px] mb-6 select-none transition-shadow duration-150 ${
+      className={`flex flex-col p-[3px] select-none transition-shadow duration-150 ${
         isActive ? 'xp-window' : 'xp-window-inactive'
-      } ${
-        isMaximized
-          ? 'w-full max-w-6xl'
-          : size.width
-          ? ''
-          : 'w-full max-w-3xl sm:max-w-4xl'
-      } ${className}`}
+      } ${isMaximized ? 'w-full' : ''} ${className}`}
     >
       {/* Windows XP Titlebar */}
       <div 
         onPointerDown={handleTitlePointerDown}
-        onDoubleClick={onMaximize}
+        onDoubleClick={isMaximized ? handleRestore : onMaximize}
         className={`${
           isActive ? 'xp-titlebar-active' : 'xp-titlebar-inactive'
         } relative flex justify-between items-center px-2 py-1 select-none ${
@@ -382,7 +389,7 @@ export function RetroWindow({
           </div>
         )}
 
-        {/* Grouped Window Controls (32x32px hit-target padding with centered buttons) */}
+        {/* Grouped Window Controls (32x32px desktop / 44x44px touch hit-target) */}
         <div className="flex items-center gap-1 flex-shrink-0">
           <button 
             type="button"
@@ -393,7 +400,7 @@ export function RetroWindow({
               e.stopPropagation();
               onMinimize?.();
             }}
-            className="xp-btn-ctrl w-6 h-6 flex items-center justify-center p-0 font-bold text-xs select-none focus:outline-none focus:ring-1 focus:ring-white"
+            className="xp-btn-ctrl w-8 h-8 flex items-center justify-center p-0 font-bold text-xs select-none focus:outline-none focus:ring-1 focus:ring-white"
           >
             _
           </button>
@@ -410,7 +417,7 @@ export function RetroWindow({
                 onMaximize?.();
               }
             }}
-            className="xp-btn-ctrl w-6 h-6 flex items-center justify-center p-0 font-bold text-xs select-none focus:outline-none focus:ring-1 focus:ring-white"
+            className="xp-btn-ctrl w-8 h-8 flex items-center justify-center p-0 font-bold text-xs select-none focus:outline-none focus:ring-1 focus:ring-white"
           >
             {isMaximized ? '❐' : '□'}
           </button>
@@ -423,7 +430,7 @@ export function RetroWindow({
               e.stopPropagation();
               onClose?.();
             }}
-            className="xp-btn-ctrl xp-btn-close w-6 h-6 flex items-center justify-center p-0 font-bold text-xs select-none focus:outline-none focus:ring-1 focus:ring-white"
+            className="xp-btn-ctrl xp-btn-close w-8 h-8 flex items-center justify-center p-0 font-bold text-xs select-none focus:outline-none focus:ring-1 focus:ring-white"
           >
             ✕
           </button>

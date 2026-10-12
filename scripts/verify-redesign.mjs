@@ -10,7 +10,8 @@ import { resolve } from 'node:path';
 
 const testSuites = [
   'tests/portfolio-parity.test.mjs',
-  'tests/window-manager.test.mjs'
+  'tests/window-manager.test.mjs',
+  'tests/navigation-shell.test.mjs'
 ];
 
 console.log('====================================================');

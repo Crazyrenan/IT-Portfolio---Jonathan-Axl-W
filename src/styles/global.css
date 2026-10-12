@@ -228,6 +228,81 @@ body {
     pointer-events: none;
     z-index: 0;
   }
+
+  /* ── Windows XP Luna Taskbar, Start Button & Tray Primitives ── */
+  .xp-taskbar {
+    background: linear-gradient(180deg, #2466CF 0%, #1B56B7 12%, #16489C 85%, #0F326E 100%);
+    border-top: 2px solid #5A94E8;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    color: #FFFFFF;
+  }
+
+  .xp-start-btn {
+    background: linear-gradient(180deg, #58B05C 0%, #388E3C 30%, #2E7D32 70%, #1B5E20 100%);
+    border: 1px solid #144918;
+    border-top: 1px solid #78B66A;
+    border-radius: 0 10px 10px 0;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.75), 1px 1px 3px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+    color: #FFFFFF;
+    font-style: italic;
+    font-weight: 800;
+  }
+  .xp-start-btn:hover {
+    filter: brightness(1.12);
+  }
+  .xp-start-btn:active,
+  .xp-start-btn[aria-expanded="true"] {
+    background: linear-gradient(180deg, #1B5E20 0%, #2E7D32 50%, #388E3C 100%);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+  }
+
+  .xp-task-btn {
+    background: linear-gradient(180deg, #3C82E6 0%, #2466CF 30%, #1A54B4 100%);
+    border: 1px solid #123A7A;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 1px 2px rgba(0, 0, 0, 0.2);
+    color: #FFFFFF;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
+  }
+  .xp-task-btn:hover {
+    background: linear-gradient(180deg, #589AF0 0%, #367EE0 30%, #2062C8 100%);
+  }
+
+  .xp-task-btn-active {
+    background: linear-gradient(180deg, #11346E 0%, #184694 40%, #1E54B0 100%);
+    border: 1px solid #0A224A;
+    border-top: 1px solid #081B3B;
+    box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.6), inset 0 -1px 0 rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
+    font-weight: 700;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.8);
+  }
+
+  .xp-task-btn-minimized {
+    background: linear-gradient(180deg, #2A5EA6 0%, #1E4780 50%, #173766 100%);
+    border: 1px dashed #4E88D6;
+    color: #C0D8FA;
+    font-style: italic;
+  }
+
+  .xp-tray {
+    background: linear-gradient(180deg, #0F326E 0%, #133D85 40%, #16479C 100%);
+    border-left: 1px solid #0A224A;
+    border-top: 1px solid #0A224A;
+    border-right: 1px solid #3870C0;
+    border-bottom: 1px solid #3870C0;
+    box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.5);
+    color: #FFFFFF;
+  }
+
+  /* ── Windows XP Luna Start Menu Primitives ── */
+  .xp-start-menu {
+    border: 1px solid #0C3875;
+    border-radius: 6px 6px 0 0;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+  }
 }
 
 @keyframes win95-slide-in-right {

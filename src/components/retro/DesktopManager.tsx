@@ -43,9 +43,34 @@ export function DesktopManager() {
 
   const [hasInteracted, setHasInteracted] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
-  const [isBooting, setIsBooting] = useState<boolean>(true);
+  const [isBooting, setIsBooting] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      if (sessionStorage.getItem('axl_boot_seen') === 'true') {
+        return false;
+      }
+    } catch {
+      // sessionStorage unavailable
+    }
+    if (window.location.hash) {
+      return false;
+    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return false;
+    }
+    return true;
+  });
 
-  // Reboot System (replays boot screen without wiping open window state)
+  const handleBootComplete = useCallback(() => {
+    setIsBooting(false);
+    try {
+      sessionStorage.setItem('axl_boot_seen', 'true');
+    } catch {
+      // sessionStorage unavailable
+    }
+  }, []);
+
+  // Reboot System (replays boot screen without wiping open window state - FR-12)
   const rebootOS = useCallback(() => {
     setIsBooting(true);
   }, []);
@@ -151,6 +176,10 @@ export function DesktopManager() {
 
   const handleCloseAll = useCallback(() => {
     dispatch({ type: 'CLOSE_ALL' });
+  }, []);
+
+  const handleShowDesktop = useCallback(() => {
+    dispatch({ type: 'SHOW_DESKTOP' });
   }, []);
 
   // Prepare taskbar items (only open or minimized windows appear on taskbar)
@@ -578,6 +607,7 @@ export function DesktopManager() {
         onLaunchAll={handleLaunchAll}
         onMinimizeAll={handleMinimizeAll}
         onCloseAll={handleCloseAll}
+        onShowDesktop={handleShowDesktop}
         onReboot={rebootOS}
         hasInteracted={hasInteracted}
       />
@@ -586,7 +616,7 @@ export function DesktopManager() {
       <AnimatePresence>
         {isBooting && (
           <RetroBootScreen
-            onComplete={() => setIsBooting(false)}
+            onComplete={handleBootComplete}
           />
         )}
       </AnimatePresence>

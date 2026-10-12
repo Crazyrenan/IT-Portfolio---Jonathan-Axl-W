@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
+import { StartMenu } from './StartMenu';
+import { SystemClock } from './SystemClock';
 
 export interface TaskbarWindowItem {
   id: string;
@@ -17,6 +19,7 @@ export interface RetroTaskbarProps {
   onLaunchAll: () => void;
   onMinimizeAll: () => void;
   onCloseAll: () => void;
+  onShowDesktop?: () => void;
   onReboot?: () => void;
   hasInteracted: boolean;
 }
@@ -28,291 +31,188 @@ export function RetroTaskbar({
   onLaunchAll,
   onMinimizeAll,
   onCloseAll,
+  onShowDesktop,
   onReboot,
   hasInteracted
 }: RetroTaskbarProps) {
   const [startMenuOpen, setStartMenuOpen] = useState(false);
-  const [timeString, setTimeString] = useState('00:00:00 WIB');
-  const startMenuRef = useRef<HTMLDivElement>(null);
+  const startBtnRef = useRef<HTMLButtonElement>(null);
 
-  // Live WIB Clock (Asia/Jakarta UTC+7)
-  useEffect(() => {
-    function updateClock() {
-      try {
-        const now = new Date();
-        const options: Intl.DateTimeFormatOptions = {
-          timeZone: 'Asia/Jakarta',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false
-        };
-        const formatted = new Intl.DateTimeFormat('en-GB', options).format(now);
-        setTimeString(`${formatted} WIB`);
-      } catch {
-        const now = new Date();
-        setTimeString(now.toLocaleTimeString());
-      }
+  const handleShowDesktop = () => {
+    if (onShowDesktop) {
+      onShowDesktop();
+    } else {
+      onMinimizeAll();
     }
+  };
 
-    updateClock();
-    const interval = setInterval(updateClock, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Close Start Menu on click outside
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (startMenuRef.current && !startMenuRef.current.contains(e.target as Node)) {
-        setStartMenuOpen(false);
-      }
-    }
-    if (startMenuOpen) {
-      window.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => window.removeEventListener('mousedown', handleClickOutside);
-  }, [startMenuOpen]);
-
-  const allOpen = windows.every(w => w.isOpen && !w.isMinimized);
+  const openWindows = windows.filter((w) => w.isOpen);
 
   return (
     <>
-      {/* Start Menu Popup */}
-      {startMenuOpen && (
-        <div
-          ref={startMenuRef}
-          className="fixed bottom-10 left-1 z-50 win95-raised flex shadow-2xl font-[Tahoma,sans-serif] text-black w-64 max-w-[90vw] select-none border-2 border-white"
-        >
-          {/* Left Vertical Brand Banner */}
-          <div className="w-8 bg-gradient-to-t from-[#000080] via-[#1084d0] to-[#000080] flex items-end justify-center pb-3">
-            <span className="text-white font-bold text-sm tracking-widest -rotate-90 origin-center whitespace-nowrap">
-              AXL_OS<span className="text-[#FFEA00]">98</span>
-            </span>
-          </div>
+      {/* ── Windows XP Two-Column Start Menu Disclosure ── */}
+      <StartMenu
+        isOpen={startMenuOpen}
+        onClose={() => setStartMenuOpen(false)}
+        windows={windows}
+        onToggleWindow={onToggleWindow}
+        onLaunchAll={onLaunchAll}
+        onMinimizeAll={onMinimizeAll}
+        onCloseAll={onCloseAll}
+        onShowDesktop={handleShowDesktop}
+        onReboot={onReboot}
+        triggerRef={startBtnRef}
+      />
 
-          {/* Right Menu Items List */}
-          <div className="flex-1 bg-[#c0c0c0] p-1.5 flex flex-col gap-1 text-xs">
-            {/* Quick Launch All */}
+      {/* ── Windows XP Luna Taskbar ── */}
+      <footer
+        className="fixed bottom-0 left-0 right-0 z-50 xp-taskbar flex items-center px-0.5 sm:px-1 font-sans text-white select-none h-11"
+        role="navigation"
+        aria-label="Windows XP Taskbar"
+      >
+        {/* Left: Luna Start Button */}
+        <div className="flex items-center h-full py-0.5 flex-shrink-0">
+          <button
+            ref={startBtnRef}
+            type="button"
+            id="start-button"
+            onClick={() => setStartMenuOpen((prev) => !prev)}
+            aria-expanded={startMenuOpen}
+            aria-controls="start-menu"
+            aria-haspopup="dialog"
+            aria-label="Start menu"
+            className="xp-start-btn px-2 sm:px-3 h-full flex items-center gap-1.5 sm:gap-2 text-sm select-none focus:outline-none focus:ring-1 focus:ring-white/80 cursor-pointer mr-1"
+          >
+            {/* Original 4-Quadrant XP Emblem */}
+            <svg
+              className="w-4 h-4 flex-shrink-0 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path d="M1 2.5C4 2 6 3 7.5 3.5V7C6 6.5 4 5.5 1 6V2.5Z" fill="#E84833" />
+              <path d="M8.5 3.8C10 4.2 12 4.5 15 3.5V7C12 8 10 7.8 8.5 7.2V3.8Z" fill="#4B9FE1" />
+              <path d="M1 7.5C4 7 6 8 7.5 8.5V12C6 11.5 4 10.5 1 11V7.5Z" fill="#67B92A" />
+              <path d="M8.5 8.8C10 9.2 12 9.5 15 8.5V12C12 13 10 12.8 8.5 12.2V8.8Z" fill="#F8BC1C" />
+            </svg>
+            <span className="font-extrabold italic tracking-tight text-[13px] sm:text-sm lowercase">
+              start
+            </span>
+          </button>
+
+          {/* Quick Launch Section */}
+          <div className="hidden xs:flex items-center gap-1 px-1 border-r border-[#1B56B7]/60 pr-1.5 mr-1 flex-shrink-0">
+            {/* Show Desktop */}
             <button
               type="button"
-              onClick={() => {
-                onLaunchAll();
-                setStartMenuOpen(false);
-              }}
-              className="flex items-center gap-2 px-2 py-1.5 hover:bg-[#000080] hover:text-white text-left font-bold"
+              onClick={handleShowDesktop}
+              title="Show Desktop (Minimize/Restore Windows)"
+              aria-label="Show Desktop"
+              className="w-7 h-7 flex items-center justify-center rounded hover:bg-white/15 text-white transition-colors focus:outline-none focus:ring-1 focus:ring-white"
             >
-              <span className="text-base">⚡</span>
-              <span>Launch All Windows</span>
+              <svg className="w-4 h-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                <path d="M1 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3zm1 0v8h12V3H2zm3 10h6v1H5v-1z"/>
+              </svg>
             </button>
 
-            <div className="h-[2px] bg-[#808080] border-b border-white my-0.5" />
+            {/* Launch All */}
+            <button
+              type="button"
+              onClick={onLaunchAll}
+              title="Launch All Portfolio Windows"
+              aria-label="Launch All Portfolio Windows"
+              className={`w-7 h-7 flex items-center justify-center rounded hover:bg-white/15 text-yellow-300 transition-colors focus:outline-none focus:ring-1 focus:ring-white ${
+                !hasInteracted ? 'animate-pulse' : ''
+              }`}
+            >
+              <span className="text-sm">⚡</span>
+            </button>
 
-            {/* Individual Application List */}
-            {windows.map((win) => (
+            {/* Quick View Shortcut */}
+            <a
+              href="/quick-view"
+              title="Recruiter Quick View"
+              aria-label="Recruiter Quick View"
+              className="w-7 h-7 flex items-center justify-center rounded hover:bg-white/15 text-white transition-colors focus:outline-none focus:ring-1 focus:ring-white"
+            >
+              <img
+                src="/icons/xp/quick-view.svg"
+                alt=""
+                className="w-4 h-4 object-contain"
+              />
+            </a>
+          </div>
+        </div>
+
+        {/* Center: Running Task Tabs Strip */}
+        <div
+          className="flex items-center gap-1 h-full py-0.5 flex-1 overflow-x-auto scrollbar-none px-1"
+          role="tablist"
+          aria-label="Open Windows"
+        >
+          {openWindows.map((win) => {
+            const isTabActive = !win.isMinimized && win.isActive;
+            const isTabMinimized = win.isMinimized;
+
+            let btnClass = 'xp-task-btn';
+            if (isTabActive) {
+              btnClass = 'xp-task-btn-active';
+            } else if (isTabMinimized) {
+              btnClass = 'xp-task-btn-minimized';
+            }
+
+            const accessibleLabel = `${win.title}${isTabMinimized ? ' (minimized)' : isTabActive ? ' (active)' : ''}`;
+
+            return (
               <button
                 key={win.id}
                 type="button"
-                onClick={() => {
-                  onToggleWindow(win.id);
-                  setStartMenuOpen(false);
-                }}
-                className="flex items-center gap-2 px-2 py-1 hover:bg-[#000080] hover:text-white text-left"
+                role="tab"
+                aria-selected={isTabActive}
+                aria-label={accessibleLabel}
+                title={accessibleLabel}
+                onClick={() => onToggleWindow(win.id)}
+                className={`${btnClass} px-2 py-1 flex items-center gap-1.5 text-xs h-full min-w-[38px] sm:min-w-[110px] max-w-[170px] flex-shrink-0 select-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/80 transition-none`}
               >
                 <img
                   src={win.icon}
-                  alt={win.title}
-                  className="w-4 h-4 object-contain flex-shrink-0"
+                  alt=""
+                  className="w-4 h-4 flex-shrink-0 object-contain drop-shadow"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.onerror = null;
-                    target.src = '/icons/retro/windows.svg';
+                    target.src = '/icons/xp/my-computer.svg';
                   }}
                 />
-                <span className="truncate">{win.exeName}</span>
-                {win.isOpen && !win.isMinimized && (
-                  <span className="ml-auto text-[10px] text-green-700 font-mono">● RUN</span>
+                <span className="hidden sm:inline truncate text-[11px] leading-tight font-sans">
+                  {win.exeName}
+                </span>
+                {isTabActive && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-300 ml-auto flex-shrink-0 hidden sm:block shadow-[0_0_4px_#00d4ff]" />
                 )}
               </button>
-            ))}
-
-            <div className="h-[2px] bg-[#808080] border-b border-white my-0.5" />
-
-            {/* Resume Link */}
-            <a
-              href="/cv.pdf"
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => setStartMenuOpen(false)}
-              className="flex items-center gap-2 px-2 py-1 hover:bg-[#000080] hover:text-white text-left no-underline text-black"
-            >
-              <img
-                src="/icons/retro/quest.svg"
-                alt="Resume"
-                className="w-4 h-4 object-contain"
-              />
-              <span>Download CV / Resume (PDF)</span>
-            </a>
-
-            {/* GitHub */}
-            <a
-              href="https://github.com/crazyrenan"
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => setStartMenuOpen(false)}
-              className="flex items-center gap-2 px-2 py-1 hover:bg-[#000080] hover:text-white text-left no-underline text-black"
-            >
-              <img
-                src="/icons/github.svg"
-                alt="GitHub"
-                className="w-4 h-4 object-contain"
-              />
-              <span>GitHub Profile ↗</span>
-            </a>
-
-            <div className="h-[2px] bg-[#808080] border-b border-white my-0.5" />
-
-            {/* Window Management Controls */}
-            <button
-              type="button"
-              onClick={() => {
-                onMinimizeAll();
-                setStartMenuOpen(false);
-              }}
-              className="flex items-center gap-2 px-2 py-1 hover:bg-[#000080] hover:text-white text-left"
-            >
-              <span>🗕</span>
-              <span>Minimize All Windows</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                onCloseAll();
-                setStartMenuOpen(false);
-              }}
-              className="flex items-center gap-2 px-2 py-1 hover:bg-[#000080] hover:text-white text-left"
-            >
-              <span>✕</span>
-              <span>Close All Windows</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                onReboot?.();
-                setStartMenuOpen(false);
-              }}
-              className="flex items-center gap-2 px-2 py-1 hover:bg-[#000080] hover:text-white text-left text-red-950 hover:text-white font-bold"
-            >
-              <span>🔄</span>
-              <span>Restart AXL_OS (Reboot)...</span>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Main Taskbar */}
-      <footer
-        className="fixed bottom-0 left-0 right-0 z-50 bg-[#c0c0c0] border-t-2 border-white flex items-center px-1 font-[Tahoma,sans-serif] text-black shadow-[0px_-1px_0px_#808080] select-none h-10"
-        role="navigation"
-        aria-label="Windows Taskbar"
-      >
-        {/* Left: Start Button & Quick Launch All */}
-        <div className="flex items-center gap-1.5 h-full py-0.5 flex-shrink-0">
-          {/* Start Menu Button */}
-          <button
-            type="button"
-            onClick={() => setStartMenuOpen(!startMenuOpen)}
-            className={`${
-              startMenuOpen ? 'win95-sunken bg-[#dfdfdf]' : 'win95-raised'
-            } px-2 sm:px-2.5 py-1 flex items-center gap-1 sm:gap-1.5 font-bold text-xs h-full text-black select-none focus:outline-none`}
-            aria-expanded={startMenuOpen}
-          >
-            <img
-              src="/icons/retro/windows.svg"
-              alt="Start"
-              className="w-4 h-4"
-            />
-            <span className="mt-0.5">Start</span>
-          </button>
-
-          {/* Recruiter Quick Mode: Launch All / Tile All */}
-          <button
-            type="button"
-            onClick={allOpen ? onMinimizeAll : onLaunchAll}
-            title="Recruiter Quick View: Launch all portfolio windows"
-            className={`win95-raised px-1.5 sm:px-2 py-1 flex items-center gap-1 font-bold text-[11px] h-full text-black hover:bg-[#dfdfdf] transition-none select-none ${
-              !hasInteracted ? 'animate-pulse ring-1 ring-blue-700 bg-[#e8e8e8]' : ''
-            }`}
-          >
-            <span>{allOpen ? '🗕' : '⚡'}</span>
-            <span className="hidden sm:inline">
-              {allOpen ? 'Minimize All' : 'Launch All'}
-            </span>
-          </button>
+            );
+          })}
         </div>
 
-        {/* Divider */}
-        <div className="w-[2px] h-6 bg-[#808080] border-r border-white mx-1 flex-shrink-0" />
+        {/* Right: Windows XP Luna System Tray */}
+        <div className="flex items-center h-full py-0.5 ml-auto flex-shrink-0">
+          <div className="xp-tray px-2 py-0.5 flex items-center h-full gap-2 rounded-sm">
+            {/* Audio Icon (Visual cue) */}
+            <button
+              type="button"
+              title="System Audio"
+              aria-label="System Audio"
+              className="text-white hover:text-cyan-200 bg-transparent border-0 p-0 cursor-pointer hidden xs:flex items-center justify-center"
+            >
+              <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                <path d="M2 5h3l4-3v12l-4-3H2V5zm10 0a4 4 0 0 1 0 6v-1.5a2.5 2.5 0 0 0 0-3V5zm2-2a6.5 6.5 0 0 1 0 10v-1.5a5 5 0 0 0 0-7V3z"/>
+              </svg>
+            </button>
 
-        {/* Center: Application Window Tabs (Only visible when window is OPEN, disappears when closed) */}
-        <div className="flex items-center gap-1 h-full py-0.5 flex-1 overflow-x-auto scrollbar-none px-0.5">
-          {windows
-            .filter((win) => win.isOpen)
-            .map((win) => {
-              const isTabActive = !win.isMinimized && win.isActive;
-              const isTabMinimized = win.isMinimized;
-
-              let tabStyle = 'win95-raised text-black';
-              if (isTabActive) {
-                tabStyle = 'win95-sunken bg-[#dfdfdf] font-bold text-black border-2 border-black/30';
-              } else if (isTabMinimized) {
-                tabStyle = 'win95-raised bg-[#d0d0d0] text-gray-700 italic';
-              }
-
-              return (
-                <button
-                  key={win.id}
-                  type="button"
-                  onClick={() => onToggleWindow(win.id)}
-                  title={win.exeName}
-                  className={`${tabStyle} px-1.5 sm:px-2 py-1 flex items-center gap-1 sm:gap-1.5 text-xs h-full min-w-[34px] sm:min-w-[85px] max-w-[140px] flex-shrink-0 truncate select-none transition-none justify-center sm:justify-start`}
-                >
-                  <img
-                    src={win.icon}
-                    alt={win.title}
-                    className="w-3.5 h-3.5 flex-shrink-0 object-contain"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.onerror = null;
-                      target.src = '/icons/retro/windows.svg';
-                    }}
-                  />
-                  <span className="hidden sm:inline truncate text-[10.5px]">{win.exeName}</span>
-                  {!win.isMinimized && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600 ml-auto flex-shrink-0 hidden sm:block" />
-                  )}
-                </button>
-              );
-            })}
-        </div>
-
-        {/* Right: System Tray */}
-        <div className="flex items-center gap-1 h-full py-0.5 ml-auto flex-shrink-0">
-          <div className="win95-sunken px-2 py-0.5 flex items-center h-full gap-2 text-black bg-[#dfdfdf]">
-            {/* Status Indicator */}
-            <div className="hidden md:flex items-center gap-1 text-[10px] font-mono font-bold text-green-800">
-              <span className="w-2 h-2 rounded-full bg-green-600 animate-pulse" />
-              <span>ONLINE</span>
-            </div>
-
-            {/* Sound Icon */}
-            <svg className="w-3.5 h-3.5 hidden xs:block" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M2 5h3l4-3v12l-4-3H2V5zm10 0a4 4 0 0 1 0 6v-1.5a2.5 2.5 0 0 0 0-3V5zm2-2a6.5 6.5 0 0 1 0 10v-1.5a5 5 0 0 0 0-7V3z"/>
-            </svg>
-
-            {/* Live Clock */}
-            <span className="text-xs font-mono font-bold whitespace-nowrap">
-              {timeString}
-            </span>
+            {/* Isolated Minute-Level System Clock (Asia/Jakarta WIB) */}
+            <SystemClock />
           </div>
         </div>
       </footer>

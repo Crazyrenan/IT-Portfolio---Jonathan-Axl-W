@@ -33,9 +33,9 @@ All tasks are initialized NOT_STARTED, including baseline/review tasks.
 | T07 | Integrate frame controls and focus restoration | COMPLETED | Antigravity | src/components/retro/RetroWindow.tsx, src/components/retro/DesktopManager.tsx | node scripts/verify-redesign.mjs, npm run build | PASS: exit 0, focus restoration & inert minimization verified | Browser DevTools MCP unconfigured (recorded NOT_RUN) | Frame visibility/mode controlled through reducer; inert hidden minimized body |
 | T08 | Bound gestures and implement nondrag geometry controls | COMPLETED | Antigravity | src/components/retro/RetroWindow.tsx, src/components/retro/DesktopManager.tsx, src/lib/window-manager.ts | node scripts/verify-redesign.mjs, npm run build | PASS: exit 0, center/fit/move/resize tests pass | Browser DevTools MCP unconfigured (recorded NOT_RUN) | Dragging bounded to usable workspace; nondrag Center/Fit system menu controls |
 | T09 | Separate launch intents, URLs and desktop utilities | COMPLETED | Antigravity | src/components/retro/DesktopManager.tsx, src/components/retro/PixelHero.tsx, src/lib/window-manager.ts | node scripts/verify-redesign.mjs, npm run build | PASS: exit 0, hash intent parsing and launch semantics pass | Browser DevTools MCP unconfigured (recorded NOT_RUN) | URL hash parsing, OPEN from launcher never minimizes, desktop utilities wired |
-| T10 | Redesign optional boot and sound lifecycle | NOT_STARTED | Antigravity | None | NOT_RUN | No implementation evidence | Not assessed | Phase 3; dependencies: T09 |
-| T11 | Extract two-column Start navigation | NOT_STARTED | Antigravity | None | NOT_RUN | No implementation evidence | Not assessed | Phase 3; dependencies: T09, T10 |
-| T12 | Redesign task strip, tray and Show Desktop | NOT_STARTED | Antigravity | None | NOT_RUN | No implementation evidence | Not assessed | Phase 3; dependencies: T11 |
+| T10 | Redesign optional boot and sound lifecycle | COMPLETED | Antigravity | src/components/retro/RetroBootScreen.tsx, src/components/retro/DesktopManager.tsx | npm run build, node scripts/verify-redesign.mjs | PASS: <=800ms intro, one-action skip, session bypass, AudioContext cleanup | None | Duration reduced to 800ms, reduced-motion auto-skip, session flag, AudioContext closed |
+| T11 | Extract two-column Start navigation | COMPLETED | Antigravity | src/components/retro/StartMenu.tsx, src/components/retro/RetroTaskbar.tsx, src/styles/global.css | npm run build, node scripts/verify-redesign.mjs | PASS: Two-column Luna disclosure, Escape/outside dismiss, truthful footer | None | Two-column StartMenu extracted with programs, shortcuts, truthful utilities |
+| T12 | Redesign task strip, tray and Show Desktop | COMPLETED | Antigravity | src/components/retro/SystemClock.tsx, src/lib/clock.ts, src/components/retro/RetroTaskbar.tsx, src/components/retro/DesktopManager.tsx, src/styles/global.css, tests/navigation-shell.test.mjs, scripts/verify-redesign.mjs | node scripts/verify-redesign.mjs, npm run build | PASS: 24/24 tests pass, isolated 60s WIB clock, Luna blue taskbar, Show Desktop & Quick View wired | None | Luna blue taskbar, green Start, isolated SystemClock, Show Desktop toggle |
 | T13 | Extract and redesign profile, skills and history content | NOT_STARTED | Antigravity | None | NOT_RUN | No implementation evidence | Not assessed | Phase 4; dependencies: T03, T05, T09, T12 |
 | T14 | Unify Projects Explorer and existing article routes | NOT_STARTED | Antigravity | None | NOT_RUN | No implementation evidence | Not assessed | Phase 4; dependencies: T03, T12, T13 |
 | T15 | Create direct SSR Quick View | NOT_STARTED | Antigravity | None | NOT_RUN | No implementation evidence | Not assessed | Phase 4; dependencies: T13, T14 |
@@ -149,7 +149,52 @@ under docs/redesign/. An authorized governance sync is required before approval.
   - Ran `npm run build`: Exit code 0, 10 static routes prerendered, bundle size well within budget (67.23 kB gzip for DesktopManager).
   - Limitation: Browser automation unconfigured; visual rendering recorded as `NOT_RUN`.
 - **Phase 2 Checkpoint Reached.**
-- **Next Eligible Task:** T10 (Phase 3: Redesign optional boot and sound lifecycle).
+
+### Phase 3 Execution (2026-10-12 / Antigravity)
+- **T10 (Redesign Optional Boot & Sound Lifecycle):**
+  - Updated `src/components/retro/RetroBootScreen.tsx`:
+    - Replaced 2800ms gate with a compact <=800ms intro (default `durationMs = 800`).
+    - Added one-action native skip via click, touch, `Escape`, `Space`, or `Enter`.
+    - Auto-skips immediately if `prefers-reduced-motion: reduce` matches on mount.
+    - Chime synthesized with pure Web Audio API oscillators on explicit opt-in only; `AudioContext` closed safely upon chime completion or unmount, returning browser resources to baseline.
+    - Uses original monitor vector SVG icon (`/icons/xp/my-computer.svg`); zero borrowed Windows sound/video/brand assets.
+  - Updated `src/components/retro/DesktopManager.tsx`:
+    - Checks `sessionStorage.getItem('axl_boot_seen')` on mount to bypass intro on repeat page visits within the same session.
+    - Bypasses boot screen immediately when visiting via deep link hash (`#projects`, `#skills`, etc.) or under reduced motion.
+    - Sets `sessionStorage.setItem('axl_boot_seen', 'true')` upon boot completion.
+    - "Restart OS" desktop shortcut and Start Menu "Replay Intro" restart boot without wiping or resetting open workspace windows (satisfying FR-12).
+- **T11 (Extract Two-Column Luna Start Navigation):**
+  - Created `src/components/retro/StartMenu.tsx`:
+    - Authentic two-column disclosure layout:
+      - Top Identity Header: Profile picture with white border/shadow, name ("Jonathan Axl Wibowo"), and role title ("Software Engineer & AI Specialist") over deep-blue Luna gradient.
+      - Left Column (Programs): Primary portfolio apps (`hero`, `projects`, `skills`, `experience`, `contact`, `certificates`) with blue running indicators, and expandable "All Programs & Interactive Extras" view for easter eggs (`browser`, `p5r`, `apex`, `elden`).
+      - Right Column (Destinations): Quick View recruiter link (`/quick-view`), PDF CV download (`/cv.pdf`), GitHub profile link, and workspace controls (Launch All, Show Desktop, Minimize All).
+      - Bottom Truthful Footer: "Close All Windows" and "Replay Intro" utility actions (no misleading "Shut Down" or "Log Off" buttons).
+    - Accessibility & Dismissal: `role="dialog"`, `aria-label="Windows XP Start Menu"`, outside click/pointer listener, and `Escape` key dismissal with focus return to Start button (`triggerRef`).
+- **T12 (Redesign Task Strip, Tray, Show Desktop & Isolate Clock):**
+  - Created `src/lib/clock.ts` and `src/components/retro/SystemClock.tsx`:
+    - Formats system time strictly in `Asia/Jakarta` (WIB) timezone (`HH:mm WIB`).
+    - Tooltip and `aria-label` display full accessible date and time string in Indonesian Western Time (UTC+7).
+    - Aligned to minute turnover and updates at 60,000ms intervals (not 1 second).
+    - Isolated component state prevents clock ticks from triggering re-renders of the taskbar or desktop shell.
+    - Not `aria-live` per TRD accessibility requirements.
+  - Rewrote `src/components/retro/RetroTaskbar.tsx`:
+    - Replaced legacy grey Win95 chrome with authentic Luna styling (`.xp-taskbar` blue gradient).
+    - Added green Luna Start button (`.xp-start-btn`) with 4-quadrant emblem and `aria-expanded` disclosure attribute.
+    - Added Quick Launch toolbar: Show Desktop (`🗔`), Launch All (`⚡`), and Quick View icon (`/quick-view`).
+    - Added Luna task button styling: `.xp-task-btn` (inactive), `.xp-task-btn-active` (dark inset with cyan active pip), and `.xp-task-btn-minimized` (dashed border, italic text).
+    - Accessible full window title retained in `title` and `aria-label`.
+    - Added sunken Luna system tray (`.xp-tray`) with audio glyph and `<SystemClock />`.
+    - Removed misleading "ONLINE" badge.
+  - Created `tests/navigation-shell.test.mjs`:
+    - 5 tests covering WIB timezone formatting, 10-app registry completeness for Start/Taskbar, partition of core vs extra apps, and taskbar monotonic ordering.
+    - Integrated into `scripts/verify-redesign.mjs`.
+- **Verification:**
+  - Ran `node scripts/verify-redesign.mjs`: 24/24 tests passed across 3 test suites (`portfolio-parity`, `window-manager`, `navigation-shell`).
+  - Ran `npm run build`: Exit code 0, 10 static prerendered routes, client gzip bundle within budget (DesktopManager 69.35 kB gzip).
+  - Limitation: Browser automation unconfigured; visual rendering recorded as `NOT_RUN`.
+- **Phase 3 Checkpoint Reached.**
+- **Next Eligible Task:** T13 (Phase 4: Extract and redesign profile, skills and history content).
 
 ## Independent review and final validation
 
